@@ -27,7 +27,11 @@ export function Footer() {
           <div>
             <div className="text-sm font-semibold text-black">Compliance</div>
             <p className="mt-3 text-sm leading-6 text-black/70">
-              Medicare disclaimer: Not connected with or endorsed by the U.S. government or the federal Medicare program.
+              Not connected with or endorsed by the U.S. government or the federal Medicare program.
+            </p>
+            <p className="mt-3 text-sm leading-6 text-black/70">
+              We do not offer every plan available in your area. Any information we provide is limited to plans we offer
+              in your area.
             </p>
             <div className="mt-4 flex gap-4 text-sm">
               <Link className="text-black/70 hover:text-black" href="/privacy">Privacy</Link>

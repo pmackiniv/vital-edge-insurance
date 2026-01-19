@@ -27,9 +27,6 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Link href="/contact" className="hidden text-sm text-black/70 hover:text-black sm:inline">
-              Contact
-            </Link>
             <motion.div whileHover={{ y: -1 }} whileTap={{ y: 0 }}>
               <Link
                 href={site.primaryCta.href}

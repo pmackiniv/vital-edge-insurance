@@ -20,10 +20,9 @@ export const site = {
   },
   nav: [
     { label: "Services", href: "/services" },
-    { label: "ACA", href: "/aca" },
-    { label: "Small Business", href: "/ichra" },
-    { label: "Medicare", href: "/medicare" },
-    { label: "About", href: "/about" },
+    { label: "Enroll", href: "/enroll" },
+    { label: "Resources", href: "/resources" },
+    { label: "Contact", href: "/contact" },
   ],
 } as const;
 
