@@ -33,12 +33,14 @@ export default function ContactPage() {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [disabledUntil, setDisabledUntil] = useState<number | null>(null);
+  const formEndpoint = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT;
 
   const canSubmit = useMemo(() => {
     if (isSubmitting) return false;
     if (disabledUntil && Date.now() < disabledUntil) return false;
+    if (!formEndpoint) return false;
     return true;
-  }, [disabledUntil, isSubmitting]);
+  }, [disabledUntil, formEndpoint, isSubmitting]);
 
   const handleChange = (field: keyof FormState) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const value = event.target.type === "checkbox" ? (event.target as HTMLInputElement).checked : event.target.value;
@@ -79,16 +81,15 @@ export default function ContactPage() {
       return;
     }
 
-    const endpoint = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT;
-    if (!endpoint) {
-      setError("Form endpoint is not configured yet.");
+    if (!formEndpoint) {
+      setError("Contact form is temporarily unavailable. Please call/email.");
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(endpoint, {
+      const response = await fetch(formEndpoint, {
         method: "POST",
         headers: {
           "Accept": "application/json",
@@ -236,11 +237,16 @@ export default function ContactPage() {
               </label>
             </div>
 
-            {error ? <p className="text-xs text-red-600">{error}</p> : null}
+          {error ? <p className="text-xs text-red-600">{error}</p> : null}
+          {!formEndpoint ? (
+            <p className="text-xs text-black/60">
+              Contact form is temporarily unavailable. Please call/email.
+            </p>
+          ) : null}
 
-            <button
-              type="submit"
-              disabled={!canSubmit}
+          <button
+            type="submit"
+            disabled={!canSubmit}
               className="inline-flex items-center justify-center rounded-xl bg-black px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting ? "Sending..." : "Send message"}
