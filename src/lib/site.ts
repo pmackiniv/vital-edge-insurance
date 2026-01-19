@@ -15,8 +15,8 @@ export const site = {
   },
   serviceAreas: ["Jacksonville, FL", "Duval County, FL", "St. Johns County, FL"],
   sameAs: [
-    "https://www.linkedin.com/in/patrick-mackin-iv/",
-    "https://www.linkedin.com/company/vital-edge-insurance/",
+    "https://www.linkedin.com/in/patrick-mackin-iv-297574187",
+    "https://www.linkedin.com/company/111003981/",
   ],
   logoPath: "/logo.svg",
   ogImagePath: "/og-image.svg",

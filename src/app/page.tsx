@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { site } from "@/lib/site";
+import { externalLinkProps, LINKEDIN_COMPANY_PUBLIC, LINKEDIN_PERSONAL } from "@/lib/externalLinks";
 
 export default function HomePage() {
   return (
@@ -41,6 +42,27 @@ export default function HomePage() {
                 <div className="rounded-xl border border-black/10 p-3">Fast replies</div>
                 <div className="rounded-xl border border-black/10 p-3">Local focus</div>
                 <div className="rounded-xl border border-black/10 p-3">Clear next steps</div>
+              </div>
+
+              <div className="mt-6 rounded-xl border border-black/10 bg-white p-4">
+                <div className="text-xs font-semibold text-black">Founder</div>
+                <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-black/70">
+                  <span className="font-medium text-black">Patrick Mackin IV</span>
+                  <a
+                    href={LINKEDIN_PERSONAL}
+                    {...externalLinkProps()}
+                    className="rounded-full border border-black/10 px-3 py-1 text-xs font-semibold text-black hover:bg-black/5"
+                  >
+                    Connect on LinkedIn
+                  </a>
+                  <a
+                    href={LINKEDIN_COMPANY_PUBLIC}
+                    {...externalLinkProps()}
+                    className="rounded-full border border-black/10 px-3 py-1 text-xs font-semibold text-black hover:bg-black/5"
+                  >
+                    Vital Edge Insurance on LinkedIn
+                  </a>
+                </div>
               </div>
             </div>
 
