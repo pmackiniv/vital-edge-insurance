@@ -31,6 +31,7 @@ export default function ContactPage() {
   const router = useRouter();
   const [formState, setFormState] = useState<FormState>(initialState);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [disabledUntil, setDisabledUntil] = useState<number | null>(null);
   const formEndpoint = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT;
@@ -110,7 +111,10 @@ export default function ContactPage() {
         throw new Error("Request failed");
       }
 
-      router.push("/thank-you");
+      setSuccess(true);
+      setTimeout(() => {
+        router.push("/thank-you");
+      }, 1200);
     } catch {
       setError("We could not submit your request. Please try again or call us.");
     } finally {
@@ -237,10 +241,15 @@ export default function ContactPage() {
               </label>
             </div>
 
-          {error ? <p className="text-xs text-red-600">{error}</p> : null}
-          {!formEndpoint ? (
-            <p className="text-xs text-black/60">
-              Contact form is temporarily unavailable. Please call/email.
+            {success ? (
+              <p className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-xs text-green-700">
+                Message sent. Redirecting...
+              </p>
+            ) : null}
+            {error ? <p className="text-xs text-red-600">{error}</p> : null}
+            {!formEndpoint ? (
+              <p className="text-xs text-black/60">
+                Contact form is temporarily unavailable. Please call/email.
             </p>
           ) : null}
 
