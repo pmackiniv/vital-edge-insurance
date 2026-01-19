@@ -10,7 +10,7 @@ export default function EnrollPage() {
           Use the secure enrollment partners below. You will be redirected to a third-party site to continue.
         </p>
         <div className="mt-4 space-y-2 text-sm text-black/70">
-          <p>You are leaving Vital Edge Insurance and going to a third-party site.</p>
+          <p>You are leaving Vital Edge Insurance and going to a third-party website.</p>
           <p>Not connected with or endorsed by the U.S. government or the federal Medicare program.</p>
           <p>
             We do not offer every plan available in your area. Any information we provide is limited to plans we offer in
