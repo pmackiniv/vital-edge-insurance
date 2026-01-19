@@ -12,6 +12,14 @@ export function Footer() {
             <p className="mt-2 text-sm leading-6 text-black/70">
               Independent guidance for individuals, families, and small businesses in Jacksonville and nearby counties.
             </p>
+            <div className="mt-3 space-y-1 text-sm">
+              <a className="block text-black/70 hover:text-black" href={`tel:${site.phoneE164}`}>
+                {site.phoneDisplay}
+              </a>
+              <a className="block text-black/70 hover:text-black" href={`mailto:${site.email}`}>
+                {site.email}
+              </a>
+            </div>
           </div>
 
           <div>
