@@ -33,7 +33,10 @@ export const site = {
 } as const;
 
 export function absoluteUrl(path = "/") {
-  const base = site.siteUrl.replace(/\/$/, "");
+  const vercelUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "";
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL || "";
+  const fallback = "http://localhost:3000";
+  const base = (explicit || vercelUrl || fallback).replace(/\/$/, "");
   const p = path.startsWith("/") ? path : `/${path}`;
   return `${base}${p}`;
 }
