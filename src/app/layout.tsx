@@ -3,7 +3,7 @@ import "./globals.css";
 
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { absoluteUrl, localBusinessJsonLd, organizationJsonLd, site } from "@/lib/site";
+import { absoluteUrl, insuranceAgencyJsonLd, localBusinessJsonLd, organizationJsonLd, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.siteUrl),
@@ -22,6 +22,17 @@ export const metadata: Metadata = {
     title: "Vital Edge Insurance",
     description:
       "Health insurance guidance for Jacksonville, FL with support for ACA, small business options, and Medicare education.",
+    images: [
+      {
+        url: absoluteUrl(site.ogImagePath),
+        width: 1200,
+        height: 630,
+        alt: "Vital Edge Insurance",
+      },
+    ],
+  },
+  icons: {
+    icon: site.logoPath,
   },
   robots: {
     index: true,
@@ -32,6 +43,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const org = organizationJsonLd();
   const local = localBusinessJsonLd();
+  const agency = insuranceAgencyJsonLd();
 
   return (
     <html lang="en" className="h-full">
@@ -47,6 +59,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(local) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(agency) }}
         />
       </body>
     </html>

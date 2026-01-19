@@ -13,7 +13,13 @@ export const site = {
     postalCode: "32200",
     addressCountry: "US",
   },
-  serviceAreas: ["Duval County, FL", "St. Johns County, FL"],
+  serviceAreas: ["Jacksonville, FL", "Duval County, FL", "St. Johns County, FL"],
+  sameAs: [
+    "https://www.linkedin.com/in/patrick-mackin-iv/",
+    "https://www.linkedin.com/company/vital-edge-insurance/",
+  ],
+  logoPath: "/logo.svg",
+  ogImagePath: "/og-image.svg",
   primaryCta: {
     label: "Request help",
     href: "/contact",
@@ -40,7 +46,7 @@ export function organizationJsonLd() {
     url: site.siteUrl,
     email: site.email,
     telephone: site.phoneE164,
-    sameAs: [],
+    sameAs: site.sameAs,
   };
 }
 
@@ -57,5 +63,26 @@ export function localBusinessJsonLd() {
       "@type": "PostalAddress",
       ...site.address,
     },
+  };
+}
+
+export function insuranceAgencyJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "InsuranceAgency",
+    name: site.legalName,
+    url: site.siteUrl,
+    telephone: site.phoneE164,
+    description:
+      "Independent insurance guidance for individuals, families, and small businesses in Jacksonville, Florida and nearby counties.",
+    areaServed: site.serviceAreas.map((name) => ({ "@type": "AdministrativeArea", name })),
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: site.address.addressLocality,
+      addressRegion: site.address.addressRegion,
+      addressCountry: site.address.addressCountry,
+    },
+    sameAs: site.sameAs,
+    logo: absoluteUrl(site.logoPath),
   };
 }
