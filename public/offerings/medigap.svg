@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 420" role="img" aria-label="Medigap">
+  <rect width="600" height="420" fill="#ffffff" />
+  <rect x="40" y="40" width="520" height="340" rx="32" fill="#0b0b0b" />
+  <path d="M120 190c20-40 80-40 100 0" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round" />
+  <path d="M120 230c20 40 80 40 100 0" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round" />
+  <text x="300" y="220" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="28" fill="#ffffff">Medigap Support</text>
+  <text x="300" y="255" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#d7d7d7">Supplement education</text>
+</svg>

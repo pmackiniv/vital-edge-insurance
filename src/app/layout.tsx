@@ -3,6 +3,7 @@ import "./globals.css";
 
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { ChatWidget } from "@/components/ChatWidget";
 import { absoluteUrl, insuranceAgencyJsonLd, localBusinessJsonLd, organizationJsonLd, site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -51,6 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main>{children}</main>
         <Footer />
+        <ChatWidget />
 
         <script
           type="application/ld+json"
