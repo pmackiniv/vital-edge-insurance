@@ -3,9 +3,9 @@ export const site = {
   legalName: "Vital Edge Insurance",
   domain: "vital-edge-insurance.vercel.app",
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
-  phoneDisplay: "(904) 000-0000",
-  phoneE164: "+19040000000",
-  email: "help@vitaledgeinsurance.com",
+  phoneDisplay: "(352) 214-8879",
+  phoneE164: "+13522148879",
+  email: "pmackiniv27@icloud.com",
   address: {
     streetAddress: "Jacksonville, FL",
     addressLocality: "Jacksonville",
@@ -16,7 +16,7 @@ export const site = {
   serviceAreas: ["Jacksonville, FL", "Duval County, FL", "St. Johns County, FL"],
   sameAs: [
     "https://www.linkedin.com/in/patrick-mackin-iv-297574187",
-    "https://www.linkedin.com/company/111003981/",
+    "https://www.linkedin.com/company/vital-edge-insurance/",
   ],
   logoPath: "/logo.svg",
   ogImagePath: "/og-image.svg",
@@ -74,8 +74,9 @@ export function insuranceAgencyJsonLd() {
     "@context": "https://schema.org",
     "@type": "InsuranceAgency",
     name: site.legalName,
-    url: site.siteUrl,
+    url: absoluteUrl("/"),
     telephone: site.phoneE164,
+    email: site.email,
     description:
       "Independent insurance guidance for individuals, families, and small businesses in Jacksonville, Florida and nearby counties.",
     areaServed: site.serviceAreas.map((name) => ({ "@type": "AdministrativeArea", name })),
