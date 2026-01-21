@@ -25,7 +25,7 @@ export const metadata: Metadata = {
       "Health insurance guidance for Jacksonville, FL with support for ACA, small business options, and Medicare education.",
     images: [
       {
-        url: absoluteUrl(site.ogImagePath),
+        url: "/og.png",
         width: 1200,
         height: 630,
         alt: "Vital Edge Insurance",
@@ -33,7 +33,12 @@ export const metadata: Metadata = {
     ],
   },
   icons: {
-    icon: site.logoPath,
+    icon: [{ url: "/favicon-32.png", sizes: "32x32", type: "image/png" }],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/og.png"],
   },
   robots: {
     index: true,
