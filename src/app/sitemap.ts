@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { blogPosts } from "@/lib/blogPosts";
 import { site } from "@/lib/site";
 
 const routes = [
@@ -24,8 +25,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = site.siteUrl.replace(/\/$/, "");
   const now = new Date();
 
-  return routes.map((route) => ({
-    url: `${base}/${route}`.replace(/\/$/, ""),
-    lastModified: now,
-  }));
+  return [
+    ...routes.map((route) => ({
+      url: `${base}/${route}`.replace(/\/$/, ""),
+      lastModified: now,
+    })),
+    ...blogPosts.map((post) => ({
+      url: `${base}/blog/${post.slug}`,
+      lastModified: now,
+    })),
+  ];
 }
