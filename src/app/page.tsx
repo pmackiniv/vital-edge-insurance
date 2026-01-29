@@ -20,6 +20,7 @@ const offerings = [
     title: "ACA Marketplace (HealthCare.gov)",
     description: "Eligibility and subsidy education, plan timing, and enrollment support.",
     href: "/aca",
+    iconSrc: "/images/offerings/aca.svg",
     image: {
       mobileSrc: "/images/offerings/aca/aca-family-hero-1x1.jpg",
       desktopSrc: "/images/offerings/aca/aca-family-hero-4x3.jpg",
@@ -30,6 +31,7 @@ const offerings = [
     title: "Medicare Guidance",
     description: "General Medicare education. Plan-specific discussions require a Scope of Appointment.",
     href: "/medicare",
+    iconSrc: "/images/offerings/medicare.svg",
     image: {
       mobileSrc: "/images/offerings/medicare/medicare-retirement-hero-1x1.jpg",
       desktopSrc: "/images/offerings/medicare/medicare-retirement-hero-4x3.jpg",
@@ -40,6 +42,7 @@ const offerings = [
     title: "Medicare Supplement (Medigap)",
     description: "Help understanding enrollment timing and what to compare before you apply.",
     href: "/medicare",
+    iconSrc: "/images/offerings/medigap.svg",
     image: {
       mobileSrc: "/images/offerings/medicare/medicare-retirement-hero-1x1.jpg",
       desktopSrc: "/images/offerings/medicare/medicare-retirement-hero-4x3.jpg",
@@ -50,6 +53,7 @@ const offerings = [
     title: "ICHRA",
     description: "Guidance for employers and employees navigating defined contribution coverage.",
     href: "/ichra",
+    iconSrc: "/images/offerings/ichra.svg",
     image: {
       mobileSrc: "/images/offerings/group/group-legacy-hero-1x1.jpg",
       desktopSrc: "/images/offerings/group/group-legacy-hero-4x3.jpg",
@@ -60,6 +64,7 @@ const offerings = [
     title: "Off-Exchange Options",
     description: "Alternatives when Marketplace coverage is not the right fit.",
     href: "/off-exchange",
+    iconSrc: "/images/offerings/off-exchange.svg",
     image: {
       mobileSrc: "/images/offerings/aca/aca-family-hero-1x1.jpg",
       desktopSrc: "/images/offerings/aca/aca-family-hero-4x3.jpg",
@@ -70,6 +75,7 @@ const offerings = [
     title: "Small Group",
     description: "Decision support for small employers evaluating group coverage.",
     href: "/services",
+    iconSrc: "/images/offerings/small-group.svg",
     image: {
       mobileSrc: "/images/offerings/group/group-legacy-hero-1x1.jpg",
       desktopSrc: "/images/offerings/group/group-legacy-hero-4x3.jpg",
@@ -305,6 +311,9 @@ export default function HomePage() {
                         className="object-cover"
                         sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
                       />
+                      <div className="absolute left-4 top-4 rounded-2xl bg-white/95 p-2 shadow-sm">
+                        <Image src={item.iconSrc} alt="" width={36} height={36} />
+                      </div>
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-black/0" />
                       <div className="absolute inset-x-0 bottom-0 p-5 text-white">
                         <div className="text-lg font-semibold">{item.title}</div>
