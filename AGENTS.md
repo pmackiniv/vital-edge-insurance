@@ -1,76 +1,40 @@
-# Vital Edge Insurance — Website Finish Contract (Codex Rules)
+# Vital Edge Website Agents – Operating Context
 
-## Mission
-Finish and polish this Next.js website to a premium, enterprise-grade UX suitable for Vital Edge Insurance.
-Priorities, in order:
-1) Navigation integrity (no dead ends)
-2) Visual polish (hero, typography, image ratios, spacing)
-3) Performance + accessibility
-4) Compliance-safe, high-trust copy (educational, not salesy)
-5) Content scaffolding that supports ongoing “Vital Edge Daily” updates (draft + review workflow)
+## Current State (Authoritative)
+- Compliance audit stabilized
+- TPMO disclaimer parsing fixed with regression fixture
+- Repo stays clean after dev + audit
+- Inbound lead pipeline scaffolded (Prisma + API routes)
+- Twilio uses Messaging Service SID (not From number)
+- Notion is CRM surface; Prisma is source of truth
 
-## Working Style
-- Operate in small, reversible diffs.
-- Before editing: propose a plan and the smallest batch of changes.
-- After each batch of edits, run:
-  - npm run lint
-  - npm run build
-- Stop and report immediately if either command fails.
+## Non-Negotiables
+- Compliance logic must not be refactored without fixtures
+- No agent may modify compliance-audit files unless explicitly instructed
+- No agent may introduce marketing language requiring TPMO without disclaimer checks
+- Repo hygiene is mandatory: no scope creep, no mass refactors
 
-## Hard Constraints (Non-Negotiable)
-- No Medicare Advantage / MAPD marketing language.
-- No plan recommendations, “best plan” guidance, pricing promises, or enrollment decisions.
-- No carrier comparisons or disparagement.
-- Do not request or store sensitive identifiers (SSN, Medicare ID/MBI, Medicaid ID, bank info).
-- Never print, copy, or commit secrets (API keys, tokens, credentials, env vars).
-- Do NOT implement Notion, Twilio, Zapier/Make integrations yet. Only create safe stubs/CTAs and placeholder routes where necessary.
-- All public-facing copy must remain compliant and general; anything that looks like advice must trigger a human handoff path (CTA only for now).
+## Website Build Objective
+Ship a compliant, conversion-focused insurance website that:
+- Captures inbound leads 24/7
+- Routes through compliant intake
+- Hands off to a human agent
+- Never performs enrollment or plan recommendation autonomously
 
-## Scope of Work (This Sprint)
-### P0 (must fix first)
-- Dead links / routes that go nowhere
-- Missing pages or broken navigation elements (Header/Footer/CTAs)
-- Image stretching / squashed visuals (enforce ratio-locked wrappers + next/image best practices)
-- Scroll/overflow traps (no “page stuck unless zoom out” behavior)
-- Hero legibility issues (overlay gradients, text-shadow, accessible contrast)
-- Dropdown/select readability (opaque background, readable text/border)
+## Allowed Actions
+- Add new website components
+- Add new API routes that call existing lead pipeline
+- Improve UI/UX, SEO structure, performance
+- Propose changes before implementing if touching shared logic
+- Implement Phase 1 Twilio SMS routing only (inbound webhook → forward to owner → privacy-safe auto-reply)
 
-### P1 (after P0 is stable)
-- Premium polish: spacing rhythm, typography scale, button states, hover/focus states
-- Consistent section layouts and cards
-- “Trust” UI elements (trust strip, fine print placement)
-- Performance/SEO hygiene: metadata consistency, sitemap/robots sanity checks
+## Disallowed Actions
+- Changing compliance audit logic
+- Editing blocked terms or disclaimers
+- Auto-deploying without approval
+- Refactoring existing files without instruction
+- No AI SMS responses, no plan recommendations, no PHI/SSN/MBI collection, and no Notion/Zapier integrations without explicit approval
 
-### P2 (after P1)
-- Advanced micro-interactions (only if they respect prefers-reduced-motion)
-- Deeper content expansion
 
-## Hero / Background Requirements
-- Home page must have a stable background hero image layer.
-- Foreground content scrolls normally above it.
-- If adding cursor/parallax effect:
-  - Respect prefers-reduced-motion
-  - Do not introduce scroll traps or jank
-  - Do not harm text legibility
-  - Keep implementation minimal and reversible
-
-## Content Strategy (Scaffolding Only for Now)
-Create a clean content surface that supports ongoing updates:
-- Add /learn index and /learn/[slug] route scaffolding if missing.
-- Content here is educational and high-level only.
-- No plan marketing. No plan recommendations.
-- “Vital Edge Daily” content should be drafted for review, not auto-published.
-
-## Acceptance Criteria for This Sprint
-- Website builds cleanly: npm run lint && npm run build pass.
-- No dead-end navigation.
-- No stretched imagery.
-- Scroll behaves normally across pages.
-- Home hero looks premium, legible, and stable.
-- Provide a punch list grouped by P0/P1/P2 and implement only P0 first.
-
-## Required Outputs After Each Batch
-- List files changed
-- What was fixed
-- What to QA in a Vercel Preview (or local build output)
-- Any risks/edge cases noticed
+Why this matters:
+Codex treats this as its constitution for the repo.
