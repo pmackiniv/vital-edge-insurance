@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Container } from "@/components/Container";
+import { BottomFinePrint } from "@/components/BottomFinePrint";
 import { site } from "@/lib/site";
 
 export function Footer() {
@@ -48,7 +49,9 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-black/5 py-6 text-xs text-black/60">
+        <BottomFinePrint />
+
+        <div className="border-t border-black/5 py-6 text-sm text-black/60">
           © {new Date().getFullYear()} {site.legalName}. All rights reserved.
         </div>
       </Container>

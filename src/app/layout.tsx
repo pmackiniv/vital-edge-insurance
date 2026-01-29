@@ -53,7 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <html lang="en" className="h-full">
-      <body className="min-h-full bg-white text-black antialiased font-sans">
+      <body className="min-h-full bg-white text-[18px] leading-relaxed text-slate-900 antialiased font-sans">
         <Header />
         <main>{children}</main>
         <Footer />

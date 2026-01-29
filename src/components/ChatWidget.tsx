@@ -73,7 +73,7 @@ export function ChatWidget() {
 
     setIsSubmitting(true);
     try {
-      const response = await fetch("/api/lead", {
+      const response = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -100,7 +100,7 @@ export function ChatWidget() {
         onClick={() => setOpen(true)}
         className="rounded-full bg-[var(--brand-blue)] px-5 py-3 text-sm font-semibold text-white shadow-lg hover:bg-[var(--brand-green)]"
       >
-        Chat with Patrick
+        Talk with a licensed agent now
       </button>
 
       <AnimatePresence>
@@ -115,7 +115,7 @@ export function ChatWidget() {
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between border-b border-black/10 p-4">
                 <div>
-                  <div className="text-sm font-semibold text-black">Chat with Patrick</div>
+                <div className="text-sm font-semibold text-black">Talk with a licensed agent now</div>
                   <div className="text-xs text-black/60">Educational guidance + routing</div>
                 </div>
                 <button
@@ -135,14 +135,6 @@ export function ChatWidget() {
               </div>
 
               <div className="space-y-4 overflow-y-auto p-5">
-                <div className="rounded-2xl border border-black/10 bg-[var(--muted)] p-4 text-xs text-black/70">
-                  <p>This chat may use AI assistance to provide general information.</p>
-                  <p className="mt-2">
-                    For enrollment or plan-specific advice, you can request a call or use official enrollment links.
-                  </p>
-                  <p className="mt-2">Do not enter SSN/Medicare ID or sensitive identifiers here.</p>
-                </div>
-
                 <div className="flex items-center gap-2 text-xs text-black/50">
                   {["Topic", "Details", "Next steps"].map((label, index) => {
                     const current = index + 1;

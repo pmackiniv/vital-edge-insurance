@@ -1,14 +1,24 @@
 @import "tailwindcss";
 
 :root {
+  font-size: 18px;
+  --vei-blue: #0e4498;
+  --vei-green: #35b228;
+  --vei-orange: #f69232;
+  --vei-soft-blue: #839bc0;
+  --vei-navy: #091a38;
+  --ve-bg: #f4f7fb;
+  --ve-border: #d7e1ec;
+  --ve-text: #0b1320;
+  --ve-muted: #52667a;
   --background: #ffffff;
-  --foreground: #171717;
-  --brand-blue: #0a4696;
-  --brand-green: #32aa28;
-  --brand-orange: #f07800;
-  --ink: #0b1220;
+  --foreground: #0b1320;
+  --brand-blue: #0e4498;
+  --brand-green: #35b228;
+  --brand-orange: #f69232;
+  --ink: #0b1320;
   --paper: #ffffff;
-  --muted: #f5f7fa;
+  --muted: #f4f7fb;
 }
 
 @theme inline {
@@ -35,6 +45,16 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: "Times New Roman", Times, serif;
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+a {
+  color: var(--vei-blue);
+}
+
+a:hover {
+  color: var(--vei-green);
 }
 
 button,
@@ -42,4 +62,26 @@ input,
 select,
 textarea {
   font-family: inherit;
+}
+
+.vei-tide {
+  background-image: radial-gradient(circle at 30% 60%, rgba(255, 255, 255, 0.35), transparent 55%);
+  opacity: 0.12;
+  animation: vei-tide 12s ease-in-out infinite;
+}
+
+@keyframes vei-tide {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vei-tide {
+    animation: none;
+  }
 }

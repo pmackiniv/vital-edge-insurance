@@ -1,9 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Container } from "@/components/Container";
+import { TrustStrip } from "@/components/TrustStrip";
+import { LeadModal } from "@/components/LeadModal";
 import { externalLinkProps, LINKEDIN_COMPANY_PUBLIC, LINKEDIN_PERSONAL } from "@/lib/externalLinks";
 import { absoluteUrl, site } from "@/lib/site";
 
@@ -14,54 +17,78 @@ const sectionReveal = {
 
 const offerings = [
   {
-    title: "ACA Marketplace",
-    description: "Enrollment guidance, subsidy education, and plan timing clarity.",
+    title: "ACA Marketplace (HealthCare.gov)",
+    description: "Eligibility and subsidy education, plan timing, and enrollment support.",
     href: "/aca",
-    image: "/offerings/aca.svg",
+    image: {
+      mobileSrc: "/images/offerings/aca/aca-family-hero-1x1.jpg",
+      desktopSrc: "/images/offerings/aca/aca-family-hero-4x3.jpg",
+      alt: "ACA Marketplace guidance for families",
+    },
   },
   {
     title: "Medicare Guidance",
-    description: "General Medicare education with SOA-required plan discussions.",
+    description: "General Medicare education. Plan-specific discussions require a Scope of Appointment.",
     href: "/medicare",
-    image: "/offerings/medicare.svg",
+    image: {
+      mobileSrc: "/images/offerings/medicare/medicare-retirement-hero-1x1.jpg",
+      desktopSrc: "/images/offerings/medicare/medicare-retirement-hero-4x3.jpg",
+      alt: "Medicare guidance for retirement planning",
+    },
   },
   {
-    title: "Medigap",
-    description: "Supplement education and enrollment timing support.",
+    title: "Medicare Supplement (Medigap)",
+    description: "Help understanding enrollment timing and what to compare before you apply.",
     href: "/medicare",
-    image: "/offerings/medigap.svg",
+    image: {
+      mobileSrc: "/images/offerings/medicare/medicare-retirement-hero-1x1.jpg",
+      desktopSrc: "/images/offerings/medicare/medicare-retirement-hero-4x3.jpg",
+      alt: "Medigap supplemental coverage guidance",
+    },
   },
   {
     title: "ICHRA",
-    description: "Defined contribution guidance for employers and teams.",
+    description: "Guidance for employers and employees navigating defined contribution coverage.",
     href: "/ichra",
-    image: "/offerings/ichra.svg",
+    image: {
+      mobileSrc: "/images/offerings/group/group-legacy-hero-1x1.jpg",
+      desktopSrc: "/images/offerings/group/group-legacy-hero-4x3.jpg",
+      alt: "ICHRA guidance for employers and teams",
+    },
   },
   {
-    title: "Off-Exchange",
-    description: "Alternatives when marketplace coverage is not the right fit.",
+    title: "Off-Exchange Options",
+    description: "Alternatives when Marketplace coverage is not the right fit.",
     href: "/off-exchange",
-    image: "/offerings/off-exchange.svg",
+    image: {
+      mobileSrc: "/images/offerings/aca/aca-family-hero-1x1.jpg",
+      desktopSrc: "/images/offerings/aca/aca-family-hero-4x3.jpg",
+      alt: "Off-exchange coverage alternatives",
+    },
   },
   {
     title: "Small Group",
-    description: "Decision support for small group health coverage.",
+    description: "Decision support for small employers evaluating group coverage.",
     href: "/services",
-    image: "/offerings/small-group.svg",
+    image: {
+      mobileSrc: "/images/offerings/group/group-legacy-hero-1x1.jpg",
+      desktopSrc: "/images/offerings/group/group-legacy-hero-4x3.jpg",
+      alt: "Small group coverage guidance",
+    },
   },
 ];
 
 const stats = [
-  { label: "Counties served", value: "Duval + St. Johns" },
-  { label: "Response pace", value: "Same-day when available" },
-  { label: "Intake style", value: "No SSN or MBI in chat" },
-  { label: "Guidance focus", value: "Client-first clarity" },
+  { label: "Local focus", value: "Florida-wide capability" },
+  { label: "Privacy-first intake", value: "No SSN or MBI in chat" },
+  { label: "Guidance style", value: "Clear, documented next steps" },
+  { label: "Service area", value: "Duval + St. Johns focus" },
 ];
 
 const faqs = [
   {
     question: "What do you need from me?",
-    answer: "ZIP code, preferred contact method, and goals. We keep intake light and respectful.",
+    answer: "ZIP code, preferred contact method, and what you want help with.",
   },
   {
     question: "How do you get paid?",
@@ -77,11 +104,12 @@ const faqs = [
   },
   {
     question: "Medicare: do I need an SOA to discuss plan details?",
-    answer: "Yes. A Scope of Appointment is required before plan-specific discussions.",
+    answer: "Yes. A Scope of Appointment is required before plan-specific Medicare discussions.",
   },
 ];
 
 export default function HomePage() {
+  const [leadModalOpen, setLeadModalOpen] = useState(false);
   const pageJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -92,8 +120,21 @@ export default function HomePage() {
 
   return (
     <div className="bg-white">
+      <div aria-hidden className="fixed inset-0 -z-10">
+        <Image
+          src="/images/hero/hero-beach-16x9-1920x1080.webp"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/25 to-white/90" />
+        <div className="absolute inset-0 vei-tide" />
+      </div>
       <section className="relative overflow-hidden">
-        <Container>
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/60 via-black/35 to-black/10" />
+        <Container className="relative">
           <div className="grid items-center gap-12 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24">
             <motion.div
               initial="hidden"
@@ -102,71 +143,74 @@ export default function HomePage() {
               transition={{ duration: 0.6, ease: "easeOut" }}
               className="space-y-6"
             >
-              <p className="inline-flex items-center rounded-full border border-black/10 bg-white px-3 py-1 text-xs text-black/70">
-                Independent insurance guidance for Jacksonville, Florida
+              <p className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm text-white/90 backdrop-blur">
+                Florida-wide service with a Duval + St. Johns focus
               </p>
-              <h1 className="text-4xl font-semibold tracking-tight text-black sm:text-5xl">
-                Premium guidance for coverage decisions, built on clarity and speed.
+              <h1 className="text-white font-semibold tracking-tight text-[clamp(2.6rem,5vw,4.2rem)] leading-[1.05]">
+                Confused by Health Insurance or Medicare? We make the next step clear.
               </h1>
-              <p className="max-w-xl text-base leading-7 text-black/70">
-                We help individuals, families, and small businesses move from uncertainty to confident next steps with a
-                fast, respectful intake and a clean enrollment path.
+              <p className="max-w-xl text-base leading-7 text-white/85">
+                Independent guidance for individuals, families, and small businesses in Florida, with a local focus in
+                Duval and St. Johns County.
               </p>
-              <div className="grid gap-3 text-sm text-black/70">
+              <div className="text-sm font-semibold text-white/90">What you can expect</div>
+              <div className="grid gap-3 text-sm text-white/85">
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex h-2 w-2 rounded-full bg-[var(--brand-primary)]" />
+                  <span className="inline-flex h-2 w-2 rounded-full bg-white" />
                   Clear guidance, no pressure
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex h-2 w-2 rounded-full bg-[var(--brand-primary)]" />
-                  Fast response when available
+                  <span className="inline-flex h-2 w-2 rounded-full bg-white" />
+                  Fast, respectful intake
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex h-2 w-2 rounded-full bg-[var(--brand-primary)]" />
-                  Local focus with county-level support
+                  <span className="inline-flex h-2 w-2 rounded-full bg-white" />
+                  Help confirming timing, networks, and next steps
                 </div>
               </div>
               <div className="flex flex-wrap gap-3">
                 <a
                   href={`tel:${site.phoneE164}`}
-                  className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-blue)] px-5 py-3 text-sm font-semibold text-white hover:bg-[var(--brand-green)]"
+                  className="inline-flex items-center justify-center rounded-xl px-6 py-3 text-base font-semibold text-white shadow-sm hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                  style={{ backgroundColor: "#35B228" }}
                 >
                   Call/Text
                 </a>
-                <Link
-                  href="/enroll"
-                  className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-orange)] px-5 py-3 text-sm font-semibold text-white hover:opacity-90"
+                <button
+                  type="button"
+                  onClick={() => setLeadModalOpen(true)}
+                  className="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/10 px-6 py-3 text-base font-semibold text-white backdrop-blur hover:bg-white/15"
                 >
-                  Enroll
-                </Link>
+                  Talk with a licensed agent now
+                </button>
                 <Link
                   href="/chat"
-                  className="inline-flex items-center justify-center rounded-xl border border-black/10 px-5 py-3 text-sm font-semibold text-black hover:bg-black/5"
+                  className="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/10 px-6 py-3 text-base font-semibold text-white backdrop-blur hover:bg-white/15"
                 >
                   Chat
                 </Link>
                 <Link
                   href="/resources"
-                  className="inline-flex items-center justify-center rounded-xl border border-black/10 px-5 py-3 text-sm font-semibold text-black hover:bg-black/5"
+                  className="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/10 px-6 py-3 text-base font-semibold text-white backdrop-blur hover:bg-white/15"
                 >
                   Resources
                 </Link>
               </div>
-              <div className="rounded-xl border border-black/10 bg-white p-4">
-                <div className="text-xs font-semibold text-black">Founder</div>
-                <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-black/70">
-                  <span className="font-medium text-black">Patrick Mackin IV</span>
+              <div className="rounded-xl border border-white/20 bg-white/10 p-4 text-white/90 backdrop-blur">
+                <div className="text-xs font-semibold text-white">Founder</div>
+                <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-white/85">
+                  <span className="font-medium text-white">Patrick Mackin IV</span>
                   <a
                     href={LINKEDIN_PERSONAL}
                     {...externalLinkProps()}
-                    className="rounded-full border border-black/10 px-3 py-1 text-xs font-semibold text-black hover:bg-black/5"
+                    className="rounded-full border border-white/30 px-3 py-1 text-xs font-semibold text-white hover:bg-white/15"
                   >
                     Connect on LinkedIn
                   </a>
                   <a
                     href={LINKEDIN_COMPANY_PUBLIC}
                     {...externalLinkProps()}
-                    className="rounded-full border border-black/10 px-3 py-1 text-xs font-semibold text-black hover:bg-black/5"
+                    className="rounded-full border border-white/30 px-3 py-1 text-xs font-semibold text-white hover:bg-white/15"
                   >
                     Vital Edge Insurance on LinkedIn
                   </a>
@@ -206,12 +250,13 @@ export default function HomePage() {
                   </li>
                 </ol>
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <Link
-                    href="/chat"
+                  <button
+                    type="button"
+                    onClick={() => setLeadModalOpen(true)}
                     className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-green)]"
                   >
-                    Start with chat
-                  </Link>
+                    Talk with a licensed agent now
+                  </button>
                   <a
                     href={`tel:${site.phoneE164}`}
                     className="inline-flex items-center justify-center rounded-xl border border-black/10 px-4 py-2 text-sm font-semibold text-black hover:bg-black/5"
@@ -224,12 +269,14 @@ export default function HomePage() {
           </div>
         </Container>
       </section>
+      <TrustStrip />
 
-      <section className="border-t border-black/5 bg-white">
-        <Container>
+      <section className="relative border-t border-black/5">
+        <div className="pointer-events-none absolute inset-0 bg-white/85 backdrop-blur" />
+        <Container className="relative">
           <div className="py-12">
             <motion.h2
-              className="text-2xl font-semibold tracking-tight text-black"
+              className="text-[clamp(1.8rem,2.6vw,2.6rem)] font-semibold tracking-tight text-black"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.4 }}
@@ -247,18 +294,24 @@ export default function HomePage() {
                   key={item.title}
                   whileHover={{ y: -6 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="overflow-hidden rounded-2xl border border-black/10 bg-white"
+                  className="rounded-2xl border border-black/10 bg-white p-3"
                 >
-                  <div className="relative h-40 w-full">
-                    <Image src={item.image} alt={item.title} fill className="object-cover" />
-                  </div>
-                  <div className="p-6">
-                    <div className="text-sm font-semibold text-black">{item.title}</div>
-                    <p className="mt-2 text-sm leading-6 text-black/70">{item.description}</p>
-                    <Link href={item.href} className="mt-4 inline-flex text-sm font-semibold text-black">
-                      Learn more →
-                    </Link>
-                  </div>
+                  <Link href={item.href} className="block">
+                    <div className="relative overflow-hidden rounded-2xl aspect-square md:aspect-[4/3]">
+                      <Image
+                        src={item.image.desktopSrc}
+                        alt={item.image.alt}
+                        fill
+                        className="object-cover"
+                        sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-black/0" />
+                      <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+                        <div className="text-lg font-semibold">{item.title}</div>
+                        <div className="mt-1 text-sm opacity-95">{item.description}</div>
+                      </div>
+                    </div>
+                  </Link>
                 </motion.div>
               ))}
             </div>
@@ -270,7 +323,7 @@ export default function HomePage() {
         <Container>
           <div className="py-12">
             <motion.h2
-              className="text-2xl font-semibold tracking-tight text-black"
+              className="text-[clamp(1.8rem,2.6vw,2.6rem)] font-semibold tracking-tight text-black"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.4 }}
@@ -307,7 +360,7 @@ export default function HomePage() {
         <Container>
           <div className="py-14">
             <motion.h2
-              className="text-2xl font-semibold tracking-tight text-black"
+              className="text-[clamp(1.8rem,2.6vw,2.6rem)] font-semibold tracking-tight text-black"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.4 }}
@@ -320,15 +373,15 @@ export default function HomePage() {
               {[
                 {
                   title: "Clarify",
-                  copy: "We gather your needs, doctor preferences, medications, and timing.",
+                  copy: "We gather your goals, doctors, prescriptions (optional), and timing.",
                 },
                 {
                   title: "Compare",
-                  copy: "We focus on what matters most: network, costs, and coverage priorities.",
+                  copy: "We focus on what matters: networks, costs, and coverage priorities.",
                 },
                 {
                   title: "Enroll & Support",
-                  copy: "We route you to enrollment and stay available for follow-up support.",
+                  copy: "We route you to the right enrollment path and stay available for follow-up.",
                 },
               ].map((step, index) => (
                 <div key={step.title} className="rounded-2xl border border-black/10 bg-white p-6">
@@ -346,7 +399,7 @@ export default function HomePage() {
         <Container>
           <div className="py-12">
             <motion.h2
-              className="text-2xl font-semibold tracking-tight text-black"
+              className="text-[clamp(1.8rem,2.6vw,2.6rem)] font-semibold tracking-tight text-black"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.4 }}
@@ -371,7 +424,7 @@ export default function HomePage() {
         <Container>
           <div className="py-14">
             <motion.h2
-              className="text-2xl font-semibold tracking-tight text-black"
+              className="text-[clamp(1.8rem,2.6vw,2.6rem)] font-semibold tracking-tight text-black"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.4 }}
@@ -417,17 +470,20 @@ export default function HomePage() {
           <div className="py-14">
             <div className="rounded-2xl bg-[var(--brand-blue)] p-8 text-white md:p-10">
               <div className="text-sm font-semibold text-white/80">Ready to begin?</div>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight">Start a contact request today.</h2>
+              <h2 className="mt-2 text-[clamp(1.8rem,2.6vw,2.6rem)] font-semibold tracking-tight">
+                Start a contact request today.
+              </h2>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-white/90">
                 We will guide you to the right next step and keep the process simple.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Link
-                  href="/contact"
+                <button
+                  type="button"
+                  onClick={() => setLeadModalOpen(true)}
                   className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-orange)] px-5 py-3 text-sm font-semibold text-white hover:opacity-90"
                 >
-                  Contact us
-                </Link>
+                  Talk with a licensed agent now
+                </button>
                 <Link
                   href="/chat"
                   className="inline-flex items-center justify-center rounded-xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
@@ -439,6 +495,7 @@ export default function HomePage() {
           </div>
         </Container>
       </section>
+      <LeadModal isOpen={leadModalOpen} onClose={() => setLeadModalOpen(false)} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(pageJsonLd) }} />
     </div>
   );
