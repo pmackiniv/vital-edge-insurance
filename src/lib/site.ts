@@ -13,7 +13,7 @@ export const site = {
     postalCode: "32200",
     addressCountry: "US",
   },
-  serviceAreas: ["Jacksonville, FL", "Duval County, FL", "St. Johns County, FL"],
+  serviceAreas: ["Jacksonville, FL", "Duval County, FL", "St. Johns County, FL", "Miami-Dade County, FL"],
   sameAs: [
     "https://www.linkedin.com/in/patrick-mackin-iv-297574187",
     "https://www.linkedin.com/company/vital-edge-insurance/",

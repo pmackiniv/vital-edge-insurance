@@ -14,9 +14,15 @@ type LeadPayload = {
   consent: boolean;
 };
 
+type QaResponse = {
+  topic: string;
+  answer: string;
+  resources: { slug: string; title: string }[];
+};
+
 const topics = ["Medicare", "ACA Marketplace", "Small Business", "Other"];
 const counties = ["Duval County", "St. Johns County", "Other"];
-const contactMethods = ["Call", "Text", "Email"];
+const contactMethods = ["Text", "Email"];
 
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -26,6 +32,10 @@ export function ChatWidget() {
   const [contactMethod, setContactMethod] = useState("");
   const [message, setMessage] = useState("");
   const [consent, setConsent] = useState(false);
+  const [question, setQuestion] = useState("");
+  const [qaResponse, setQaResponse] = useState<QaResponse | null>(null);
+  const [zip, setZip] = useState("");
+  const [mode, setMode] = useState<"intake" | "question">("intake");
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,6 +50,10 @@ export function ChatWidget() {
     setContactMethod("");
     setMessage("");
     setConsent(false);
+    setQuestion("");
+    setQaResponse(null);
+    setZip("");
+    setMode("intake");
     setError("");
     setSubmitted(false);
     setIsSubmitting(false);
@@ -47,6 +61,15 @@ export function ChatWidget() {
 
   const goNext = () => {
     setError("");
+    setStep((prev) => Math.min(prev + 1, 3));
+  };
+
+  const goNextDetails = () => {
+    setError("");
+    if (topic.toLowerCase().includes("medicare") && zip.length !== 5) {
+      setError("Please enter a valid Florida ZIP code for Medicare routing.");
+      return;
+    }
     setStep((prev) => Math.min(prev + 1, 3));
   };
 
@@ -67,7 +90,7 @@ export function ChatWidget() {
       topic,
       county,
       contactMethod,
-      message,
+      message: zip.length === 5 ? `${message}\nZIP: ${zip}` : message,
       consent,
     };
 
@@ -93,12 +116,49 @@ export function ChatWidget() {
     }
   };
 
+  const handleQuestion = async () => {
+    setError("");
+    if (!question.trim()) {
+      setError("Please enter a short question.");
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("/api/qa", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question }),
+      });
+      if (!response.ok) {
+        throw new Error("Unable to answer right now.");
+      }
+      const data = (await response.json()) as QaResponse;
+      setQaResponse(data);
+      if (/medicare/i.test(data.topic)) {
+        setTopic("Medicare");
+      } else if (/aca/i.test(data.topic)) {
+        setTopic("ACA Marketplace");
+      } else if (/ichra/i.test(data.topic)) {
+        setTopic("ICHRA");
+      } else if (/off-exchange/i.test(data.topic)) {
+        setTopic("Off-Exchange");
+      } else if (/group/i.test(data.topic)) {
+        setTopic("Small Business");
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unable to answer right now.";
+      setError(message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="fixed bottom-6 right-6 z-[60]">
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="rounded-full bg-[var(--brand-blue)] px-5 py-3 text-sm font-semibold text-white shadow-lg hover:bg-[var(--brand-green)]"
+        className="btn btn-primary rounded-full px-5 py-3 text-sm shadow-lg"
       >
         Talk with a licensed agent now
       </button>
@@ -135,7 +195,117 @@ export function ChatWidget() {
               </div>
 
               <div className="space-y-4 overflow-y-auto p-5">
-                <div className="flex items-center gap-2 text-xs text-black/50">
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setMode("intake")}
+                    className={`btn px-3 py-1 text-xs ${
+                      mode === "intake" ? "btn-primary" : "btn-secondary"
+                    }`}
+                  >
+                    Request guidance
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMode("question")}
+                    className={`btn px-3 py-1 text-xs ${
+                      mode === "question" ? "btn-primary" : "btn-secondary"
+                    }`}
+                  >
+                    Ask a question
+                  </button>
+                </div>
+
+                {mode === "question" ? (
+                  <div className="space-y-4">
+                    <div className="text-sm font-semibold text-black">What can we help with?</div>
+                    <textarea
+                      value={question}
+                      onChange={(event) => setQuestion(event.target.value)}
+                      className="w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+                      rows={4}
+                      placeholder="Ask a question about Medicare, ACA, ICHRA, off-exchange, or group coverage."
+                    />
+                    <p className="text-xs text-black/60">
+                      For your privacy, do not send SSN, Medicare ID (MBI), or medical details.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={handleQuestion}
+                      className="btn btn-primary px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Checking..." : "Get an answer"}
+                    </button>
+
+                    {qaResponse ? (
+                      <div className="rounded-xl border border-black/10 bg-white p-4 text-sm text-black/80">
+                        <div className="font-semibold text-black">Answer</div>
+                        <p className="mt-2 leading-7">{qaResponse.answer}</p>
+                      </div>
+                    ) : null}
+
+                    {qaResponse?.resources?.length ? (
+                      <div>
+                        <div className="text-sm font-semibold text-black">Suggested resources</div>
+                        <div className="mt-3 space-y-2">
+                          {qaResponse.resources.map((item) => (
+                            <Link
+                              key={item.slug}
+                              href={`/resources#${item.slug}`}
+                              className="block rounded-xl border border-black/10 px-3 py-2 text-sm text-black hover:bg-black/5"
+                            >
+                              {item.title}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
+
+                    {qaResponse?.topic === "medicare" ? (
+                      <div className="space-y-3 rounded-xl border border-black/10 bg-white p-4 text-sm text-black/80">
+                        <div className="font-semibold text-black">Medicare call-only routing</div>
+                        <label className="block">
+                          Florida ZIP code (required)
+                          <input
+                            value={zip}
+                            onChange={(event) => setZip(event.target.value.replace(/\D/g, "").slice(0, 5))}
+                            className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+                            placeholder="ZIP code"
+                          />
+                        </label>
+                        {zip.length === 5 ? (
+                          <div className="rounded-xl border border-black/10 bg-black/5 p-3 text-xs text-black/70">
+                            <div className="font-semibold text-black">TPMO disclaimer</div>
+                            We do not offer every plan available in your area. Any information we provide is limited to
+                            plans we offer in your area. We are not connected with or endorsed by the U.S. government or
+                            the federal Medicare program.
+                          </div>
+                        ) : null}
+                        <a
+                          className="btn btn-primary px-4 py-2 text-sm"
+                          href={`tel:${site.phoneE164}`}
+                        >
+                          Call {site.phoneDisplay}
+                        </a>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMode("intake");
+                          setStep(2);
+                        }}
+                        className="btn btn-secondary px-4 py-2 text-sm"
+                      >
+                        Request follow-up
+                      </button>
+                    )}
+                  </div>
+                ) : null}
+
+                {mode === "intake" ? (
+                  <div className="flex items-center gap-2 text-xs text-black/50">
                   {["Topic", "Details", "Next steps"].map((label, index) => {
                     const current = index + 1;
                     return (
@@ -152,8 +322,9 @@ export function ChatWidget() {
                     );
                   })}
                 </div>
+                ) : null}
 
-                {step === 1 ? (
+                {mode === "intake" && step === 1 ? (
                   <div className="space-y-3">
                     <div className="text-sm font-semibold text-black">What are you looking for?</div>
                     <div className="grid gap-2">
@@ -161,7 +332,12 @@ export function ChatWidget() {
                         <button
                           key={item}
                           type="button"
-                          onClick={() => setTopic(item)}
+                          onClick={() => {
+                            setTopic(item);
+                            if (item.toLowerCase().includes("medicare")) {
+                              setContactMethod("Call");
+                            }
+                          }}
                           className={`rounded-xl border px-4 py-3 text-left text-sm font-semibold transition ${
                             topic === item ? "border-black bg-black text-white" : "border-black/10 text-black hover:bg-black/5"
                           }`}
@@ -175,7 +351,7 @@ export function ChatWidget() {
                         type="button"
                         onClick={goNext}
                         disabled={!topic}
-                        className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-green)] disabled:cursor-not-allowed disabled:opacity-50"
+                        className="btn btn-primary px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         Next
                       </button>
@@ -183,7 +359,7 @@ export function ChatWidget() {
                   </div>
                 ) : null}
 
-                {step === 2 ? (
+                {mode === "intake" && step === 2 ? (
                   <div className="space-y-4">
                     <div>
                       <label className="text-sm font-semibold text-black">County</label>
@@ -206,11 +382,26 @@ export function ChatWidget() {
                         className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
                       >
                         <option value="">Select one</option>
-                        {contactMethods.map((item) => (
-                          <option key={item} value={item}>{item}</option>
-                        ))}
+                        {topic.toLowerCase().includes("medicare") ? (
+                          <option value="Call">Call</option>
+                        ) : (
+                          contactMethods.map((item) => (
+                            <option key={item} value={item}>{item}</option>
+                          ))
+                        )}
                       </select>
                     </div>
+                    {topic.toLowerCase().includes("medicare") ? (
+                      <div>
+                        <label className="text-sm font-semibold text-black">Florida ZIP code</label>
+                        <input
+                          value={zip}
+                          onChange={(event) => setZip(event.target.value.replace(/\D/g, "").slice(0, 5))}
+                          className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+                          placeholder="ZIP code"
+                        />
+                      </div>
+                    ) : null}
                     <div>
                       <label className="text-sm font-semibold text-black">Short message</label>
                       <textarea
@@ -227,9 +418,9 @@ export function ChatWidget() {
                       </button>
                       <button
                         type="button"
-                        onClick={goNext}
+                        onClick={goNextDetails}
                         disabled={!county || !contactMethod || !message}
-                        className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-green)] disabled:cursor-not-allowed disabled:opacity-50"
+                        className="btn btn-primary px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         Next
                       </button>
@@ -237,8 +428,16 @@ export function ChatWidget() {
                   </div>
                 ) : null}
 
-                {step === 3 ? (
+                {mode === "intake" && step === 3 ? (
                   <div className="space-y-4">
+                    {topic.toLowerCase().includes("medicare") && zip.length === 5 ? (
+                      <div className="rounded-xl border border-black/10 bg-black/5 p-3 text-xs text-black/70">
+                        <div className="font-semibold text-black">TPMO disclaimer</div>
+                        We do not offer every plan available in your area. Any information we provide is limited to
+                        plans we offer in your area. We are not connected with or endorsed by the U.S. government or the
+                        federal Medicare program.
+                      </div>
+                    ) : null}
                     <div className="rounded-xl border border-black/10 p-4 text-xs text-black/70">
                       <label className="flex items-start gap-3">
                         <input
@@ -282,7 +481,8 @@ export function ChatWidget() {
                         type="button"
                         onClick={handleSubmit}
                         disabled={!consent || isSubmitting || submitted}
-                        className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-orange)] px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                        className="btn px-4 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-50"
+                        style={{ backgroundColor: "var(--brand-orange)" }}
                       >
                         {isSubmitting ? "Sending..." : "Request Call Back"}
                       </button>

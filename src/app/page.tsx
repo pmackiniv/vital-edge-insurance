@@ -22,9 +22,9 @@ const offerings = [
     href: "/aca",
     iconSrc: "/images/offerings/aca.svg",
     image: {
-      mobileSrc: "/images/offerings/aca/aca-family-hero-1x1.jpg",
-      desktopSrc: "/images/offerings/aca/aca-family-hero-4x3.jpg",
-      alt: "ACA Marketplace guidance for families",
+      mobileSrc: "/images/offerings/daytona-beach.png",
+      desktopSrc: "/images/offerings/daytona-beach.png",
+      alt: "Florida coastline at sunset",
     },
   },
   {
@@ -33,9 +33,9 @@ const offerings = [
     href: "/medicare",
     iconSrc: "/images/offerings/medicare.svg",
     image: {
-      mobileSrc: "/images/offerings/medicare/medicare-retirement-hero-1x1.jpg",
-      desktopSrc: "/images/offerings/medicare/medicare-retirement-hero-4x3.jpg",
-      alt: "Medicare guidance for retirement planning",
+      mobileSrc: "/images/offerings/tampa-sunset.png",
+      desktopSrc: "/images/offerings/tampa-sunset.png",
+      alt: "Calm Florida skyline at sunset",
     },
   },
   {
@@ -44,9 +44,9 @@ const offerings = [
     href: "/medicare",
     iconSrc: "/images/offerings/medigap.svg",
     image: {
-      mobileSrc: "/images/offerings/medicare/medicare-retirement-hero-1x1.jpg",
-      desktopSrc: "/images/offerings/medicare/medicare-retirement-hero-4x3.jpg",
-      alt: "Medigap supplemental coverage guidance",
+      mobileSrc: "/images/offerings/daytona-beach.png",
+      desktopSrc: "/images/offerings/daytona-beach.png",
+      alt: "Florida coastline at dusk",
     },
   },
   {
@@ -55,9 +55,9 @@ const offerings = [
     href: "/ichra",
     iconSrc: "/images/offerings/ichra.svg",
     image: {
-      mobileSrc: "/images/offerings/group/group-legacy-hero-1x1.jpg",
-      desktopSrc: "/images/offerings/group/group-legacy-hero-4x3.jpg",
-      alt: "ICHRA guidance for employers and teams",
+      mobileSrc: "/images/offerings/florida-night.png",
+      desktopSrc: "/images/offerings/florida-night.png",
+      alt: "Florida city skyline after sunset",
     },
   },
   {
@@ -66,9 +66,9 @@ const offerings = [
     href: "/off-exchange",
     iconSrc: "/images/offerings/off-exchange.svg",
     image: {
-      mobileSrc: "/images/offerings/aca/aca-family-hero-1x1.jpg",
-      desktopSrc: "/images/offerings/aca/aca-family-hero-4x3.jpg",
-      alt: "Off-exchange coverage alternatives",
+      mobileSrc: "/images/offerings/tampa-sunset.png",
+      desktopSrc: "/images/offerings/tampa-sunset.png",
+      alt: "Florida skyline in warm light",
     },
   },
   {
@@ -77,9 +77,30 @@ const offerings = [
     href: "/services",
     iconSrc: "/images/offerings/small-group.svg",
     image: {
-      mobileSrc: "/images/offerings/group/group-legacy-hero-1x1.jpg",
-      desktopSrc: "/images/offerings/group/group-legacy-hero-4x3.jpg",
-      alt: "Small group coverage guidance",
+      mobileSrc: "/images/offerings/florida-night.png",
+      desktopSrc: "/images/offerings/florida-night.png",
+      alt: "City skyline with evening lights",
+    },
+  },
+];
+
+const regionalHighlights = [
+  {
+    title: "Duval County (Jacksonville)",
+    description: "Local guidance with quick access to intake, timelines, and documentation help.",
+    href: "/duval-county",
+    image: {
+      src: "/images/cities/jacksonville.png",
+      alt: "Jacksonville skyline at sunset",
+    },
+  },
+  {
+    title: "Miami-Dade County",
+    description: "Regional support for Miami-area coverage questions and enrollment timing.",
+    href: "/miami",
+    image: {
+      src: "/images/cities/miami.png",
+      alt: "Miami skyline at dusk",
     },
   },
 ];
@@ -121,23 +142,23 @@ export default function HomePage() {
     "@type": "WebPage",
     name: "Vital Edge Insurance",
     url: absoluteUrl("/"),
-    description: "Independent insurance guidance for Jacksonville, Florida.",
+    description: "Independent insurance guidance for Duval County and Miami-Dade County, Florida.",
+  };
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
   };
 
   return (
-    <div className="bg-white">
-      <div aria-hidden className="fixed inset-0 -z-10">
-        <Image
-          src="/images/hero/hero-beach-16x9-1920x1080.webp"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/25 to-white/90" />
-        <div className="absolute inset-0 vei-tide" />
-      </div>
+    <div className="relative">
       <section className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/60 via-black/35 to-black/10" />
         <Container className="relative">
@@ -177,7 +198,7 @@ export default function HomePage() {
               <div className="flex flex-wrap gap-3">
                 <a
                   href={`tel:${site.phoneE164}`}
-                  className="inline-flex items-center justify-center rounded-xl px-6 py-3 text-base font-semibold text-white shadow-sm hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                  className="btn px-6 py-3 text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
                   style={{ backgroundColor: "#35B228" }}
                 >
                   Call/Text
@@ -185,19 +206,19 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={() => setLeadModalOpen(true)}
-                  className="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/10 px-6 py-3 text-base font-semibold text-white backdrop-blur hover:bg-white/15"
+                  className="btn btn-outline-on-dark px-6 py-3 text-base"
                 >
                   Talk with a licensed agent now
                 </button>
                 <Link
                   href="/chat"
-                  className="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/10 px-6 py-3 text-base font-semibold text-white backdrop-blur hover:bg-white/15"
+                  className="btn btn-outline-on-dark px-6 py-3 text-base"
                 >
                   Chat
                 </Link>
                 <Link
                   href="/resources"
-                  className="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/10 px-6 py-3 text-base font-semibold text-white backdrop-blur hover:bg-white/15"
+                  className="btn btn-outline-on-dark px-6 py-3 text-base"
                 >
                   Resources
                 </Link>
@@ -259,13 +280,13 @@ export default function HomePage() {
                   <button
                     type="button"
                     onClick={() => setLeadModalOpen(true)}
-                    className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-green)]"
+                    className="btn btn-primary px-4 py-2 text-sm"
                   >
                     Talk with a licensed agent now
                   </button>
                   <a
                     href={`tel:${site.phoneE164}`}
-                    className="inline-flex items-center justify-center rounded-xl border border-black/10 px-4 py-2 text-sm font-semibold text-black hover:bg-black/5"
+                    className="btn btn-secondary px-4 py-2 text-sm"
                   >
                     Call/Text
                   </a>
@@ -277,12 +298,12 @@ export default function HomePage() {
       </section>
       <TrustStrip />
 
-      <section className="relative border-t border-black/5">
-        <div className="pointer-events-none absolute inset-0 bg-white/85 backdrop-blur" />
+      <section className="relative border-t border-white/10">
+        <div className="pointer-events-none absolute inset-0 bg-black/35 backdrop-blur" />
         <Container className="relative">
           <div className="py-12">
             <motion.h2
-              className="text-[clamp(1.8rem,2.6vw,2.6rem)] font-semibold tracking-tight text-black"
+              className="text-[clamp(2.1rem,3vw,3rem)] font-semibold tracking-tight text-white"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.4 }}
@@ -291,7 +312,7 @@ export default function HomePage() {
             >
               Offerings
             </motion.h2>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-black/70">
+            <p className="mt-2 max-w-2xl text-sm leading-7 text-white/85">
               Comprehensive guidance across marketplace, Medicare education, employer plans, and small group coverage.
             </p>
             <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -328,7 +349,7 @@ export default function HomePage() {
         </Container>
       </section>
 
-      <section className="border-t border-black/5 bg-white">
+      <section className="border-t border-white/10 bg-transparent">
         <Container>
           <div className="py-12">
             <motion.h2
@@ -344,10 +365,14 @@ export default function HomePage() {
             <p className="mt-2 max-w-2xl text-sm leading-6 text-black/70">
               Explore county-specific guidance and core services to find the right next step.
             </p>
-            <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
               <Link href="/duval-county" className="rounded-2xl border border-black/10 bg-white p-6 hover:bg-black/5">
                 <div className="text-sm font-semibold text-black">Duval County</div>
                 <p className="mt-2 text-sm text-black/70">Jacksonville guidance and local service highlights.</p>
+              </Link>
+              <Link href="/miami" className="rounded-2xl border border-black/10 bg-white p-6 hover:bg-black/5">
+                <div className="text-sm font-semibold text-black">Miami-Dade County</div>
+                <p className="mt-2 text-sm text-black/70">Miami guidance and enrollment timing support.</p>
               </Link>
               <Link href="/st-johns-county" className="rounded-2xl border border-black/10 bg-white p-6 hover:bg-black/5">
                 <div className="text-sm font-semibold text-black">St. Johns County</div>
@@ -365,7 +390,7 @@ export default function HomePage() {
         </Container>
       </section>
 
-      <section className="border-t border-black/5 bg-white">
+      <section className="border-t border-white/10 bg-transparent">
         <Container>
           <div className="py-14">
             <motion.h2
@@ -404,7 +429,49 @@ export default function HomePage() {
         </Container>
       </section>
 
-      <section className="border-t border-black/5 bg-white">
+      <section className="border-t border-white/10 bg-transparent">
+        <Container>
+          <div className="py-12">
+            <motion.h2
+              className="text-[clamp(1.8rem,2.6vw,2.6rem)] font-semibold tracking-tight text-black"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.4 }}
+              variants={sectionReveal}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            >
+              Regional focus: Duval + Miami-Dade
+            </motion.h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-black/70">
+              We provide education-first guidance with local context for Duval County and Miami-Dade County.
+            </p>
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              {regionalHighlights.map((item) => (
+                <Link key={item.title} href={item.href} className="group rounded-2xl border border-black/10 bg-white p-3">
+                  <div className="relative overflow-hidden rounded-2xl">
+                    <div className="relative aspect-[16/9]">
+                      <Image
+                        src={item.image.src}
+                        alt={item.image.alt}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                        sizes="(min-width: 768px) 50vw, 100vw"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/20 to-transparent" />
+                    </div>
+                    <div className="absolute inset-x-0 bottom-0 p-4 text-white">
+                      <div className="text-lg font-semibold">{item.title}</div>
+                      <div className="mt-1 text-sm opacity-90">{item.description}</div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      <section className="border-t border-white/10 bg-transparent">
         <Container>
           <div className="py-12">
             <motion.h2
@@ -429,7 +496,7 @@ export default function HomePage() {
         </Container>
       </section>
 
-      <section className="border-t border-black/5 bg-white">
+      <section className="border-t border-white/10 bg-transparent">
         <Container>
           <div className="py-14">
             <motion.h2
@@ -449,7 +516,7 @@ export default function HomePage() {
         </Container>
       </section>
 
-      <section className="border-t border-black/5 bg-white">
+      <section className="border-t border-white/10 bg-transparent">
         <Container>
           <div className="py-14">
             <motion.h2
@@ -489,13 +556,14 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={() => setLeadModalOpen(true)}
-                  className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-orange)] px-5 py-3 text-sm font-semibold text-white hover:opacity-90"
+                  className="btn px-5 py-3 text-sm text-white"
+                  style={{ backgroundColor: "var(--brand-orange)" }}
                 >
                   Talk with a licensed agent now
                 </button>
                 <Link
                   href="/chat"
-                  className="inline-flex items-center justify-center rounded-xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
+                  className="btn btn-outline-on-dark px-5 py-3 text-sm"
                 >
                   Chat now
                 </Link>
@@ -506,6 +574,7 @@ export default function HomePage() {
       </section>
       <LeadModal isOpen={leadModalOpen} onClose={() => setLeadModalOpen(false)} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(pageJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
     </div>
   );
 }

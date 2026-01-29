@@ -33,7 +33,10 @@ export default function Page() {
             <Link className="text-black/70 hover:text-black" href="/services">Services</Link>
           </div>
           <div className="mt-4 text-sm text-black/70">
-            Also serving <Link className="text-black hover:underline" href="/st-johns-county">St. Johns County</Link>.
+            Also serving{" "}
+            <Link className="text-black hover:underline" href="/st-johns-county">St. Johns County</Link>{" "}
+            and{" "}
+            <Link className="text-black hover:underline" href="/miami">Miami-Dade County</Link>.
           </div>
         </div>
         <div className="rounded-2xl border border-black/10 bg-white p-4 text-sm text-black/70">

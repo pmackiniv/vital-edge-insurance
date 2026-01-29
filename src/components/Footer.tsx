@@ -5,7 +5,7 @@ import { site } from "@/lib/site";
 
 export function Footer() {
   return (
-    <footer className="border-t border-black/5 bg-white">
+    <footer className="border-t border-white/10 bg-transparent">
       <Container>
         <div className="grid gap-8 py-12 md:grid-cols-3">
           <div>
@@ -28,6 +28,7 @@ export function Footer() {
             <ul className="mt-3 space-y-2 text-sm">
               <li><Link className="text-black/70 hover:text-black" href="/services">Services</Link></li>
               <li><Link className="text-black/70 hover:text-black" href="/duval-county">Duval County</Link></li>
+              <li><Link className="text-black/70 hover:text-black" href="/miami">Miami-Dade County</Link></li>
               <li><Link className="text-black/70 hover:text-black" href="/st-johns-county">St. Johns County</Link></li>
               <li><Link className="text-black/70 hover:text-black" href="/blog">Blog</Link></li>
             </ul>

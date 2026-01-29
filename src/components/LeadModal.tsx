@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { site } from "@/lib/site";
 
@@ -41,6 +41,15 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isOpen]);
 
   const toggleOffering = (offering: string) => {
     setSelectedOfferings((prev) =>
@@ -98,16 +107,17 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40 px-4 py-10"
+          className="fixed inset-0 z-[70] flex items-start justify-center bg-black/40 px-4 py-6"
         >
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="w-full max-w-4xl overflow-hidden rounded-3xl bg-white shadow-2xl"
+            className="flex w-full max-w-4xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
+            style={{ maxHeight: "calc(100dvh - 3rem)" }}
           >
-            <div className="flex items-center justify-between border-b border-black/10 px-6 py-4">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-black/10 bg-white/95 px-6 py-4 backdrop-blur">
               <div>
                 <div className="text-sm font-semibold text-black">Get Expert Help Today</div>
                 <div className="text-xs text-black/60">Independent guidance + clear next steps</div>
@@ -125,7 +135,10 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="grid gap-8 px-6 py-6 md:grid-cols-[1fr_1fr]">
+            <form
+              onSubmit={handleSubmit}
+              className="grid flex-1 gap-8 overflow-y-auto px-6 py-6 md:grid-cols-[1fr_1fr]"
+            >
               <div className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
@@ -238,13 +251,13 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-green)] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="btn btn-primary px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {isSubmitting ? "Sending..." : "Request help"}
                   </button>
                   <a
                     href={`tel:${site.phoneE164}`}
-                    className="inline-flex items-center justify-center rounded-xl border border-black/10 px-4 py-2 text-sm font-semibold text-black hover:bg-black/5"
+                    className="btn btn-secondary px-4 py-2 text-sm"
                   >
                     Call {site.phoneDisplay}
                   </a>

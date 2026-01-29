@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+import { BackgroundLayers } from "@/components/BackgroundLayers";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
     template: "%s | Vital Edge Insurance",
   },
   description:
-    "Independent guidance for ACA Marketplace, individual and family plans, small business options, and Medicare education in Jacksonville, FL. Duval and St. Johns County service areas.",
+    "Independent guidance for ACA Marketplace, individual and family plans, small business options, and Medicare education in Jacksonville, FL. Duval, St. Johns, and Miami-Dade County service areas.",
   alternates: {
     canonical: absoluteUrl("/"),
   },
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
     url: absoluteUrl("/"),
     title: "Vital Edge Insurance",
     description:
-      "Health insurance guidance for Jacksonville, FL with support for ACA, small business options, and Medicare education.",
+      "Health insurance guidance for Jacksonville, FL with support for ACA, small business options, and Medicare education across Duval and Miami-Dade counties.",
     images: [
       {
         url: "/og.png",
@@ -53,9 +54,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <html lang="en" className="h-full">
-      <body className="min-h-full bg-white text-[18px] leading-relaxed text-slate-900 antialiased font-sans">
+      <body className="min-h-full bg-transparent text-[18px] leading-relaxed text-slate-900 antialiased font-sans">
+        <BackgroundLayers />
         <Header />
-        <main>{children}</main>
+        <main className="relative z-10">{children}</main>
         <Footer />
         <ChatWidget />
 

@@ -1,0 +1,95 @@
+{
+  "url": "https://www.merebenefits.com/?utm_source=chatgpt.com",
+  "results": {
+    "heroH1": {
+      "selector": "h1",
+      "tag": "h1",
+      "text": "Confused by Health Insurance & Medicare? We Make Choosing Your Plan Simple.",
+      "fontSize": "72px",
+      "lineHeight": "86.4px",
+      "fontWeight": "500"
+    },
+    "heroBody": null,
+    "offeringsHeading": {
+      "selector": "text=Mere Offerings",
+      "tag": "h2",
+      "text": "Mere Offerings",
+      "fontSize": "40px",
+      "lineHeight": "48px",
+      "fontWeight": "400"
+    },
+    "stepsHeading": {
+      "selector": "text=3 Simple Steps",
+      "tag": "h3",
+      "text": "3 Simple Steps to Get Covered with Confidence",
+      "fontSize": "40px",
+      "lineHeight": "52px",
+      "fontWeight": "400"
+    },
+    "whyChooseHeading": {
+      "selector": "text=Why Choose Us",
+      "tag": "h3",
+      "text": "Why Choose Us",
+      "fontSize": "40px",
+      "lineHeight": "48px",
+      "fontWeight": "500"
+    },
+    "testimonialsHeading": {
+      "selector": "text=What Our Clients Are Saying",
+      "tag": "h3",
+      "text": "What Our Clients Are Saying About Mere",
+      "fontSize": "40px",
+      "lineHeight": "48px",
+      "fontWeight": "400"
+    },
+    "faqHeading": {
+      "selector": "text=Frequently Asked Questions",
+      "tag": "h3",
+      "text": "Frequently Asked Questions",
+      "fontSize": "40px",
+      "lineHeight": "52px",
+      "fontWeight": "400"
+    },
+    "formHeading": {
+      "selector": "text=Get in Touch",
+      "tag": "h4",
+      "text": "Get in Touch:",
+      "fontSize": "40px",
+      "lineHeight": "44px",
+      "fontWeight": "500"
+    },
+    "consentText": {
+      "selector": "text=I consent to receive communications",
+      "tag": "p",
+      "text": "I consent to receive communications from Health Wealth Simplified LLC, DBA Mere,",
+      "fontSize": "15px",
+      "lineHeight": "20px",
+      "fontWeight": "400"
+    },
+    "solicitationDisclaimer": {
+      "selector": "text=This is a solicitation of insurance",
+      "tag": "p",
+      "text": "This is a solicitation of insurance. A licensed insurance agent with Mere is con",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "fontWeight": "400"
+    },
+    "govtDisclaimer": {
+      "selector": "text=not associated with, endorsed by, or authorized",
+      "tag": "p",
+      "text": "This site is owned and operated by Mere, an independent insurance agency. It is ",
+      "fontSize": "14px",
+      "lineHeight": "21px",
+      "fontWeight": "400"
+    },
+    "notConnectedDisclaimer": {
+      "selector": "text=Not connected with or endorsed by the United States government",
+      "tag": "strong",
+      "text": "Not connected with or endorsed by the United States government or the federal Me",
+      "fontSize": "16px",
+      "lineHeight": "20.8px",
+      "fontWeight": "400"
+    },
+    "chatButton": null
+  }
+}
