@@ -78,10 +78,10 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          topic: selectedOfferings.join(", ") || formState.topic,
-          county: formState.county,
+          topic: selectedOfferings.length ? selectedOfferings.join(", ") : "General inquiry",
+          county: formState.county || "",
           contactMethod: `Phone: ${formState.phone} | Email: ${formState.email}`,
-          message: formState.message,
+          message: formState.message || "",
           consent: formState.consent,
         }),
       });

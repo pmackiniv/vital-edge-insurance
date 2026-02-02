@@ -1,7 +1,24 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
 import { SeoFaq } from "@/components/SeoFaq";
+import { absoluteUrl } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "Medicare Guidance in Jacksonville, FL | Medicare Supplement & Medigap Help",
+  description:
+    "Patrick Mackin IV provides Medicare education, Medicare Supplement (Medigap), and Medicare Advantage guidance in Jacksonville, Duval County, and St. Johns County. Licensed Florida agent for Original Medicare, Part D, and supplemental coverage.",
+  alternates: {
+    canonical: absoluteUrl("/medicare"),
+  },
+  openGraph: {
+    title: "Medicare Help in Jacksonville, FL | Patrick Mackin IV | Vital Edge Insurance",
+    description:
+      "Licensed Medicare guidance for Jacksonville residents. Education on Medicare Supplement, Medigap, Part D, and enrollment timing.",
+    url: absoluteUrl("/medicare"),
+  },
+};
 
 export default function Page() {
   return (

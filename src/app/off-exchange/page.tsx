@@ -1,7 +1,24 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
 import { SeoFaq } from "@/components/SeoFaq";
+import { absoluteUrl } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "Off-Exchange Health Insurance | Florida Non-Marketplace Plans",
+  description:
+    "Patrick Mackin IV provides guidance on off-exchange health insurance options in Florida when ACA Marketplace coverage isn't the right fit. Licensed agent for Jacksonville, Duval, St. Johns, and Miami-Dade counties.",
+  alternates: {
+    canonical: absoluteUrl("/off-exchange"),
+  },
+  openGraph: {
+    title: "Off-Exchange Health Insurance in Florida | Patrick Mackin IV",
+    description:
+      "Licensed agent guidance for non-Marketplace health insurance options in Florida.",
+    url: absoluteUrl("/off-exchange"),
+  },
+};
 
 export default function Page() {
   return (

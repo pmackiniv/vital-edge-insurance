@@ -1,7 +1,23 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { absoluteUrl, site } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "Miami-Dade County Health Insurance Agent | Miami, FL",
+  description:
+    "Patrick Mackin IV serves Miami-Dade County with health insurance guidance for ACA Marketplace, Medicare, and small business coverage. Licensed Florida agent with regional support for Miami metro area.",
+  alternates: {
+    canonical: absoluteUrl("/miami"),
+  },
+  openGraph: {
+    title: "Miami-Dade Health Insurance | Patrick Mackin IV | Vital Edge Insurance",
+    description:
+      "Licensed health insurance agent serving Miami-Dade County with ACA, Medicare, and employer coverage guidance.",
+    url: absoluteUrl("/miami"),
+  },
+};
 
 export default function Page() {
   const pageJsonLd = {

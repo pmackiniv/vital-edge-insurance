@@ -66,15 +66,19 @@ export async function POST(request: Request) {
   const body = String(form.get("Body") ?? "");
   const sid = String(form.get("MessageSid") ?? "");
 
-  await queueNotionStub({ from, to, body, sid });
-  const forwardStatus = await sendOwnerCopy({ from, to, body, sid });
-  console.info("twilio-inbound", {
-    sid,
-    from,
-    to,
-    forwardStatus,
-    timestampEt: formatTimestampEt(new Date()),
-  });
+  try {
+    await queueNotionStub({ from, to, body, sid });
+    const forwardStatus = await sendOwnerCopy({ from, to, body, sid });
+    console.info("twilio-inbound", {
+      sid,
+      from,
+      to,
+      forwardStatus,
+      timestampEt: formatTimestampEt(new Date()),
+    });
+  } catch (err) {
+    console.error("twilio-inbound error (still replying to sender):", err);
+  }
 
   return new NextResponse(twiml(AUTO_REPLY), {
     headers: {

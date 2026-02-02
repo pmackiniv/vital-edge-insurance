@@ -1,7 +1,24 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
 import { SeoFaq } from "@/components/SeoFaq";
+import { absoluteUrl } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "ACA Marketplace Health Insurance | Florida HealthCare.gov Enrollment Help",
+  description:
+    "Patrick Mackin IV provides ACA Marketplace enrollment guidance in Jacksonville, FL. Get help with HealthCare.gov eligibility, subsidies, Special Enrollment Periods, and plan selection for Duval, St. Johns, and Miami-Dade counties.",
+  alternates: {
+    canonical: absoluteUrl("/aca"),
+  },
+  openGraph: {
+    title: "ACA Marketplace Help in Jacksonville, FL | Patrick Mackin IV",
+    description:
+      "Licensed agent support for Florida ACA Marketplace enrollment, subsidies, and plan selection.",
+    url: absoluteUrl("/aca"),
+  },
+};
 
 export default function Page() {
   return (

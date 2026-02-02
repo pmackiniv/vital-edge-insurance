@@ -1,7 +1,24 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
 import { SeoFaq } from "@/components/SeoFaq";
+import { absoluteUrl } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "Small Business Health Insurance | Florida Group Coverage | Jacksonville",
+  description:
+    "Patrick Mackin IV helps Florida small businesses with group health insurance, renewals, and employee benefits. Licensed agent serving Jacksonville, Duval County, St. Johns County, and Miami-Dade County employers.",
+  alternates: {
+    canonical: absoluteUrl("/small-group"),
+  },
+  openGraph: {
+    title: "Small Business Health Insurance in Florida | Patrick Mackin IV",
+    description:
+      "Licensed agent support for small group health insurance, renewals, and employee benefits in Florida.",
+    url: absoluteUrl("/small-group"),
+  },
+};
 
 export default function Page() {
   return (

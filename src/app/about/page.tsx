@@ -1,6 +1,22 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { absoluteUrl, site } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "About Patrick Mackin IV",
+  description:
+    "Patrick Mackin IV is a licensed Florida health insurance agent and founder of Vital Edge Insurance, serving Jacksonville, Duval County, St. Johns County, and Miami-Dade County with independent guidance for ACA, Medicare, and small business health insurance.",
+  alternates: {
+    canonical: absoluteUrl("/about"),
+  },
+  openGraph: {
+    title: "About Patrick Mackin IV | Vital Edge Insurance",
+    description:
+      "Licensed Florida health insurance agent providing independent, education-first guidance in Jacksonville and surrounding counties.",
+    url: absoluteUrl("/about"),
+  },
+};
 
 export default function Page() {
   const pageJsonLd = {

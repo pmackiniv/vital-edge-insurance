@@ -198,8 +198,8 @@ export default function HomePage() {
               <div className="flex flex-wrap gap-3">
                 <a
                   href={`tel:${site.phoneE164}`}
-                  className="btn px-6 py-3 text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
-                  style={{ backgroundColor: "#35B228" }}
+                  className="btn px-6 py-3 text-base text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
+                  style={{ backgroundColor: "#35B228", color: "#ffffff" }}
                 >
                   Call/Text
                 </a>

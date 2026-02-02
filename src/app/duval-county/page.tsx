@@ -1,6 +1,22 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { absoluteUrl, site } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "Duval County Health Insurance Agent | Jacksonville, FL",
+  description:
+    "Patrick Mackin IV serves Duval County and Jacksonville with local health insurance guidance for ACA Marketplace, Medicare, small business group plans, and ICHRA. Licensed Florida agent with education-first approach.",
+  alternates: {
+    canonical: absoluteUrl("/duval-county"),
+  },
+  openGraph: {
+    title: "Duval County Health Insurance | Patrick Mackin IV | Jacksonville Agent",
+    description:
+      "Local health insurance agent serving Duval County and Jacksonville, FL with ACA, Medicare, and small business coverage guidance.",
+    url: absoluteUrl("/duval-county"),
+  },
+};
 
 export default function Page() {
   const pageJsonLd = {

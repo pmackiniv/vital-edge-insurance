@@ -13,14 +13,15 @@ type LeadPayload = {
 export async function POST(req: Request) {
   try {
     const body = (await req.json()) as LeadPayload;
-    const topic = body.topic?.trim() || "";
-    const county = body.county?.trim() || "";
     const contactMethod = body.contactMethod?.trim() || "";
-    const message = body.message?.trim() || "";
 
-    if (!topic || !county || !contactMethod || !message || !body.consent) {
+    if (!body.consent || !contactMethod) {
       return NextResponse.json({ ok: false, error: "Missing required fields." }, { status: 400 });
     }
+
+    const topic = body.topic?.trim() || "General inquiry";
+    const county = body.county?.trim() || "";
+    const message = body.message?.trim() || "";
 
     const sensitiveError = findSensitiveIdentifier(message);
     if (sensitiveError) {

@@ -1,7 +1,24 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
 import { SeoFaq } from "@/components/SeoFaq";
+import { absoluteUrl } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "ICHRA Health Insurance | Individual Coverage HRA | Florida Employer Guide",
+  description:
+    "Patrick Mackin IV helps Florida employers and employees navigate ICHRA (Individual Coverage Health Reimbursement Arrangement). Licensed agent guidance for defined contribution health benefits in Jacksonville and Miami.",
+  alternates: {
+    canonical: absoluteUrl("/ichra"),
+  },
+  openGraph: {
+    title: "ICHRA Guidance in Florida | Patrick Mackin IV | Vital Edge Insurance",
+    description:
+      "Licensed agent support for ICHRA setup, employee guidance, and compliance in Florida.",
+    url: absoluteUrl("/ichra"),
+  },
+};
 
 export default function Page() {
   return (

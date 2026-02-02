@@ -78,11 +78,11 @@ h3 {
   backdrop-filter: blur(14px);
 }
 
-a {
+a:not(.btn):not([class*="text-"]) {
   color: var(--vei-blue);
 }
 
-a:hover {
+a:not(.btn):not([class*="text-"]):hover {
   color: var(--vei-green);
 }
 
@@ -200,7 +200,7 @@ textarea::placeholder {
 .btn-outline-on-dark {
   background: rgba(0, 0, 0, 0.18);
   border: 1px solid rgba(255, 255, 255, 0.35);
-  color: #ffffff;
+  color: #ffffff !important;
   backdrop-filter: blur(6px);
 }
 
