@@ -1,6 +1,22 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { absoluteUrl, site } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "St. Johns County Health Insurance Agent | St. Augustine, FL",
+  description:
+    "Patrick Mackin IV provides health insurance guidance in St. Johns County and St. Augustine, FL. Licensed agent for ACA Marketplace, Medicare, Medigap, and small business health insurance.",
+  alternates: {
+    canonical: absoluteUrl("/st-johns-county"),
+  },
+  openGraph: {
+    title: "St. Johns County Health Insurance | Patrick Mackin IV",
+    description:
+      "Licensed Florida health insurance agent serving St. Johns County and St. Augustine with ACA, Medicare, and employer coverage guidance.",
+    url: absoluteUrl("/st-johns-county"),
+  },
+};
 
 export default function Page() {
   const pageJsonLd = {

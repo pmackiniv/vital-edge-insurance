@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { resourcesForTopic } from "@/lib/knowledgeBase";
-import { site } from "@/lib/site";
 
 type LeadPayload = {
   topic: string;
@@ -61,7 +60,7 @@ export default function ChatPage() {
 
     setIsSubmitting(true);
     try {
-      const response = await fetch("/api/lead", {
+      const response = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -84,22 +83,11 @@ export default function ChatPage() {
   return (
     <Container className="py-14">
       <div className="max-w-3xl space-y-4">
-        <h1 className="text-3xl font-semibold tracking-tight text-black">Chat with Patrick</h1>
+        <h1 className="text-3xl font-semibold tracking-tight text-black">Talk with a licensed agent now</h1>
         <p className="text-sm leading-6 text-black/70">
           This guided assistant is for general information and routing. It does not provide plan recommendations or
           collect sensitive identifiers.
         </p>
-        <div className="rounded-2xl border border-black/10 bg-[var(--muted)] p-4 text-xs text-black/70">
-          <p>This chat may use AI assistance to provide general information.</p>
-          <p className="mt-2">
-            For enrollment or plan-specific advice, request a call or use official enrollment links.
-          </p>
-          <p className="mt-2">Do not enter SSN/Medicare ID or sensitive identifiers here.</p>
-          <p className="mt-2">
-            Want a human handoff? Call <a className="text-black hover:underline" href={`tel:${site.phoneE164}`}>{site.phoneDisplay}</a> or
-            email <a className="text-black hover:underline" href={`mailto:${site.email}`}>{site.email}</a>.
-          </p>
-        </div>
       </div>
 
       <div className="mt-8 max-w-3xl rounded-2xl border border-black/10 bg-white p-6">

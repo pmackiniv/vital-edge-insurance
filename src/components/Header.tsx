@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -26,10 +27,19 @@ export function Header() {
       <div className="border-b border-black/5">
         <Container>
           <div className="flex h-16 items-center justify-between gap-4">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-black/10 bg-black text-xs font-semibold text-white">
-                VEI
-              </div>
+            <Link
+              href="/"
+              className="flex items-center gap-3"
+              aria-label="Vital Edge Insurance home"
+            >
+              <Image
+                src="/brand/vital-edge-logo.png"
+                alt="Vital Edge Insurance logo"
+                width={180}
+                height={60}
+                priority
+                className="h-10 w-auto"
+              />
               <div className="leading-tight">
                 <div className="text-sm font-semibold text-black">{site.name}</div>
                 <div className="text-xs text-black/60">Jacksonville, Florida</div>

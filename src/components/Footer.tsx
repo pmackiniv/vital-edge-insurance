@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { Container } from "@/components/Container";
+import { BottomFinePrint } from "@/components/BottomFinePrint";
 import { site } from "@/lib/site";
 
 export function Footer() {
   return (
-    <footer className="border-t border-black/5 bg-white">
+    <footer className="border-t border-white/10 bg-transparent">
       <Container>
         <div className="grid gap-8 py-12 md:grid-cols-3">
           <div>
@@ -27,6 +28,7 @@ export function Footer() {
             <ul className="mt-3 space-y-2 text-sm">
               <li><Link className="text-black/70 hover:text-black" href="/services">Services</Link></li>
               <li><Link className="text-black/70 hover:text-black" href="/duval-county">Duval County</Link></li>
+              <li><Link className="text-black/70 hover:text-black" href="/miami">Miami-Dade County</Link></li>
               <li><Link className="text-black/70 hover:text-black" href="/st-johns-county">St. Johns County</Link></li>
               <li><Link className="text-black/70 hover:text-black" href="/blog">Blog</Link></li>
             </ul>
@@ -48,7 +50,9 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-black/5 py-6 text-xs text-black/60">
+        <BottomFinePrint />
+
+        <div className="border-t border-black/5 py-6 text-sm text-black/60">
           © {new Date().getFullYear()} {site.legalName}. All rights reserved.
         </div>
       </Container>

@@ -13,9 +13,9 @@ export const resources: ResourceItem[] = [
     tags: ["medicare"],
   },
   {
-    slug: "medicare-advantage-vs-medigap",
-    title: "Medicare Advantage vs Medigap",
-    summary: "High-level differences between Advantage and Medigap coverage.",
+    slug: "medicare-coverage-pathways",
+    title: "Medicare coverage pathways",
+    summary: "High-level overview of Original Medicare and supplemental coverage choices.",
     tags: ["medicare", "medigap"],
   },
   {
