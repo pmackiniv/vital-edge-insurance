@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 
+import { AnalyticsConsent } from "@/components/AnalyticsConsent";
 import { BackgroundLayers } from "@/components/BackgroundLayers";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
+import { TimedLeadPopup } from "@/components/TimedLeadPopup";
 import { absoluteUrl, insuranceAgencyJsonLd, localBusinessJsonLd, organizationJsonLd, personJsonLd, site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -59,11 +62,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="h-full">
       <body className="min-h-full bg-transparent text-[18px] leading-relaxed text-slate-900 antialiased font-sans">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-black focus:px-4 focus:py-2 focus:text-white focus:outline-none">
+          Skip to main content
+        </a>
         <BackgroundLayers />
         <Header />
-        <main className="relative z-10">{children}</main>
+        <main id="main-content" className="relative z-10" tabIndex={-1}>{children}</main>
         <Footer />
         <ChatWidget />
+        <Suspense fallback={null}>
+          <TimedLeadPopup />
+        </Suspense>
+        <AnalyticsConsent />
 
         <script
           type="application/ld+json"
