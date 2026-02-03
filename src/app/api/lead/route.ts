@@ -64,5 +64,25 @@ export async function POST(request: Request) {
     receivedAt: new Date().toISOString(),
   });
 
+  const webhookUrl = process.env.LEAD_WEBHOOK_URL;
+  if (webhookUrl) {
+    try {
+      await fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          topic,
+          county,
+          contactMethod,
+          message,
+          consent: payload.consent,
+          receivedAt: new Date().toISOString(),
+        }),
+      });
+    } catch (error) {
+      console.error("Lead webhook failed:", error);
+    }
+  }
+
   return NextResponse.json({ ok: true });
 }

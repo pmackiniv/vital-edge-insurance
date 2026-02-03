@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { AIConcierge } from "@/components/AIConcierge";
 import { Container } from "@/components/Container";
 import { resourcesForTopic } from "@/lib/knowledgeBase";
 import { site } from "@/lib/site";
@@ -28,6 +29,7 @@ export default function ChatPage() {
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const formRef = useRef<HTMLDivElement>(null);
 
   const resources = useMemo(() => resourcesForTopic(topic), [topic]);
   const canEnroll = useMemo(() => /medicare|aca/i.test(topic), [topic]);
@@ -102,7 +104,15 @@ export default function ChatPage() {
         </div>
       </div>
 
-      <div className="mt-8 max-w-3xl rounded-2xl border border-black/10 bg-white p-6">
+      <div className="mt-8 max-w-3xl">
+        <AIConcierge
+          onRequestAgent={() => {
+            formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+          }}
+        />
+      </div>
+
+      <div ref={formRef} className="mt-8 max-w-3xl rounded-2xl border border-black/10 bg-white p-6">
         <div className="mb-6 flex flex-wrap items-center gap-3 text-xs text-black/50">
           {["Topic", "Details", "Next steps"].map((label, index) => {
             const current = index + 1;

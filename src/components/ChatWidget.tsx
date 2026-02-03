@@ -1,8 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
+import { AIChatPanel } from "@/components/AIChatPanel";
 import { resourcesForTopic } from "@/lib/knowledgeBase";
 import { site } from "@/lib/site";
 
@@ -98,9 +100,19 @@ export function ChatWidget() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="rounded-full bg-[var(--brand-blue)] px-5 py-3 text-sm font-semibold text-white shadow-lg hover:bg-[var(--brand-green)]"
+        className="group flex h-14 w-14 items-center justify-center rounded-full border border-white/60 bg-white shadow-lg ring-1 ring-black/10 transition hover:-translate-y-0.5 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-blue)]"
+        aria-label="Open chat"
       >
-        Chat with Patrick
+        <span className="sr-only">Open chat</span>
+        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--brand-blue)]">
+          <Image
+            src={site.logoPath}
+            alt="Vital Edge Insurance"
+            width={28}
+            height={28}
+            className="h-7 w-7"
+          />
+        </span>
       </button>
 
       <AnimatePresence>
@@ -142,6 +154,13 @@ export function ChatWidget() {
                   </p>
                   <p className="mt-2">Do not enter SSN/Medicare ID or sensitive identifiers here.</p>
                 </div>
+
+                <AIChatPanel
+                  compact
+                  onRequestAgent={() => {
+                    setStep(1);
+                  }}
+                />
 
                 <div className="flex items-center gap-2 text-xs text-black/50">
                   {["Topic", "Details", "Next steps"].map((label, index) => {
