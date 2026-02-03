@@ -51,7 +51,8 @@ export function AIConcierge({ compact = false, onRequestAgent }: AIConciergeProp
       });
 
       const data = (await response.json()) as AssistantResponse;
-      if (!response.ok || !data.ok || !data.answer) {
+      const answer = typeof data.answer === "string" ? data.answer : "";
+      if (!response.ok || !data.ok || !answer) {
         throw new Error(data.error || "Unable to respond right now.");
       }
 
@@ -59,7 +60,7 @@ export function AIConcierge({ compact = false, onRequestAgent }: AIConciergeProp
         ...prev,
         {
           role: "assistant",
-          content: data.answer,
+          content: answer,
           resources: data.resources || [],
           shouldEscalate: data.shouldEscalate,
           escalationReason: data.escalationReason,
