@@ -1,18 +1,13 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { site } from "@/lib/site";
 
-const TO = process.env.NEXT_PUBLIC_FORMSUBMIT_TO || site.email;
-const CC = process.env.NEXT_PUBLIC_FORMSUBMIT_CC || "";
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "";
-const NEXT_URL = SITE_URL ? `${SITE_URL}/contact/thanks` : "/contact/thanks";
-const FORM_URL = SITE_URL ? `${SITE_URL}/contact` : "";
-
 function ContactForm() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const topicParam = (searchParams.get("topic")?.trim() || "").toLowerCase();
   const topicMap: Record<string, string> = { aca: "ACA", medicare: "Medicare", ichra: "ICHRA", other: "Other" };
@@ -26,15 +21,15 @@ function ContactForm() {
   const defaultZip = searchParams.get("zip")?.trim() || "";
   const defaultMessage = searchParams.get("message")?.trim() || "";
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     const form = event.currentTarget;
     const formData = new FormData(form);
     const followUp = String(formData.get("request_follow_up") || "").toLowerCase();
-
+    const intent = followUp === "yes";
     setError("");
-
-    if (followUp !== "yes") return;
 
     const firstName = String(formData.get("first_name") || "").trim();
     const lastName = String(formData.get("last_name") || "").trim();
@@ -47,19 +42,16 @@ function ContactForm() {
     const consent = String(formData.get("consent") || "") === "yes";
 
     if (!name || !message) {
-      event.preventDefault();
       setError("Please provide your name and a short message.");
       return;
     }
 
     if (!email && !phone) {
-      event.preventDefault();
       setError("Please provide an email or phone number.");
       return;
     }
 
     if (!consent) {
-      event.preventDefault();
       setError("Please provide consent to be contacted.");
       return;
     }
@@ -73,10 +65,11 @@ function ContactForm() {
       .join(" | ");
 
     const messageWithZip = zip ? `${message}\nZIP: ${zip}` : message;
-    const enrichedMessage = `${messageWithZip}\nRequest follow up: yes`;
+    const enrichedMessage = `${messageWithZip}\nRequest follow up: ${intent ? "yes" : "no"}`;
 
+    setIsSubmitting(true);
     try {
-      fetch("/api/leads", {
+      const response = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -85,11 +78,19 @@ function ContactForm() {
           contactMethod: contactMethod || "Contact provided",
           message: enrichedMessage,
           consent: true,
+          intent,
         }),
-        keepalive: true,
-      }).catch(() => {});
-    } catch {
-      // best-effort Notion sync, ignore to avoid blocking form submit
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        const errorMessage = typeof data?.error === "string" ? data.error : "We could not submit your request.";
+        throw new Error(errorMessage);
+      }
+      router.push("/contact/thanks");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "We could not submit your request. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -155,16 +156,9 @@ function ContactForm() {
           </p>
 
           <form
-            action={`https://formsubmit.co/${TO}`}
-            method="POST"
             onSubmit={handleSubmit}
             className="mt-8 space-y-5 rounded-2xl border border-black/10 bg-white p-6"
           >
-            <input type="hidden" name="_subject" value="Vital Edge website inquiry" />
-            <input type="hidden" name="_next" value={NEXT_URL} />
-            {FORM_URL ? <input type="hidden" name="_url" value={FORM_URL} /> : null}
-            {CC ? <input type="hidden" name="_cc" value={CC} /> : null}
-            <input type="hidden" name="_blacklist" value="viagra, casino, crypto, porn" />
             <div className="grid gap-4 md:grid-cols-2">
               <div>
                 <label htmlFor="first_name" className="text-sm font-semibold text-black">
@@ -273,6 +267,7 @@ function ContactForm() {
                   defaultValue={defaultZip}
                   className="mt-2 h-12 w-full rounded-xl border border-black/10 px-4 text-sm"
                   autoComplete="postal-code"
+                  inputMode="numeric"
                 />
               </div>
             </div>
@@ -311,9 +306,10 @@ function ContactForm() {
 
             <button
               type="submit"
+              disabled={isSubmitting}
               className="h-12 w-full rounded-xl bg-black px-5 text-sm font-semibold text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Send message
+              {isSubmitting ? "Sending..." : "Send message"}
             </button>
           </form>
         </div>

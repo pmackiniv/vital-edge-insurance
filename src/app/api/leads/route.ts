@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { findSensitiveIdentifier } from "@/lib/leadGuard";
 import { sendLeadEmail } from "@/lib/notify";
 import { syncLeadToNotion } from "@/lib/notionLead";
+import { site } from "@/lib/site";
 
 type LeadPayload = {
   topic?: string;
@@ -9,9 +10,11 @@ type LeadPayload = {
   contactMethod?: string;
   message?: string;
   consent?: boolean;
+  intent?: boolean;
 };
 
 export async function POST(req: Request) {
+  const startMs = Date.now();
   try {
     const body = (await req.json()) as LeadPayload;
     const contactMethod = body.contactMethod?.trim() || "";
@@ -23,6 +26,7 @@ export async function POST(req: Request) {
     const topic = body.topic?.trim() || "General inquiry";
     const county = body.county?.trim() || "";
     const message = body.message?.trim() || "";
+    const intent = body.intent !== false;
 
     const sensitiveError = findSensitiveIdentifier(message);
     if (sensitiveError) {
@@ -39,7 +43,7 @@ export async function POST(req: Request) {
     };
 
     const notifications: {
-      email: { status: "sent" | "failed" | "skipped"; reason?: string };
+      email: { status: "sent" | "failed" | "skipped"; reason?: string; provider?: "smtp" | "formsubmit" };
       sms: { status: "sent" | "failed" | "skipped"; reason?: string; errorCode?: number };
     } = {
       email: { status: "skipped" },
@@ -59,16 +63,28 @@ export async function POST(req: Request) {
       email_attempted: emailAttempted,
       email_success: emailSuccess,
       email_reason: notifications.email.reason,
+      email_provider: notifications.email.provider ?? null,
       sms_attempted: smsAttempted,
       sms_success: smsSuccess,
       sms_error_code: smsErrorCode ?? null,
       sms_reason: notifications.sms.reason ?? null,
     });
 
-    const notionResult = await syncLeadToNotion(payload);
+    const notionResult = intent ? await syncLeadToNotion(payload) : { status: "skipped", reason: "intent_false" };
     if (notionResult.status !== "skipped") {
       console.info("lead_notion", { status: notionResult.status, reason: notionResult.status === "sent" ? null : notionResult.reason });
     }
+
+    const elapsedMs = Date.now() - startMs;
+    console.info("lead_request", {
+      elapsed_ms: elapsedMs,
+      topic,
+      county,
+      has_contact: Boolean(contactMethod),
+      message_length: message.length,
+      consent: body.consent === true,
+      intent,
+    });
 
     const webhookUrl = process.env.LEAD_WEBHOOK_URL?.trim();
     if (webhookUrl) {
@@ -87,11 +103,17 @@ export async function POST(req: Request) {
     }
 
     const responseMessage =
-      emailSuccess && !smsSuccess && smsAttempted
-        ? "Got it, Patrick will follow up. We'll respond by email or phone."
-        : "Got it, Patrick will follow up.";
+      emailSuccess
+        ? "Got it, Patrick will follow up."
+        : `We received your request. If you don't hear back within an hour, please call us at ${site.phoneDisplay}.`;
 
-    return NextResponse.json({ ok: true, message: responseMessage, notifications });
+    return NextResponse.json({
+      ok: true,
+      message: responseMessage,
+      notifications,
+      notion: { status: notionResult.status, reason: notionResult.status === "sent" ? undefined : notionResult.reason },
+      email: { status: notifications.email.status, reason: notifications.email.reason, provider: notifications.email.provider },
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ ok: false, error: "Server error." }, { status: 500 });

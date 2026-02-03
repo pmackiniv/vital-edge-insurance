@@ -25,20 +25,22 @@ export function AIChatPanel() {
     sendMessage({ text });
   };
 
+  const showError = Boolean(error) || status === "error";
+
   return (
     <div className="flex flex-col gap-4">
       <div className="text-sm font-semibold text-black">AI assistant</div>
       <p className="text-xs text-black/60">
         Ask general questions about coverage types or enrollment timing. We do not provide plan-specific guidance in
-        chat. We will connect you with a licensed agent for your convenience—call or text {site.phoneDisplay}, request a
+        chat. We will connect you with a licensed agent for your convenience, call or text {site.phoneDisplay}, request a
         callback, or schedule a call.
       </p>
 
-      {error ? (
+      {showError ? (
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800">
-          {status === "error" && error?.message?.includes("503")
+          {error?.message?.includes("503")
             ? "AI chat is not configured yet. Add OPENAI_API_KEY in Vercel to enable."
-            : "Something went wrong. Try again or use the contact form."}
+            : "Chat is temporarily unavailable. Call or text or use the contact form."}
         </div>
       ) : null}
 
@@ -64,6 +66,9 @@ export function AIChatPanel() {
             );
           })
         )}
+        {status === "streaming" ? (
+          <div className="text-xs text-black/50">Vital Edge is typing...</div>
+        ) : null}
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">

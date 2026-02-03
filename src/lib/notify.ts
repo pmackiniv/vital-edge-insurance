@@ -1,3 +1,5 @@
+import { sendLeadEmail as sendLeadEmailViaSmtp } from "@/lib/notify/email";
+
 type LeadNotificationPayload = {
   topic: string;
   county: string;
@@ -9,7 +11,15 @@ type LeadNotificationPayload = {
 export type NotificationResult = {
   status: "sent" | "failed" | "skipped";
   reason?: string;
+  /** Twilio error code when status === "failed" (e.g. 30032 for unverified toll-free) */
+  errorCode?: number;
+  provider?: "smtp" | "formsubmit";
 };
+
+function isSmsDisabled() {
+  const value = process.env.LEAD_SMS_DISABLED;
+  return !!value && ["1", "true", "yes", "on"].includes(value.toLowerCase());
+}
 
 function formatMessage(payload: LeadNotificationPayload) {
   const snippet = payload.message.slice(0, 500);
@@ -24,6 +34,10 @@ function formatMessage(payload: LeadNotificationPayload) {
 }
 
 export async function sendLeadSms(payload: LeadNotificationPayload): Promise<NotificationResult> {
+  if (isSmsDisabled()) {
+    return { status: "skipped", reason: "sms_disabled" };
+  }
+
   const accountSid = process.env.TWILIO_ACCOUNT_SID;
   const authToken = process.env.TWILIO_AUTH_TOKEN;
   const messagingServiceSid = process.env.TWILIO_MESSAGING_SERVICE_SID;
@@ -51,35 +65,34 @@ export async function sendLeadSms(payload: LeadNotificationPayload): Promise<Not
   });
 
   if (!response.ok) {
-    return { status: "failed", reason: "twilio_send_failed" };
+    let errorCode: number | undefined;
+    let errorMessage: string | undefined;
+    try {
+      const errBody = (await response.json()) as { code?: number; message?: string; error_code?: number };
+      errorCode = errBody.code ?? errBody.error_code;
+      errorMessage = errBody.message;
+    } catch {
+      // ignore parse errors
+    }
+    const reason =
+      errorCode != null
+        ? `twilio_${errorCode}${errorMessage ? `: ${errorMessage}` : ""}`
+        : errorMessage
+          ? `twilio_send_failed: ${errorMessage}`
+          : "twilio_send_failed";
+    return { status: "failed", reason, errorCode };
   }
 
   return { status: "sent" };
 }
 
+/**
+ * Send lead notification email via SMTP with optional fallback.
+ * Logging is done inside the email module (lead_email).
+ */
 export async function sendLeadEmail(payload: LeadNotificationPayload): Promise<NotificationResult> {
-  const resendKey = process.env.RESEND_API_KEY;
-  if (!resendKey) {
-    return { status: "skipped", reason: "resend_not_configured" };
-  }
-
-  const { Resend } = await import("resend");
-  const resend = new Resend(resendKey);
-  const to =
-    process.env.OWNER_EMAIL ||
-    process.env.LEAD_NOTIFY_TO_EMAIL ||
-    "pmackiniv27@icloud.com";
-  const from =
-    process.env.RESEND_FROM ||
-    process.env.LEAD_NOTIFY_FROM_EMAIL ||
-    "Vital Edge Leads <leads@vitaledgeinsurance.com>";
-
-  await resend.emails.send({
-    from,
-    to,
-    subject: `New lead: ${payload.topic} (${payload.county})`,
-    text: formatMessage(payload),
-  });
-
-  return { status: "sent" };
+  const result = await sendLeadEmailViaSmtp(payload);
+  if (result.status === "sent") return { status: "sent", provider: result.provider };
+  if (result.status === "skipped") return { status: "skipped", reason: result.reason, provider: result.provider };
+  return { status: "failed", reason: result.reason, provider: result.provider };
 }
