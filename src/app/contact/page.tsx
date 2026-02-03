@@ -1,125 +1,132 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { Container } from "@/components/Container";
 import { site } from "@/lib/site";
 
-type FormState = {
-  name: string;
-  email: string;
-  phone: string;
-  zip: string;
-  topic: string;
-  message: string;
-  consent: boolean;
-  honeypot: string;
-};
+const TO = process.env.NEXT_PUBLIC_FORMSUBMIT_TO || site.email;
+const CC = process.env.NEXT_PUBLIC_FORMSUBMIT_CC || "";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "";
+const NEXT_URL = SITE_URL ? `${SITE_URL}/contact/thanks` : "/contact/thanks";
+const FORM_URL = SITE_URL ? `${SITE_URL}/contact` : "";
 
-const initialState: FormState = {
-  name: "",
-  email: "",
-  phone: "",
-  zip: "",
-  topic: "",
-  message: "",
-  consent: false,
-  honeypot: "",
-};
-
-export default function ContactPage() {
-  const router = useRouter();
-  const [formState, setFormState] = useState<FormState>(initialState);
+function ContactForm() {
+  const searchParams = useSearchParams();
+  const topicParam = (searchParams.get("topic")?.trim() || "").toLowerCase();
+  const topicMap: Record<string, string> = { aca: "ACA", medicare: "Medicare", ichra: "ICHRA", other: "Other" };
+  const defaultTopic = topicMap[topicParam] || "";
+  const storedFirst = typeof window !== "undefined" ? window.localStorage.getItem("ve_lead_first_name") ?? "" : "";
+  const storedLast = typeof window !== "undefined" ? window.localStorage.getItem("ve_lead_last_name") ?? "" : "";
+  const defaultFirstName = searchParams.get("first_name")?.trim() || searchParams.get("name")?.trim() || storedFirst;
+  const defaultLastName = searchParams.get("last_name")?.trim() || storedLast;
+  const defaultEmail = searchParams.get("email")?.trim() || "";
+  const defaultPhone = searchParams.get("phone")?.trim() || "";
+  const defaultZip = searchParams.get("zip")?.trim() || "";
+  const defaultMessage = searchParams.get("message")?.trim() || "";
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [disabledUntil, setDisabledUntil] = useState<number | null>(null);
-  const formEndpoint = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT;
-
-  const canSubmit = useMemo(() => {
-    if (isSubmitting) return false;
-    if (disabledUntil && Date.now() < disabledUntil) return false;
-    if (!formEndpoint) return false;
-    return true;
-  }, [disabledUntil, formEndpoint, isSubmitting]);
-
-  const handleChange = (field: keyof FormState) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const value = event.target.type === "checkbox" ? (event.target as HTMLInputElement).checked : event.target.value;
-    setFormState((prev) => ({ ...prev, [field]: value }));
-  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const followUp = String(formData.get("request_follow_up") || "").toLowerCase();
+
     setError("");
 
-    if (!canSubmit) return;
+    if (followUp !== "yes") return;
 
-    const now = Date.now();
-    setDisabledUntil(now + 3000);
+    const firstName = String(formData.get("first_name") || "").trim();
+    const lastName = String(formData.get("last_name") || "").trim();
+    const name = [firstName, lastName].filter(Boolean).join(" ").trim();
+    const email = String(formData.get("email") || "").trim();
+    const phone = String(formData.get("phone") || "").trim();
+    const zip = String(formData.get("zip") || "").trim();
+    const topic = String(formData.get("topic") || "").trim();
+    const message = String(formData.get("message") || "").trim();
+    const consent = String(formData.get("consent") || "") === "yes";
 
-    if (formState.honeypot) {
-      setError("Submission blocked.");
+    if (!name || !message) {
+      event.preventDefault();
+      setError("Please provide your name and a short message.");
       return;
     }
 
-    if (!formState.name.trim()) {
-      setError("Please add your name.");
-      return;
-    }
-
-    if (!formState.message.trim()) {
-      setError("Please add a message.");
-      return;
-    }
-
-    if (!formState.email.trim() && !formState.phone.trim()) {
+    if (!email && !phone) {
+      event.preventDefault();
       setError("Please provide an email or phone number.");
       return;
     }
 
-    if (!formState.consent) {
+    if (!consent) {
+      event.preventDefault();
       setError("Please provide consent to be contacted.");
       return;
     }
 
-    if (!formEndpoint) {
-      setError("Contact form is temporarily unavailable. Please call/email.");
-      return;
-    }
+    const contactMethod = [
+      name && `Name: ${name}`,
+      phone && `Phone: ${phone}`,
+      email && `Email: ${email}`,
+    ]
+      .filter(Boolean)
+      .join(" | ");
 
-    setIsSubmitting(true);
+    const messageWithZip = zip ? `${message}\nZIP: ${zip}` : message;
+    const enrichedMessage = `${messageWithZip}\nRequest follow up: yes`;
 
     try {
-      const response = await fetch(formEndpoint, {
+      fetch("/api/leads", {
         method: "POST",
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: formState.name,
-          email: formState.email,
-          phone: formState.phone,
-          zip: formState.zip,
-          topic: formState.topic,
-          message: formState.message,
-          consent: formState.consent,
+          topic: topic || "General inquiry",
+          county: "",
+          contactMethod: contactMethod || "Contact provided",
+          message: enrichedMessage,
+          consent: true,
         }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Request failed");
-      }
-
-      setSuccess(true);
-      setTimeout(() => {
-        router.push("/thank-you");
-      }, 1200);
+        keepalive: true,
+      }).catch(() => {});
     } catch {
-      setError("We could not submit your request. Please try again or call us.");
-    } finally {
-      setIsSubmitting(false);
+      // best-effort Notion sync, ignore to avoid blocking form submit
     }
+  };
+
+  const answerBlock =
+    `How do you contact Vital Edge Insurance? You can call or text ${site.phoneDisplay}, use the form below, or request a callback from the chat. We respond as quickly as possible during business hours. Patrick Mackin IV is the licensed agent.`;
+
+  const contactFaqs = [
+    {
+      question: "How quickly will I hear back?",
+      answer: `We respond as quickly as possible during business hours. For urgent questions, call or text ${site.phoneDisplay}.`,
+    },
+    {
+      question: "What should I include in my message?",
+      answer: "Your name, topic (ACA, Medicare, ICHRA, or other), and how you prefer to be contacted. A short description of what you need helps us route you to the right next step.",
+    },
+    {
+      question: "Can I schedule a call?",
+      answer: "Yes. Use the Schedule a call link in the header or footer, or mention in your message that you would like to book a time.",
+    },
+    {
+      question: "Do you offer enrollment links?",
+      answer: "Yes. When appropriate we provide secure enrollment links so you can complete your application online.",
+    },
+    {
+      question: "What information should I avoid sending?",
+      answer: "Please do not send Social Security numbers, Medicare Beneficiary Identifiers, or other sensitive IDs.",
+    },
+  ];
+
+  const contactFaqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: contactFaqs.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
   };
 
   return (
@@ -127,22 +134,72 @@ export default function ContactPage() {
       <div className="grid gap-10 lg:grid-cols-[2fr_1fr]">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight text-black">Contact</h1>
+          <div className="mt-3 rounded-2xl border border-black/10 bg-white p-4 text-sm text-black/80" aria-label="How to contact Vital Edge">
+            <p className="leading-7">{answerBlock}</p>
+          </div>
+          <div className="mt-4 rounded-2xl border border-black/10 bg-[var(--muted)] p-4 text-sm text-black/70">
+            <div className="text-xs font-semibold uppercase tracking-wide text-black/60">Self-service enrollment</div>
+            <p className="mt-2 leading-6">
+              Use secure, third-party enrollment links when you already know your next step. If you’d rather enroll with
+              a licensed agent, we can help.
+            </p>
+            <Link href="/enroll" className="mt-3 inline-flex items-center text-sm font-semibold text-black hover:underline">
+              View enrollment links
+            </Link>
+            <p className="mt-2 text-xs text-black/60">
+              Third-party enrollment partners. Licensed guidance is available if you prefer to enroll with help.
+            </p>
+          </div>
           <p className="mt-3 text-sm leading-6 text-black/70">
             Tell us what you need and we will follow up with clear next steps.
           </p>
 
-          <form onSubmit={handleSubmit} className="mt-8 space-y-5 rounded-2xl border border-black/10 bg-white p-6">
+          <form
+            action={`https://formsubmit.co/${TO}`}
+            method="POST"
+            onSubmit={handleSubmit}
+            className="mt-8 space-y-5 rounded-2xl border border-black/10 bg-white p-6"
+          >
+            <input type="hidden" name="_subject" value="Vital Edge website inquiry" />
+            <input type="hidden" name="_next" value={NEXT_URL} />
+            {FORM_URL ? <input type="hidden" name="_url" value={FORM_URL} /> : null}
+            {CC ? <input type="hidden" name="_cc" value={CC} /> : null}
+            <input type="hidden" name="_blacklist" value="viagra, casino, crypto, porn" />
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <label htmlFor="name" className="text-sm font-semibold text-black">
-                  Name
+                <label htmlFor="first_name" className="text-sm font-semibold text-black">
+                  First name
                 </label>
                 <input
-                  id="name"
-                  value={formState.name}
-                  onChange={handleChange("name")}
-                  className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+                  id="first_name"
+                  name="first_name"
+                  defaultValue={defaultFirstName}
+                  className="mt-2 h-12 w-full rounded-xl border border-black/10 px-4 text-sm"
                   required
+                  autoComplete="given-name"
+                  onChange={(event) => {
+                    if (typeof window !== "undefined") {
+                      window.localStorage.setItem("ve_lead_first_name", event.target.value);
+                    }
+                  }}
+                />
+              </div>
+              <div>
+                <label htmlFor="last_name" className="text-sm font-semibold text-black">
+                  Last name
+                </label>
+                <input
+                  id="last_name"
+                  name="last_name"
+                  defaultValue={defaultLastName}
+                  className="mt-2 h-12 w-full rounded-xl border border-black/10 px-4 text-sm"
+                  required
+                  autoComplete="family-name"
+                  onChange={(event) => {
+                    if (typeof window !== "undefined") {
+                      window.localStorage.setItem("ve_lead_last_name", event.target.value);
+                    }
+                  }}
                 />
               </div>
               <div>
@@ -151,9 +208,9 @@ export default function ContactPage() {
                 </label>
                 <select
                   id="topic"
-                  value={formState.topic}
-                  onChange={handleChange("topic")}
-                  className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+                  name="topic"
+                  defaultValue={defaultTopic}
+                  className="mt-2 h-12 w-full rounded-xl border border-black/10 px-4 text-sm"
                 >
                   <option value="">Select one</option>
                   <option value="ACA">ACA</option>
@@ -163,15 +220,33 @@ export default function ContactPage() {
                 </select>
               </div>
               <div>
+                <label htmlFor="request_follow_up" className="text-sm font-semibold text-black">
+                  Request licensed agent follow up
+                </label>
+                <select
+                  id="request_follow_up"
+                  name="request_follow_up"
+                  className="mt-2 h-12 w-full rounded-xl border border-black/10 px-4 text-sm"
+                  required
+                >
+                  <option value="">Select one</option>
+                  <option value="no">No, general inquiry</option>
+                  <option value="yes">Yes, request follow up</option>
+                </select>
+              </div>
+              <div>
                 <label htmlFor="email" className="text-sm font-semibold text-black">
                   Email
                 </label>
                 <input
                   id="email"
+                  name="email"
                   type="email"
-                  value={formState.email}
-                  onChange={handleChange("email")}
-                  className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+                  defaultValue={defaultEmail}
+                  className="mt-2 h-12 w-full rounded-xl border border-black/10 px-4 text-sm"
+                  required
+                  autoComplete="email"
+                  inputMode="email"
                 />
               </div>
               <div>
@@ -180,10 +255,12 @@ export default function ContactPage() {
                 </label>
                 <input
                   id="phone"
+                  name="phone"
                   type="tel"
-                  value={formState.phone}
-                  onChange={handleChange("phone")}
-                  className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+                  defaultValue={defaultPhone}
+                  className="mt-2 h-12 w-full rounded-xl border border-black/10 px-4 text-sm"
+                  autoComplete="tel"
+                  inputMode="tel"
                 />
               </div>
               <div>
@@ -192,9 +269,10 @@ export default function ContactPage() {
                 </label>
                 <input
                   id="zip"
-                  value={formState.zip}
-                  onChange={handleChange("zip")}
-                  className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+                  name="zip"
+                  defaultValue={defaultZip}
+                  className="mt-2 h-12 w-full rounded-xl border border-black/10 px-4 text-sm"
+                  autoComplete="postal-code"
                 />
               </div>
             </div>
@@ -203,81 +281,80 @@ export default function ContactPage() {
               <label htmlFor="message" className="text-sm font-semibold text-black">
                 Message
               </label>
-              <textarea
-                id="message"
-                value={formState.message}
-                onChange={handleChange("message")}
-                rows={5}
-                className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
-                required
-              />
+                <textarea
+                  id="message"
+                  name="message"
+                  defaultValue={defaultMessage}
+                  rows={5}
+                  className="mt-2 w-full rounded-xl border border-black/10 p-4 text-sm"
+                  required
+                />
             </div>
-
-            <input
-              type="text"
-              name="company"
-              value={formState.honeypot}
-              onChange={handleChange("honeypot")}
-              className="hidden"
-              tabIndex={-1}
-              autoComplete="off"
-              aria-hidden="true"
-            />
 
             <div className="rounded-xl border border-black/10 p-3">
               <label className="flex items-start gap-3 text-xs text-black/70">
                 <input
                   type="checkbox"
-                  checked={formState.consent}
-                  onChange={handleChange("consent")}
+                  name="consent"
+                  value="yes"
                   className="mt-0.5"
                   required
                 />
                 <span>
-                  By checking this box, I consent to be contacted by Vital Edge Insurance at the phone number/email
-                  provided (including by autodialed calls/texts where permitted). Msg & data rates may apply. Reply STOP to
-                  opt out.
+                  By checking this box, you agree to be contacted by call, text, and/or email about your request.
+                  Message &amp; data rates may apply. Reply STOP to opt out.
                 </span>
               </label>
             </div>
 
-            {success ? (
-              <p className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-xs text-green-700">
-                Message sent. Redirecting...
-              </p>
-            ) : null}
             {error ? <p className="text-xs text-red-600">{error}</p> : null}
-            {!formEndpoint ? (
-              <p className="text-xs text-black/60">
-                Contact form is temporarily unavailable. Please call/email.
-            </p>
-          ) : null}
 
-          <button
-            type="submit"
-            disabled={!canSubmit}
-              className="inline-flex items-center justify-center rounded-xl bg-black px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+            <button
+              type="submit"
+              className="h-12 w-full rounded-xl bg-black px-5 text-sm font-semibold text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isSubmitting ? "Sending..." : "Send message"}
+              Send message
             </button>
           </form>
         </div>
 
-        <aside className="rounded-2xl border border-black/10 bg-white p-6 text-sm text-black/70">
-          <div className="text-sm font-semibold text-black">Reach us directly</div>
-          <div className="mt-3 space-y-2">
-            <a className="block text-black hover:underline" href={`tel:${site.phoneE164}`}>
-              {site.phoneDisplay}
-            </a>
-            <a className="block text-black hover:underline" href={`mailto:${site.email}`}>
-              {site.email}
-            </a>
+        <aside className="space-y-6">
+          <div className="rounded-2xl border border-black/10 bg-white p-6 text-sm text-black/70">
+            <div className="text-sm font-semibold text-black">Reach us directly</div>
+            <div className="mt-3 space-y-2">
+              <a className="block text-black hover:underline" href={`tel:${site.phoneE164}`}>
+                {site.phoneDisplay}
+              </a>
+              <a className="block text-black hover:underline" href={`mailto:${site.email}`}>
+                {site.email}
+              </a>
+            </div>
+            <p className="mt-4 text-xs text-black/60">
+              We respond as quickly as possible during business hours.
+            </p>
           </div>
-          <p className="mt-4 text-xs text-black/60">
-            We respond as quickly as possible during business hours.
-          </p>
+          <section className="rounded-2xl border border-black/10 bg-white p-6" aria-labelledby="contact-faq-heading">
+            <h2 id="contact-faq-heading" className="text-sm font-semibold text-black">Contact FAQs</h2>
+            <div className="mt-4 space-y-3 text-sm text-black/80">
+              {contactFaqs.map((item) => (
+                <div key={item.question}>
+                  <div className="font-semibold text-black">{item.question}</div>
+                  <p className="mt-1 leading-6">{item.answer}</p>
+                </div>
+              ))}
+            </div>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(contactFaqJsonLd) }} />
+          </section>
         </aside>
       </div>
     </Container>
+  );
+}
+
+export default function ContactPage() {
+  return (
+    <Suspense fallback={<Container className="py-14"><div className="h-64 animate-pulse rounded-2xl border border-black/10 bg-white p-6" /></Container>}>
+      <ContactForm />
+    </Suspense>
   );
 }

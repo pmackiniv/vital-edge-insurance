@@ -159,23 +159,19 @@ export function ChatWidget() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-[60] flex flex-col items-end gap-2">
-      <Link
-        href="/chat"
+    <div className="fixed bottom-6 right-6 z-[80] flex flex-col items-end gap-2">
+      <button
+        type="button"
+        onClick={() => {
+          setMode("question");
+          setOpen(true);
+        }}
         className="btn btn-primary items-start rounded-full px-5 py-3 text-left text-sm shadow-lg"
       >
         <span className="flex flex-col">
           <span className="text-[11px] font-semibold uppercase tracking-wide text-white/80">Live help 24/7</span>
           <span className="text-sm font-semibold">Chat with a licensed agent now</span>
         </span>
-      </Link>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="text-xs font-medium text-black/70 hover:text-black underline"
-        aria-label="Request a callback or view options"
-      >
-        Request callback
       </button>
 
       <AnimatePresence>
