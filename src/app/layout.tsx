@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import "./globals.css";
 
-import { AnalyticsConsent } from "@/components/AnalyticsConsent";
+import AnalyticsConsent from "@/components/AnalyticsConsent";
 import { BackgroundLayers } from "@/components/BackgroundLayers";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
-import { TimedLeadPopup } from "@/components/TimedLeadPopup";
+import TimedLeadPopup from "@/components/TimedLeadPopup";
 import { absoluteUrl, insuranceAgencyJsonLd, localBusinessJsonLd, organizationJsonLd, personJsonLd, site } from "@/lib/site";
 
 export const metadata: Metadata = {
