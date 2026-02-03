@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { resourcesForTopic } from "@/lib/knowledgeBase";
 import { site } from "@/lib/site";
+import { AIChatPanel } from "@/components/AIChatPanel";
 
 type LeadPayload = {
   topic: string;
@@ -14,15 +15,23 @@ type LeadPayload = {
   consent: boolean;
 };
 
-type QaResponse = {
-  topic: string;
-  answer: string;
-  resources: { slug: string; title: string }[];
-};
-
-const topics = ["Medicare", "ACA Marketplace", "Small Business", "Other"];
+const topics = [
+  "ACA Marketplace",
+  "Annuities / Retirement",
+  "Cancer, Heart Attack - Stroke",
+  "Change Health Plan",
+  "Current Issue with Health Plan",
+  "Dental/Vision/Hearing Coverage",
+  "Group Benefits",
+  "Life Insurance - Term, Whole, IUL, Final Expense",
+  "Medicare",
+  "Medicare Supplement/Medigap Plan",
+  "Prescription Drug Savings",
+  "Medicare Review",
+  "Other",
+];
 const counties = ["Duval County", "St. Johns County", "Other"];
-const contactMethods = ["Text", "Email"];
+const contactMethods = ["Call", "Text", "Email"];
 
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -30,32 +39,44 @@ export function ChatWidget() {
   const [topic, setTopic] = useState("");
   const [county, setCounty] = useState("");
   const [contactMethod, setContactMethod] = useState("");
+  const [contactDetail, setContactDetail] = useState("");
+  const [firstName, setFirstName] = useState(() => {
+    if (typeof window === "undefined") return "";
+    return window.localStorage.getItem("ve_lead_first_name") ?? "";
+  });
+  const [lastName, setLastName] = useState(() => {
+    if (typeof window === "undefined") return "";
+    return window.localStorage.getItem("ve_lead_last_name") ?? "";
+  });
   const [message, setMessage] = useState("");
   const [consent, setConsent] = useState(false);
-  const [question, setQuestion] = useState("");
-  const [qaResponse, setQaResponse] = useState<QaResponse | null>(null);
   const [zip, setZip] = useState("");
-  const [mode, setMode] = useState<"intake" | "question">("intake");
+  const [mode, setMode] = useState<"intake" | "question">("question");
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState("");
+  const [emailSent, setEmailSent] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const suggestedResources = useMemo(() => resourcesForTopic(topic), [topic]);
   const canEnroll = useMemo(() => /medicare|aca/i.test(topic), [topic]);
+  const contactLabel = contactMethod === "Email" ? "Best email address" : "Best phone number";
+  const contactPlaceholder = contactMethod === "Email" ? "you@email.com" : "(904) 555-1234";
 
   const resetFlow = () => {
     setStep(1);
     setTopic("");
     setCounty("");
     setContactMethod("");
+    setContactDetail("");
     setMessage("");
     setConsent(false);
-    setQuestion("");
-    setQaResponse(null);
     setZip("");
     setMode("intake");
     setError("");
     setSubmitted(false);
+    setSubmitMessage("");
+    setEmailSent(true);
     setIsSubmitting(false);
   };
 
@@ -70,6 +91,18 @@ export function ChatWidget() {
       setError("Please enter a valid Florida ZIP code for Medicare routing.");
       return;
     }
+    if (!contactDetail.trim()) {
+      setError("Please share the best phone or email for follow-up.");
+      return;
+    }
+    if (contactMethod === "Email" && !/^\S+@\S+\.\S+$/.test(contactDetail)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+    if ((contactMethod === "Text" || contactMethod === "Call") && contactDetail.replace(/\D/g, "").length < 10) {
+      setError("Please enter a valid phone number.");
+      return;
+    }
     setStep((prev) => Math.min(prev + 1, 3));
   };
 
@@ -81,16 +114,19 @@ export function ChatWidget() {
   const handleSubmit = async () => {
     setError("");
 
-    if (!topic || !county || !contactMethod || !message || !consent) {
+    if (!firstName || !lastName || !topic || !county || !contactMethod || !contactDetail || !message || !consent) {
       setError("Please complete all fields and provide consent to continue.");
       return;
     }
 
+    const nameLine = `Name: ${firstName} ${lastName}`.trim();
+    const messageWithName = [nameLine, message].filter(Boolean).join("\n");
+
     const payload: LeadPayload = {
       topic,
       county,
-      contactMethod,
-      message: zip.length === 5 ? `${message}\nZIP: ${zip}` : message,
+      contactMethod: `${contactMethod}: ${contactDetail}`,
+      message: zip.length === 5 ? `${messageWithName}\nZIP: ${zip}` : messageWithName,
       consent,
     };
 
@@ -102,11 +138,17 @@ export function ChatWidget() {
         body: JSON.stringify(payload),
       });
 
+      const data = (await response.json().catch(() => ({}))) as {
+        ok?: boolean;
+        error?: string;
+        message?: string;
+        notifications?: { email?: { status?: string } };
+      };
       if (!response.ok) {
-        const data = (await response.json().catch(() => ({}))) as { error?: string };
         throw new Error(data.error || "Unable to submit right now.");
       }
-
+      setSubmitMessage(data.message ?? "Got it, Patrick will follow up.");
+      setEmailSent(data.notifications?.email?.status === "sent");
       setSubmitted(true);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unable to submit right now.";
@@ -116,51 +158,24 @@ export function ChatWidget() {
     }
   };
 
-  const handleQuestion = async () => {
-    setError("");
-    if (!question.trim()) {
-      setError("Please enter a short question.");
-      return;
-    }
-    setIsSubmitting(true);
-    try {
-      const response = await fetch("/api/qa", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question }),
-      });
-      if (!response.ok) {
-        throw new Error("Unable to answer right now.");
-      }
-      const data = (await response.json()) as QaResponse;
-      setQaResponse(data);
-      if (/medicare/i.test(data.topic)) {
-        setTopic("Medicare");
-      } else if (/aca/i.test(data.topic)) {
-        setTopic("ACA Marketplace");
-      } else if (/ichra/i.test(data.topic)) {
-        setTopic("ICHRA");
-      } else if (/off-exchange/i.test(data.topic)) {
-        setTopic("Off-Exchange");
-      } else if (/group/i.test(data.topic)) {
-        setTopic("Small Business");
-      }
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Unable to answer right now.";
-      setError(message);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
-    <div className="fixed bottom-6 right-6 z-[60]">
+    <div className="fixed bottom-6 right-6 z-[60] flex flex-col items-end gap-2">
+      <Link
+        href="/chat"
+        className="btn btn-primary items-start rounded-full px-5 py-3 text-left text-sm shadow-lg"
+      >
+        <span className="flex flex-col">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-white/80">Live help 24/7</span>
+          <span className="text-sm font-semibold">Chat with a licensed agent now</span>
+        </span>
+      </Link>
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="btn btn-primary rounded-full px-5 py-3 text-sm shadow-lg"
+        className="text-xs font-medium text-black/70 hover:text-black underline"
+        aria-label="Request a callback or view options"
       >
-        Talk with a licensed agent now
+        Request callback
       </button>
 
       <AnimatePresence>
@@ -173,29 +188,60 @@ export function ChatWidget() {
             className="fixed inset-y-0 right-0 w-full max-w-md border-l border-black/10 bg-white shadow-2xl"
           >
             <div className="flex h-full flex-col">
-              <div className="flex items-center justify-between border-b border-black/10 p-4">
-                <div>
-                <div className="text-sm font-semibold text-black">Talk with a licensed agent now</div>
-                  <div className="text-xs text-black/60">Educational guidance + routing</div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOpen(false);
-                    resetFlow();
-                  }}
-                  className="rounded-full border border-black/10 p-2 text-black/60 hover:text-black"
-                  aria-label="Close chat"
-                >
-                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M6 6l12 12" />
+              <div className="flex flex-col gap-2 border-b border-black/10 p-4">
+                <div className="flex items-center justify-between gap-2">
+                  <div>
+                    <div className="text-sm font-semibold text-black">Talk with a licensed agent now</div>
+                    <div className="text-xs text-black/60">
+                      Chat here or request a callback. Plan-specific guidance by licensed agent.
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpen(false);
+                      resetFlow();
+                    }}
+                    className="rounded-full border border-black/10 p-2 text-black/60 hover:text-black"
+                    aria-label="Close chat"
+                  >
+                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M6 6l12 12" />
                     <path d="M18 6l-12 12" />
                   </svg>
                 </button>
               </div>
+                <Link
+                  href="/chat"
+                  className="text-xs font-medium text-[var(--brand-blue)] hover:underline"
+                >
+                  Open full chat page (like messaging) →
+                </Link>
+              </div>
+
+              <div className="border-b border-black/10 bg-white/70 p-4">
+                <div className="text-xs font-semibold uppercase tracking-wide text-black/60">Self-service enrollment</div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Link
+                    href="/enroll"
+                    className="btn btn-primary px-3 py-2 text-xs"
+                  >
+                    View enrollment links
+                  </Link>
+                  <a
+                    className="btn btn-secondary px-3 py-2 text-xs"
+                    href={`tel:${site.phoneE164}`}
+                  >
+                    Call {site.phoneDisplay}
+                  </a>
+                </div>
+                <p className="mt-2 text-[11px] text-black/60">
+                  Third-party enrollment partners. If you’d rather enroll with a licensed agent, we can help.
+                </p>
+              </div>
 
               <div className="space-y-4 overflow-y-auto p-5">
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
                     onClick={() => setMode("intake")}
@@ -217,90 +263,8 @@ export function ChatWidget() {
                 </div>
 
                 {mode === "question" ? (
-                  <div className="space-y-4">
-                    <div className="text-sm font-semibold text-black">What can we help with?</div>
-                    <textarea
-                      value={question}
-                      onChange={(event) => setQuestion(event.target.value)}
-                      className="w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
-                      rows={4}
-                      placeholder="Ask a question about Medicare, ACA, ICHRA, off-exchange, or group coverage."
-                    />
-                    <p className="text-xs text-black/60">
-                      For your privacy, do not send SSN, Medicare ID (MBI), or medical details.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={handleQuestion}
-                      className="btn btn-primary px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? "Checking..." : "Get an answer"}
-                    </button>
-
-                    {qaResponse ? (
-                      <div className="rounded-xl border border-black/10 bg-white p-4 text-sm text-black/80">
-                        <div className="font-semibold text-black">Answer</div>
-                        <p className="mt-2 leading-7">{qaResponse.answer}</p>
-                      </div>
-                    ) : null}
-
-                    {qaResponse?.resources?.length ? (
-                      <div>
-                        <div className="text-sm font-semibold text-black">Suggested resources</div>
-                        <div className="mt-3 space-y-2">
-                          {qaResponse.resources.map((item) => (
-                            <Link
-                              key={item.slug}
-                              href={`/resources#${item.slug}`}
-                              className="block rounded-xl border border-black/10 px-3 py-2 text-sm text-black hover:bg-black/5"
-                            >
-                              {item.title}
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    ) : null}
-
-                    {qaResponse?.topic === "medicare" ? (
-                      <div className="space-y-3 rounded-xl border border-black/10 bg-white p-4 text-sm text-black/80">
-                        <div className="font-semibold text-black">Medicare call-only routing</div>
-                        <label className="block">
-                          Florida ZIP code (required)
-                          <input
-                            value={zip}
-                            onChange={(event) => setZip(event.target.value.replace(/\D/g, "").slice(0, 5))}
-                            className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
-                            placeholder="ZIP code"
-                          />
-                        </label>
-                        {zip.length === 5 ? (
-                          <div className="rounded-xl border border-black/10 bg-black/5 p-3 text-xs text-black/70">
-                            <div className="font-semibold text-black">TPMO disclaimer</div>
-                            We do not offer every plan available in your area. Any information we provide is limited to
-                            plans we offer in your area. We are not connected with or endorsed by the U.S. government or
-                            the federal Medicare program.
-                          </div>
-                        ) : null}
-                        <a
-                          className="btn btn-primary px-4 py-2 text-sm"
-                          href={`tel:${site.phoneE164}`}
-                        >
-                          Call {site.phoneDisplay}
-                        </a>
-                      </div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setMode("intake");
-                          setStep(2);
-                        }}
-                        className="btn btn-secondary px-4 py-2 text-sm"
-                      >
-                        Request follow-up
-                      </button>
-                    )}
+                  <div className="flex min-h-0 flex-1 flex-col gap-3">
+                    <AIChatPanel />
                   </div>
                 ) : null}
 
@@ -361,6 +325,40 @@ export function ChatWidget() {
 
                 {mode === "intake" && step === 2 ? (
                   <div className="space-y-4">
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <div>
+                        <label className="text-sm font-semibold text-black">First name</label>
+                        <input
+                          value={firstName}
+                          onChange={(event) => {
+                            const value = event.target.value;
+                            setFirstName(value);
+                            if (typeof window !== "undefined") {
+                              window.localStorage.setItem("ve_lead_first_name", value);
+                            }
+                          }}
+                          className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+                          placeholder="First name"
+                          autoComplete="given-name"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-semibold text-black">Last name</label>
+                        <input
+                          value={lastName}
+                          onChange={(event) => {
+                            const value = event.target.value;
+                            setLastName(value);
+                            if (typeof window !== "undefined") {
+                              window.localStorage.setItem("ve_lead_last_name", value);
+                            }
+                          }}
+                          className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+                          placeholder="Last name"
+                          autoComplete="family-name"
+                        />
+                      </div>
+                    </div>
                     <div>
                       <label className="text-sm font-semibold text-black">County</label>
                       <select
@@ -391,6 +389,19 @@ export function ChatWidget() {
                         )}
                       </select>
                     </div>
+                    {contactMethod ? (
+                      <div>
+                        <label className="text-sm font-semibold text-black">{contactLabel}</label>
+                        <input
+                          value={contactDetail}
+                          onChange={(event) => setContactDetail(event.target.value)}
+                          className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+                          placeholder={contactPlaceholder}
+                          type={contactMethod === "Email" ? "email" : "tel"}
+                          autoComplete={contactMethod === "Email" ? "email" : "tel"}
+                        />
+                      </div>
+                    ) : null}
                     {topic.toLowerCase().includes("medicare") ? (
                       <div>
                         <label className="text-sm font-semibold text-black">Florida ZIP code</label>
@@ -419,7 +430,7 @@ export function ChatWidget() {
                       <button
                         type="button"
                         onClick={goNextDetails}
-                        disabled={!county || !contactMethod || !message}
+                        disabled={!firstName || !lastName || !county || !contactMethod || !contactDetail || !message}
                         className="btn btn-primary px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         Next
@@ -439,19 +450,24 @@ export function ChatWidget() {
                       </div>
                     ) : null}
                     <div className="rounded-xl border border-black/10 p-4 text-xs text-black/70">
-                      <label className="flex items-start gap-3">
+                      <label className="flex items-start gap-3 cursor-pointer">
                         <input
                           type="checkbox"
                           checked={consent}
                           onChange={(event) => setConsent(event.target.checked)}
-                          className="mt-0.5"
+                          className="mt-0.5 shrink-0"
+                          aria-describedby="consent-request-callback-hint"
                         />
                         <span>
-                          By checking this box, I consent to be contacted by Vital Edge Insurance at the phone number/email
-                          provided (including by autodialed calls/texts where permitted). Msg & data rates may apply. Reply STOP
-                          to opt out.
+                          By checking this box, you agree to be contacted by call, text, and/or email about your request.
+                          Message &amp; data rates may apply. Reply STOP to opt out.
                         </span>
                       </label>
+                      {!consent ? (
+                        <p id="consent-request-callback-hint" className="mt-2 text-black/60">
+                          Check the box above to enable &quot;Request Call Back&quot; and submit your request.
+                        </p>
+                      ) : null}
                     </div>
 
                     <div>
@@ -471,8 +487,17 @@ export function ChatWidget() {
 
                     {error ? <p className="text-xs text-red-600">{error}</p> : null}
                     {submitted ? (
-                      <div className="rounded-xl border border-green-200 bg-green-50 p-3 text-xs text-green-700">
-                        Got it, Patrick will follow up.
+                      <div className="space-y-2 rounded-xl border border-green-200 bg-green-50 p-3 text-xs text-green-700">
+                        <p>{submitMessage || "Got it, Patrick will follow up."}</p>
+                        {!emailSent ? (
+                          <p>
+                            If you don&apos;t hear back within an hour, please call us at{" "}
+                            <a className="font-semibold underline" href={`tel:${site.phoneE164}`}>
+                              {site.phoneDisplay}
+                            </a>
+                            .
+                          </p>
+                        ) : null}
                       </div>
                     ) : null}
 
@@ -481,8 +506,10 @@ export function ChatWidget() {
                         type="button"
                         onClick={handleSubmit}
                         disabled={!consent || isSubmitting || submitted}
-                        className="btn px-4 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-50"
+                        className="btn px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50 enabled:opacity-100 enabled:hover:opacity-90"
                         style={{ backgroundColor: "var(--brand-orange)" }}
+                        aria-disabled={!consent || isSubmitting || submitted}
+                        title={!consent ? "Check the consent box above to enable" : "Submit your request for a call back"}
                       >
                         {isSubmitting ? "Sending..." : "Request Call Back"}
                       </button>

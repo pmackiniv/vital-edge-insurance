@@ -22,7 +22,7 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/90 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-black/5 bg-white shadow-sm">
       <TopBar />
       <div className="border-b border-black/5">
         <Container>
@@ -56,7 +56,7 @@ export function Header() {
                       onMouseEnter={() => setActiveMenu("services")}
                       onMouseLeave={() => setActiveMenu(null)}
                     >
-                      <button className="text-sm text-black/70 hover:text-black">Services</button>
+                      <button className="text-sm font-semibold text-black">Services</button>
                       <AnimatePresence>
                         {activeMenu === "services" ? (
                           <motion.div
@@ -64,23 +64,30 @@ export function Header() {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 10 }}
                             transition={{ duration: 0.2, ease: "easeOut" }}
-                            className="absolute left-0 top-full z-50 mt-4 w-[520px] rounded-2xl border border-black/10 bg-white p-6 shadow-lg"
+                            className="absolute left-0 top-full z-50 mt-4 w-[520px] rounded-2xl border-2 border-gray-200 bg-white p-6 shadow-2xl"
+                            style={{ backgroundColor: "#ffffff" }}
                           >
-                            <div className="text-xs font-semibold uppercase tracking-wide text-black/60">Explore services</div>
+                            <div className="text-xs font-semibold uppercase tracking-wide text-gray-900">Explore services</div>
                             <div className="mt-4 grid gap-4 md:grid-cols-2">
                               {serviceLinks.map((service) => (
-                                <Link key={service.label} href={service.href} className="rounded-xl border border-black/10 p-4 hover:bg-black/5">
-                                  <div className="text-sm font-semibold text-black">{service.label}</div>
-                                  <p className="mt-2 text-xs text-black/60">{service.description}</p>
+                                <Link key={service.label} href={service.href} className="block rounded-xl border border-gray-200 bg-gray-50 p-4 text-gray-900 hover:bg-gray-100">
+                                  <div className="text-sm font-semibold text-gray-900">{service.label}</div>
+                                  <p className="mt-2 text-xs leading-relaxed text-gray-700">{service.description}</p>
                                 </Link>
                               ))}
                             </div>
-                            <div className="mt-4 flex gap-3">
+                            <div className="mt-4 flex flex-wrap gap-3">
                               <Link
                                 href="/chat"
                                 className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-green)]"
                               >
                                 Get help now
+                              </Link>
+                              <Link
+                                href="/schedule"
+                                className="inline-flex items-center justify-center rounded-xl border-2 border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
+                              >
+                                Schedule a call
                               </Link>
                               <Link
                                 href="/enroll"
