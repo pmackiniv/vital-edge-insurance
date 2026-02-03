@@ -1,6 +1,7 @@
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { Container } from "@/components/Container";
+import { SeoFaq } from "@/components/SeoFaq";
 
 type ResourceDoc = {
   slug: string;
@@ -132,6 +133,13 @@ export default async function ResourcesPage() {
           Client education hub with clear primers, checklists, and step-by-step guidance. Built for Florida residents
           seeking neutral explanations and next steps.
         </p>
+        <div className="mt-5 flex flex-wrap gap-3 text-sm">
+          <a className="underline text-black/70 hover:text-black" href="/medicare">Medicare guidance</a>
+          <a className="underline text-black/70 hover:text-black" href="/aca">ACA Marketplace</a>
+          <a className="underline text-black/70 hover:text-black" href="/ichra">ICHRA</a>
+          <a className="underline text-black/70 hover:text-black" href="/off-exchange">Off-exchange</a>
+          <a className="underline text-black/70 hover:text-black" href="/small-group">Small group</a>
+        </div>
       </div>
 
       <div className="mt-10 grid gap-8">
@@ -155,6 +163,34 @@ export default async function ResourcesPage() {
             />
           </section>
         ))}
+      </div>
+
+      <div className="mt-10">
+        <SeoFaq
+          items={[
+            {
+              question: "How should I use these resources?",
+              answer:
+                "Start with the topic that matches your coverage question, then bring the checklist to your call or chat. We focus on education and next steps.",
+            },
+            {
+              question: "Do you recommend specific plans here?",
+              answer:
+                "No. This hub is education-only. Plan-specific guidance is handled by a licensed agent.",
+            },
+            {
+              question: "What information is most helpful to have ready?",
+              answer:
+                "ZIP code, current coverage status, key dates, and your preferred contact method.",
+            },
+            {
+              question: "Do you help with Medicare plan-specific guidance?",
+              answer:
+                "Medicare plan-specific discussions require a call and the required TPMO disclaimer. We can help you schedule the next step.",
+            },
+          ]}
+          title="Resource questions"
+        />
       </div>
     </Container>
   );

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
 import { SeoFaq } from "@/components/SeoFaq";
-import { absoluteUrl } from "@/lib/site";
+import { absoluteUrl, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -40,6 +40,26 @@ export default function Page() {
               Chat with our team
             </Link>
             </div>
+          </div>
+
+          <div className="rounded-2xl border border-black/10 bg-white p-6 text-sm text-black/70">
+            <div className="text-xs font-semibold uppercase tracking-wide text-black/60">Answer</div>
+            <p className="mt-3 leading-7">
+              Vital Edge Insurance provides education-first guidance across ACA Marketplace, Medicare education, ICHRA,
+              and small group coverage in Florida. We outline next steps and connect you with a licensed agent for
+              plan-specific decisions. Call or text {site.phoneDisplay} or use chat for a quick next step.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <Link href="/enroll" className="btn btn-secondary px-4 py-2 text-sm">
+                Enrollment links
+              </Link>
+              <Link href="/contact" className="btn btn-primary px-4 py-2 text-sm">
+                Request guidance
+              </Link>
+            </div>
+            <p className="mt-2 text-xs text-black/60">
+              Third-party enrollment partners. Licensed guidance is available if you prefer to enroll with help.
+            </p>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
@@ -127,8 +147,12 @@ export default function Page() {
             <div className="rounded-2xl border border-black/10 bg-[var(--muted)] p-6">
               <h2 className="text-sm font-semibold text-black">Compliance-first approach</h2>
               <p className="mt-3 text-sm leading-6 text-black/70">
-                We provide general education and routing. We do not make plan recommendations, compare carriers, or make
-                enrollment decisions on your behalf. For individualized advice, connect with a licensed agent.
+                We provide general education and routing. If you&apos;d like plan-specific information, please provide a bit
+                of information to{" "}
+                <Link className="underline" href="/schedule">schedule an appointment</Link> or{" "}
+                <Link className="underline" href="/chat">request a same-day callback/text/email</Link>. You can also email{" "}
+                <a className="underline" href={`mailto:${site.email}`}>{site.email}</a> or call/text{" "}
+                <a className="underline" href={`tel:${site.phoneE164}`}>{site.phoneDisplay}</a>.
               </p>
             </div>
           </div>
@@ -166,9 +190,19 @@ export default function Page() {
                   "Yes. We provide education across Medicare, ACA Marketplace, off-exchange coverage, ICHRA, and small group benefits.",
               },
               {
-                question: "Do you recommend specific plans?",
+                question: "How do you handle plan-specific guidance?",
                 answer:
-                  "We do not recommend specific plans online. We provide education and connect you with licensed agents for plan-specific guidance.",
+                  "We provide general education online and handle plan-specific guidance by appointment or call/text.",
+              },
+              {
+                question: "Do you offer enrollment links?",
+                answer:
+                  "Yes. When appropriate we provide secure enrollment links so you can complete your application online.",
+              },
+              {
+                question: "What information should I have ready?",
+                answer:
+                  "Your ZIP code, coverage goals, preferred contact method, and any timing deadlines are most helpful.",
               },
               {
                 question: "How do I start a small group benefits review?",
@@ -177,6 +211,20 @@ export default function Page() {
               },
             ]}
           />
+
+          <section className="rounded-2xl border border-white/30 bg-white/35 p-6 text-white/90 backdrop-blur">
+            <div className="text-xs font-semibold uppercase tracking-wide text-white/70">AEO questions</div>
+            <h2 className="mt-2 text-lg font-semibold text-white">Common guidance questions</h2>
+            <ul className="mt-3 space-y-2 text-sm text-white/80">
+              <li>What should I bring to a first coverage call?</li>
+              <li>How do I know which enrollment window applies?</li>
+              <li>Can you explain coverage options without recommending a plan?</li>
+              <li>Do you support Florida‑only counties or statewide?</li>
+            </ul>
+            <p className="mt-3 text-sm text-white/80">
+              We provide education-first guidance and route plan-specific decisions to a licensed agent.
+            </p>
+          </section>
 
           <LeadCtaSection
             eyebrow="Ready to talk?"
