@@ -14,8 +14,15 @@ function ContactForm() {
   const defaultTopic = topicMap[topicParam] || "";
   const storedFirst = typeof window !== "undefined" ? window.localStorage.getItem("ve_lead_first_name") ?? "" : "";
   const storedLast = typeof window !== "undefined" ? window.localStorage.getItem("ve_lead_last_name") ?? "" : "";
-  const defaultFirstName = searchParams.get("first_name")?.trim() || searchParams.get("name")?.trim() || storedFirst;
-  const defaultLastName = searchParams.get("last_name")?.trim() || storedLast;
+  const defaultFirstName =
+    searchParams.get("firstName")?.trim() ||
+    searchParams.get("first_name")?.trim() ||
+    searchParams.get("name")?.trim() ||
+    storedFirst;
+  const defaultLastName =
+    searchParams.get("lastName")?.trim() ||
+    searchParams.get("last_name")?.trim() ||
+    storedLast;
   const defaultEmail = searchParams.get("email")?.trim() || "";
   const defaultPhone = searchParams.get("phone")?.trim() || "";
   const defaultZip = searchParams.get("zip")?.trim() || "";
@@ -31,8 +38,8 @@ function ContactForm() {
     const intent = followUp === "yes";
     setError("");
 
-    const firstName = String(formData.get("first_name") || "").trim();
-    const lastName = String(formData.get("last_name") || "").trim();
+    const firstName = String(formData.get("firstName") || formData.get("first_name") || "").trim();
+    const lastName = String(formData.get("lastName") || formData.get("last_name") || "").trim();
     const name = [firstName, lastName].filter(Boolean).join(" ").trim();
     const email = String(formData.get("email") || "").trim();
     const phone = String(formData.get("phone") || "").trim();
@@ -161,12 +168,12 @@ function ContactForm() {
           >
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <label htmlFor="first_name" className="text-sm font-semibold text-black">
+                <label htmlFor="firstName" className="text-sm font-semibold text-black">
                   First name
                 </label>
                 <input
-                  id="first_name"
-                  name="first_name"
+                  id="firstName"
+                  name="firstName"
                   defaultValue={defaultFirstName}
                   className="mt-2 h-12 w-full rounded-xl border border-black/10 px-4 text-sm"
                   required
@@ -179,12 +186,12 @@ function ContactForm() {
                 />
               </div>
               <div>
-                <label htmlFor="last_name" className="text-sm font-semibold text-black">
+                <label htmlFor="lastName" className="text-sm font-semibold text-black">
                   Last name
                 </label>
                 <input
-                  id="last_name"
-                  name="last_name"
+                  id="lastName"
+                  name="lastName"
                   defaultValue={defaultLastName}
                   className="mt-2 h-12 w-full rounded-xl border border-black/10 px-4 text-sm"
                   required
