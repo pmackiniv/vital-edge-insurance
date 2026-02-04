@@ -34,7 +34,7 @@ function isSmtpConfigured(): boolean {
 }
 
 function getFormSubmitTo(): string {
-  return process.env.NEXT_PUBLIC_FORMSUBMIT_TO?.trim() || "";
+  return process.env.FORMSUBMIT_TO?.trim() || process.env.NEXT_PUBLIC_FORMSUBMIT_TO?.trim() || "";
 }
 
 async function sendLeadEmailViaSmtp(payload: {
@@ -136,31 +136,23 @@ export async function sendLeadEmail(payload: {
   message: string;
   receivedAtIso: string;
 }): Promise<EmailResult> {
-  const smtpResult = await sendLeadEmailViaSmtp(payload);
-  let finalResult = smtpResult;
-
-  if (smtpResult.status !== "sent") {
-    const formResult = await sendLeadEmailViaFormSubmit(payload);
-    if (formResult.status === "sent") {
-      finalResult = formResult;
-    } else if (smtpResult.status === "error" && formResult.status === "error") {
-      finalResult = {
-        status: "error",
-        reason: `smtp: ${smtpResult.reason || "error"}; formsubmit: ${formResult.reason || "error"}`,
-        provider: "formsubmit",
-      };
-    } else {
-      finalResult = formResult.status === "skipped" ? smtpResult : formResult;
-    }
+  if (isSmtpConfigured()) {
+    const smtpResult = await sendLeadEmailViaSmtp(payload);
+    console.info("lead_email", {
+      status: smtpResult.status,
+      reason: smtpResult.reason,
+      provider: smtpResult.provider,
+    });
+    return smtpResult;
   }
 
+  const formResult = await sendLeadEmailViaFormSubmit(payload);
   console.info("lead_email", {
-    status: finalResult.status,
-    reason: finalResult.reason,
-    provider: finalResult.provider,
+    status: formResult.status,
+    reason: formResult.reason,
+    provider: formResult.provider,
   });
-
-  return finalResult;
+  return formResult;
 }
 
 /**

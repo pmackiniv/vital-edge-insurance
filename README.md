@@ -40,6 +40,15 @@ Accepted values: `1`, `true`, `yes`, `on` (case-insensitive). When set, lead not
 - **SMS (optional):** `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_MESSAGING_SERVICE_SID`, `OWNER_PHONE`
 - **Site URL:** `NEXT_PUBLIC_SITE_URL` (production), `VERCEL_URL` (set by Vercel)
 
+## Go Live Smoke Test
+
+Use these endpoints to confirm Production is serving the expected commit and integrations are configured.
+
+```bash
+curl -s https://vital-edge-insurance.vercel.app/api/version
+curl -s https://vital-edge-insurance.vercel.app/api/health
+```
+
 ## API Routes
 
 | Route | Method | Purpose |

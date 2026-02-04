@@ -4,6 +4,10 @@ import { sendLeadEmail } from "@/lib/notify";
 import { syncLeadToNotion } from "@/lib/notionLead";
 import { site } from "@/lib/site";
 
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX = 10;
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+
 type LeadPayload = {
   topic?: string;
   county?: string;
@@ -13,9 +17,41 @@ type LeadPayload = {
   intent?: boolean;
 };
 
+function getClientIp(req: Request): string {
+  const forwarded = req.headers.get("x-forwarded-for");
+  if (forwarded) return forwarded.split(",")[0]?.trim() || "unknown";
+  const realIp = req.headers.get("x-real-ip");
+  return realIp?.trim() || "unknown";
+}
+
+function checkRateLimit(ip: string): { ok: boolean; retryAfter?: number } {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || entry.resetAt <= now) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return { ok: true };
+  }
+
+  if (entry.count >= RATE_LIMIT_MAX) {
+    return { ok: false, retryAfter: Math.ceil((entry.resetAt - now) / 1000) };
+  }
+
+  entry.count += 1;
+  return { ok: true };
+}
+
 export async function POST(req: Request) {
   const startMs = Date.now();
   try {
+    const ip = getClientIp(req);
+    const rate = checkRateLimit(ip);
+    if (!rate.ok) {
+      return NextResponse.json(
+        { ok: false, error: "Too many requests. Please try again shortly." },
+        { status: 429, headers: { "Retry-After": String(rate.retryAfter || 60) } },
+      );
+    }
+
     const body = (await req.json()) as LeadPayload;
     const contactMethod = body.contactMethod?.trim() || "";
 

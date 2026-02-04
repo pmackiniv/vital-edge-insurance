@@ -6,10 +6,22 @@ export const maxDuration = 30;
 
 export async function POST(req: Request) {
   const startMs = Date.now();
+  const requestId = crypto.randomUUID();
+  const gitCommit = process.env.VERCEL_GIT_COMMIT_SHA || "unknown";
+  const vercelEnv = process.env.VERCEL_ENV || "unknown";
   if (!process.env.OPENAI_API_KEY) {
-    console.warn("chat_request", { status: 503, reason: "openai_not_configured" });
+    console.warn("chat_request", {
+      request_id: requestId,
+      status: 503,
+      reason: "openai_not_configured",
+      vercel_env: vercelEnv,
+      git_commit: gitCommit,
+    });
     return new Response(
-      JSON.stringify({ error: "LLM not configured. Add OPENAI_API_KEY in Vercel." }),
+      JSON.stringify({
+        error: "Chat is temporarily unavailable. Add OPENAI_API_KEY in Vercel.",
+        requestId,
+      }),
       { status: 503, headers: { "Content-Type": "application/json" } },
     );
   }
@@ -26,14 +38,30 @@ export async function POST(req: Request) {
       temperature: 0.3,
     });
 
-    console.info("chat_request", { status: 200, duration_ms: Date.now() - startMs });
+    console.info("chat_request", {
+      request_id: requestId,
+      status: 200,
+      duration_ms: Date.now() - startMs,
+      message_count: messages.length,
+      vercel_env: vercelEnv,
+      git_commit: gitCommit,
+    });
     return result.toUIMessageStreamResponse();
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    console.error("chat_error", { message });
-    console.info("chat_request", { status: 500, duration_ms: Date.now() - startMs });
+    console.error("chat_error", { request_id: requestId, message });
+    console.info("chat_request", {
+      request_id: requestId,
+      status: 500,
+      duration_ms: Date.now() - startMs,
+      vercel_env: vercelEnv,
+      git_commit: gitCommit,
+    });
     return new Response(
-      JSON.stringify({ error: "Something went wrong. Please try again." }),
+      JSON.stringify({
+        error: "Chat is temporarily unavailable. Use the contact form or call.",
+        requestId,
+      }),
       { status: 500, headers: { "Content-Type": "application/json" } },
     );
   }

@@ -38,9 +38,9 @@ export function AIChatPanel() {
 
       {showError ? (
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800">
-          {error?.message?.includes("503")
-            ? "AI chat is not configured yet. Add OPENAI_API_KEY in Vercel to enable."
-            : "Chat is temporarily unavailable. Call or text or use the contact form."}
+          {error?.message?.includes("OPENAI_API_KEY") || error?.message?.includes("503")
+            ? "Chat is temporarily unavailable. Use the contact form or call."
+            : "Chat is temporarily unavailable. Use the contact form or call."}
         </div>
       ) : null}
 
