@@ -2,7 +2,7 @@ import { Container } from "@/components/Container";
 import { site } from "@/lib/site";
 
 export default function SchedulePage() {
-  const scheduleUrl = process.env.CALENDLY_URL || process.env.NEXT_PUBLIC_SCHEDULE_URL || site.scheduleUrl;
+  const scheduleUrl = process.env.CALENDLY_URL || process.env.NEXT_PUBLIC_SCHEDULE_URL || "";
 
   return (
     <Container className="py-14">
