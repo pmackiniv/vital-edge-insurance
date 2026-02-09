@@ -2,6 +2,11 @@ import { streamText } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { buildChatSystemPrompt } from "@/lib/chatSystemPrompt";
 import { normalizeChatMessages } from "@/lib/chatMessages";
+import {
+  classifyChatProviderError,
+  ensureChatProviderAvailable,
+  makeChatUnavailablePayload,
+} from "@/lib/chatProviderGuard";
 
 export const maxDuration = 30;
 
@@ -37,6 +42,22 @@ export async function POST(req: Request) {
       });
     }
 
+    const availability = await ensureChatProviderAvailable();
+    if (!availability.ok) {
+      const payload = makeChatUnavailablePayload(requestId, availability.reason);
+      console.warn("chat_request", {
+        request_id: requestId,
+        status: 503,
+        reason: payload.reason,
+        vercel_env: vercelEnv,
+        git_commit: gitCommit,
+      });
+      return new Response(JSON.stringify(payload), {
+        status: 503,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     const result = streamText({
       model: openai("gpt-4o-mini"),
       system: buildChatSystemPrompt(),
@@ -53,9 +74,33 @@ export async function POST(req: Request) {
       vercel_env: vercelEnv,
       git_commit: gitCommit,
     });
-    return result.toUIMessageStreamResponse();
+    return result.toUIMessageStreamResponse({
+      onError: (error) => {
+        const reason = classifyChatProviderError(error);
+        if (reason) {
+          return JSON.stringify(makeChatUnavailablePayload(requestId, reason));
+        }
+        return "Chat is temporarily unavailable. Use the contact form or call.";
+      },
+    });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
+    const providerReason = classifyChatProviderError(err);
+    if (providerReason) {
+      const payload = makeChatUnavailablePayload(requestId, providerReason);
+      console.warn("chat_request", {
+        request_id: requestId,
+        status: 503,
+        reason: payload.reason,
+        vercel_env: vercelEnv,
+        git_commit: gitCommit,
+      });
+      return new Response(JSON.stringify(payload), {
+        status: 503,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     console.error("chat_error", { request_id: requestId, message });
     console.info("chat_request", {
       request_id: requestId,

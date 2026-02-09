@@ -212,6 +212,7 @@ async function runMobile({
   outDir,
   logLines,
   networkEntries,
+  events,
 }) {
   const result = {
     passed: false,
@@ -280,6 +281,10 @@ async function runMobile({
         afterUrl: page.url(),
         routeChanged: false,
         visible: false,
+        boundingBox: null,
+        centerPoint: null,
+        blocker: null,
+        navToggle: null,
         error: null,
       };
       try {
@@ -288,6 +293,10 @@ async function runMobile({
           if (await toggle.isVisible()) {
             await toggle.click();
           }
+          attempt.navToggle = await toggle.evaluate((el) => ({
+            ariaExpanded: el.getAttribute("aria-expanded"),
+            className: el.className,
+          }));
         }
 
         const link = page.getByRole("link", { name: new RegExp(label, "i") }).first();
@@ -295,6 +304,27 @@ async function runMobile({
         if (!attempt.visible) {
           throw new Error(`Link not visible: ${label}`);
         }
+        const box = await link.boundingBox();
+        if (box) {
+          const center = { x: Math.round(box.x + box.width / 2), y: Math.round(box.y + box.height / 2) };
+          attempt.boundingBox = box;
+          attempt.centerPoint = center;
+          attempt.blocker = await page.evaluate(({ x, y }) => {
+            const element = document.elementFromPoint(x, y);
+            if (!element) return null;
+            const style = window.getComputedStyle(element);
+            return {
+              tag: element.tagName.toLowerCase(),
+              id: element.id || null,
+              className: element.className || null,
+              pointerEvents: style.pointerEvents,
+              zIndex: style.zIndex,
+              position: style.position,
+              text: (element.textContent || "").trim().slice(0, 120),
+            };
+          }, center);
+        }
+
         await link.click({ timeout: timeoutMs });
         attempt.clicked = true;
         await page.waitForLoadState("domcontentloaded", { timeout: Math.min(timeoutMs, 10_000) });
@@ -306,6 +336,17 @@ async function runMobile({
       } catch (err) {
         attempt.error = err instanceof Error ? err.message : String(err);
       }
+      events.push({
+        type: "mobile_nav_attempt",
+        at: new Date().toISOString(),
+        attempt,
+      });
+      appendLog(
+        logLines,
+        `Mobile nav attempt ${label}: clicked=${attempt.clicked} visible=${attempt.visible} routeChanged=${attempt.routeChanged} ${
+          attempt.error ? `error=${attempt.error}` : ""
+        }`,
+      );
       result.attempts.push(attempt);
     }
 
@@ -335,7 +376,11 @@ async function writeArtifacts(outDir, logLines, networkEntries, summary) {
   const networkPath = path.join(outDir, "network.json");
 
   await fs.writeFile(consolePath, `${logLines.join("\n")}\n`, "utf8");
-  await fs.writeFile(networkPath, `${JSON.stringify({ summary, requests: networkEntries }, null, 2)}\n`, "utf8");
+  await fs.writeFile(
+    networkPath,
+    `${JSON.stringify({ summary, requests: networkEntries, events: summary.events || [] }, null, 2)}\n`,
+    "utf8",
+  );
 }
 
 async function main() {
@@ -343,6 +388,7 @@ async function main() {
   const outDir = await ensureOutputDir();
   const logLines = [];
   const networkEntries = [];
+  const events = [];
   appendLog(logLines, `Triage start baseUrl=${args.baseUrl} timeoutMs=${args.timeoutMs}`);
   appendLog(logLines, `Artifact directory: ${outDir}`);
 
@@ -369,6 +415,7 @@ async function main() {
       outDir,
       logLines,
       networkEntries,
+      events,
     });
   } catch (err) {
     fatalError = err instanceof Error ? err.message : String(err);
@@ -387,6 +434,7 @@ async function main() {
     timeoutMs: args.timeoutMs,
     desktop: desktopResult,
     mobile: mobileResult,
+    events,
     fatalError,
     passed: overallPassed,
   };

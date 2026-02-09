@@ -8,6 +8,20 @@ import { site } from "@/lib/site";
 
 const chatTransport = new DefaultChatTransport({ api: "/api/chat" });
 
+function isChatUnavailableError(message: string | undefined): boolean {
+  if (!message) return false;
+  if (message.includes("CHAT_UNAVAILABLE")) return true;
+  if (message.includes("OPENAI_API_KEY")) return true;
+  if (message.includes("503")) return true;
+
+  try {
+    const parsed = JSON.parse(message) as { error?: string };
+    return parsed.error === "CHAT_UNAVAILABLE";
+  } catch {
+    return false;
+  }
+}
+
 export function AIChatPanel() {
   const [input, setInput] = useState("");
   const { messages, sendMessage, status, error } = useChat({
@@ -16,6 +30,7 @@ export function AIChatPanel() {
   });
 
   const isDisabled = status === "streaming" || status === "submitted";
+  const chatUnavailable = isChatUnavailableError(error?.message);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,8 +53,8 @@ export function AIChatPanel() {
 
       {showError ? (
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800">
-          {error?.message?.includes("OPENAI_API_KEY") || error?.message?.includes("503")
-            ? "Chat is temporarily unavailable. Use the contact form or call."
+          {chatUnavailable
+            ? "Chat is temporarily unavailable. Call/text (352) 214-8879 or request a callback."
             : "Chat is temporarily unavailable. Use the contact form or call."}
         </div>
       ) : null}
