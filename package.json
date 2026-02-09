@@ -7,11 +7,21 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
+    "test": "tsx --test test/**/*.test.ts",
+    "smoke:compliance": "bash scripts/smoke/compliance-smoke.sh",
+    "prisma:generate": "prisma generate",
+    "tpmo:seed": "tsx scripts/tpmo/seed-sponsors.ts",
+    "tpmo:ingest": "tsx scripts/tpmo/ingest-landscape.ts",
+    "tpmo:refresh": "npm run tpmo:seed && npm run tpmo:ingest",
+    "ops:bootstrap": "node scripts/ops/bootstrap-proof.mjs",
+    "ops:prove": "node scripts/ops/prove-site.mjs --baseUrl $BASE_URL",
+    "ops:triage": "node scripts/ops/triage-site.mjs",
     "socials:daily": "node scripts/socials/create-daily-socials.mjs"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.25",
     "@ai-sdk/react": "^3.0.69",
+    "@prisma/client": "^6.17.1",
     "@vercel/analytics": "^1.6.1",
     "@vercel/speed-insights": "^1.3.1",
     "ai": "^6.0.67",
@@ -30,8 +40,10 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
     "playwright": "^1.58.0",
+    "prisma": "^6.17.1",
     "sharp": "^0.34.5",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }

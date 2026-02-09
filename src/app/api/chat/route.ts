@@ -1,6 +1,7 @@
 import { streamText } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { buildChatSystemPrompt } from "@/lib/chatSystemPrompt";
+import { normalizeChatMessages } from "@/lib/chatMessages";
 
 export const maxDuration = 30;
 
@@ -28,7 +29,13 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const messages = Array.isArray(body.messages) ? body.messages : [];
+    const messages = await normalizeChatMessages(body.messages);
+    if (messages.length === 0) {
+      return new Response(JSON.stringify({ error: "Invalid chat message payload.", requestId }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
 
     const result = streamText({
       model: openai("gpt-4o-mini"),
