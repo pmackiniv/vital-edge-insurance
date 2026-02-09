@@ -24,6 +24,8 @@ export const site = {
     label: "Request help",
     href: "/contact",
   },
+  /** Cal.com, Calendly, or other booking embed URL. Set NEXT_PUBLIC_SCHEDULE_URL in Vercel. */
+  scheduleUrl: process.env.NEXT_PUBLIC_SCHEDULE_URL || "",
   nav: [
     { label: "Services", href: "/services" },
     { label: "Enroll", href: "/enroll" },
