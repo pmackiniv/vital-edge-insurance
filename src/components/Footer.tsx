@@ -35,8 +35,6 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
-              <li><Link className="text-black/70 hover:text-black" href="/schedule">Schedule a call</Link></li>
-              <li><Link className="text-black/70 hover:text-black" href="/blog">Blog</Link></li>
             </ul>
           </div>
 

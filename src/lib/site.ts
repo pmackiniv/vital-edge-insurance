@@ -24,7 +24,7 @@ export const site = {
   logoPath: "/brand/vital-edge-logo.png",
   ogImagePath: "/og-image.svg",
   primaryCta: {
-    label: "Request help",
+    label: "Get Personalized Medicare Advice",
     href: "/contact",
   },
   /** Cal.com, Calendly, or other booking embed URL. Set NEXT_PUBLIC_SCHEDULE_URL in Vercel. */

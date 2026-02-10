@@ -1,17 +1,20 @@
 import { NextResponse } from "next/server";
+import { getTpmoStatus } from "@/lib/tpmo/tpmoCounts";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  const planYear = Number(url.searchParams.get("planYear")) || new Date().getFullYear();
+  const planYearParam = Number(url.searchParams.get("planYear"));
+  const planYear = Number.isFinite(planYearParam) && planYearParam > 0 ? planYearParam : undefined;
+  const status = await getTpmoStatus(planYear);
 
   return NextResponse.json({
-    ok: true,
-    planYear,
-    source: "cms_landscape",
-    datasetVersion: process.env.TPMO_DATASET_VERSION?.trim() || null,
-    refreshedAt: process.env.TPMO_DATASET_REFRESHED_AT?.trim() || null,
-    aliasMapVersion: process.env.TPMO_ALIAS_MAP_VERSION?.trim() || "tpmo-alias-v1",
-    databaseConfigured: Boolean(process.env.DATABASE_URL?.trim()),
-    persistenceMode: process.env.DATABASE_URL?.trim() ? "database" : "ephemeral",
+    ok: status.ok,
+    planYear: status.planYear,
+    source: status.source,
+    datasetVersion: status.datasetVersion,
+    refreshedAt: status.refreshedAt,
+    aliasMapVersion: status.aliasMapVersion,
+    databaseConfigured: status.databaseConfigured,
+    persistenceMode: status.persistenceMode,
   });
 }

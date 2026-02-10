@@ -284,13 +284,12 @@ export default function HomePage() {
                     Receive guidance and next steps.
                   </li>
                 </ol>
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <Link
-                    href="/contact"
-                    className="btn btn-primary px-4 py-2 text-sm"
-                  >
-                    Get personalized advice
+                <div className="mt-6 text-sm text-black/75">
+                  Prefer to talk now?{" "}
+                  <Link href="/contact" className="font-semibold underline">
+                    {site.primaryCta.label}
                   </Link>
+                  .
                 </div>
                 <div className="mt-3 text-xs text-black/60">
                   Prefer a callback?{" "}

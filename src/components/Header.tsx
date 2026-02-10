@@ -68,10 +68,10 @@ export function Header() {
             <div className="hidden items-center gap-3 md:flex">
               <motion.div whileHover={{ y: -1 }} whileTap={{ y: 0 }}>
                 <Link
-                  href="/contact"
+                  href={site.primaryCta.href}
                   className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[var(--brand-green)] focus:outline-none focus:ring-2 focus:ring-black/20"
                 >
-                  Get Personalized Medicare Advice
+                  {site.primaryCta.label}
                 </Link>
               </motion.div>
             </div>
@@ -131,11 +131,11 @@ export function Header() {
                   </nav>
                   <div className="flex flex-col gap-3">
                     <Link
-                      href="/contact"
+                      href={site.primaryCta.href}
                       onClick={() => setMobileOpen(false)}
                       className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-green)]"
                     >
-                      Get Personalized Medicare Advice
+                      {site.primaryCta.label}
                     </Link>
                   </div>
                 </div>
