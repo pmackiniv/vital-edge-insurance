@@ -1,0 +1,271 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ArtifactStatus {
+  PENDING
+  APPROVED
+  DENIED
+}
+
+enum DecisionType {
+  APPROVE
+  DENY
+}
+
+enum Cadence {
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+enum TaskStatus {
+  PENDING
+  DONE
+  SKIPPED
+}
+
+enum RunResult {
+  PASS
+  FAIL
+}
+
+enum ApproverRole {
+  OWNER
+  ADMIN
+  VIEWER
+}
+
+model AgentEvent {
+  id               String   @id @default(cuid())
+  timestamp        DateTime @default(now())
+  eventType        String
+  status           String
+  agentName        String?
+  requestId        String?
+  summary          String
+  metaJson         Json?
+  route            String?
+  complianceResult String?
+
+  @@index([timestamp])
+  @@index([eventType, status])
+  @@index([requestId])
+}
+
+model AppointmentSponsor {
+  id                  String   @id @default(cuid())
+  sponsorKey          String
+  displayName         String
+  status              String
+  state               String
+  effectiveDate       DateTime
+  terminationDate     DateTime?
+  countsAsSeparateOrg Boolean  @default(true)
+  notes               String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@unique([sponsorKey, state])
+  @@index([state, status])
+}
+
+model SponsorAlias {
+  id        String   @id @default(cuid())
+  alias     String
+  sponsorKey String
+  priority  Int      @default(100)
+  active    Boolean  @default(true)
+  version   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([alias, sponsorKey, version])
+  @@index([active, version])
+  @@index([sponsorKey, active])
+}
+
+model PlanIndex {
+  id             String   @id @default(cuid())
+  planYear       Int
+  zip            String
+  countyFips     String?
+  state          String
+  contractId     String
+  planId         String
+  rawSponsorName String
+  sponsorKey     String?
+  datasetVersion String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([planYear, zip, state, contractId, planId, datasetVersion])
+  @@index([planYear, zip])
+  @@index([planYear, sponsorKey])
+  @@index([planYear, zip, sponsorKey])
+}
+
+model TpmoCountLookupLog {
+  id                 String   @id @default(cuid())
+  timestamp          DateTime @default(now())
+  planYear           Int
+  zip                String
+  orgCount           Int
+  planCount          Int
+  orgsJson           Json
+  source             String
+  datasetVersion     String
+  aliasMapVersion    String
+  requestContextJson Json
+  persistenceMode    String
+
+  @@index([timestamp])
+  @@index([planYear, zip])
+}
+
+model TpmoDatasetMeta {
+  id             String   @id @default(cuid())
+  source         String
+  planYear       Int
+  datasetVersion String
+  refreshedAt    DateTime
+  fileChecksum   String?
+  rowCount       Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([source, planYear, datasetVersion])
+  @@index([source, planYear, refreshedAt])
+}
+
+model CallComplianceAudit {
+  id                   String   @id @default(cuid())
+  timestamp            DateTime @default(now())
+  callId               String
+  product              String
+  discussionStage      String
+  actorId              String
+  actorRole            String
+  recordingRequired    Boolean  @default(false)
+  callRecordingConsent Boolean  @default(false)
+  callRecordingActive  Boolean  @default(false)
+  zip                  String?
+  planYear             Int?
+  orgCount             Int?
+  planCount            Int?
+  disclaimerText       String?
+  disclaimerVariant    String?
+  cfuConfirmed         Boolean  @default(false)
+  soaOnFile            Boolean  @default(false)
+  soaRequestedAt       DateTime?
+  soaSignedAt          DateTime?
+  appointmentAt        DateTime?
+  soaTimingValid       Boolean  @default(false)
+  callRecorded         Boolean  @default(false)
+  retentionUntil       DateTime?
+  sourceRoute          String
+  allowed              Boolean  @default(false)
+  blockCode            String?
+  requiredOwner        Boolean  @default(false)
+  requestContextJson   Json?
+
+  @@index([timestamp])
+  @@index([callId])
+  @@index([discussionStage, allowed])
+  @@index([zip, product])
+}
+
+model LeadDisclosureAudit {
+  id                       String   @id @default(cuid())
+  timestamp                DateTime @default(now())
+  leadRequestId            String
+  leadTransferDisclosureAck Boolean  @default(false)
+  dataSharingConsent       Boolean  @default(false)
+  dataSharingEntitiesJson  Json
+  beneficiaryInitiated     Boolean  @default(false)
+  sourceRoute              String
+  zip                      String?
+  productInterest          String?
+
+  @@index([timestamp])
+  @@index([leadRequestId])
+}
+
+model Artifact {
+  id            String         @id @default(uuid())
+  createdAt     DateTime       @default(now())
+  runDate       DateTime       @db.Date
+  cadence       Cadence
+  periodKey     String
+  artifactType  String         @map("type")
+  relativePath  String
+  sha256        String         @unique
+  contentText   String?
+  contentJson   Json?
+  scorecardJson Json?
+  status        ArtifactStatus @default(PENDING)
+  source        String
+  meta          Json?
+
+  decisions    Decision[]
+  handoffTasks HandoffTask[]
+
+  @@index([status, createdAt])
+  @@index([cadence, periodKey])
+}
+
+model Decision {
+  id        String       @id @default(uuid())
+  artifactId String
+  decision  DecisionType
+  notes     String?
+  decidedBy String
+  decidedAt DateTime     @default(now())
+
+  artifact Artifact @relation(fields: [artifactId], references: [id], onDelete: Cascade)
+
+  @@index([artifactId, decidedAt])
+}
+
+model HandoffTask {
+  id               String     @id @default(uuid())
+  periodKey        String
+  title            String
+  stepsJson        Json
+  status           TaskStatus @default(PENDING)
+  linkedArtifactId String?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  linkedArtifact Artifact? @relation(fields: [linkedArtifactId], references: [id], onDelete: SetNull)
+
+  @@index([periodKey, status])
+}
+
+model Run {
+  id        String    @id @default(uuid())
+  cadence   Cadence
+  periodKey String
+  runDate   DateTime  @db.Date
+  packetDir String?
+  gitCommit String?
+  strict    Boolean   @default(false)
+  result    RunResult
+  summary   String?
+  createdAt DateTime  @default(now())
+
+  @@unique([cadence, periodKey, runDate])
+  @@index([createdAt])
+}
+
+model Approver {
+  id        String       @id @default(uuid())
+  email     String       @unique
+  role      ApproverRole @default(VIEWER)
+  createdAt DateTime     @default(now())
+}
