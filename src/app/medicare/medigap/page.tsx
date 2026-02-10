@@ -1,9 +1,64 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
 import { SeoFaq } from "@/components/SeoFaq";
+import { absoluteUrl } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "Medigap (Medicare Supplement) Education | Florida Licensed Agent Guidance",
+  description:
+    "Education-first Medigap and Medicare Supplement guidance for Florida residents. Learn timing, coverage basics, and next steps with a licensed agent.",
+  alternates: {
+    canonical: absoluteUrl("/medicare/medigap"),
+  },
+  openGraph: {
+    title: "Medigap Education in Florida | Vital Edge Insurance",
+    description:
+      "Understand Medigap basics, enrollment timing, and preparation steps with licensed guidance.",
+    url: absoluteUrl("/medicare/medigap"),
+  },
+};
 
 export default function Page() {
+  const serviceJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Medigap (Medicare Supplement) Education",
+    serviceType: "Insurance Guidance",
+    areaServed: "Florida",
+    provider: {
+      "@type": "InsuranceAgency",
+      name: "Vital Edge Insurance",
+      url: absoluteUrl("/"),
+    },
+    url: absoluteUrl("/medicare/medigap"),
+  };
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: absoluteUrl("/"),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Medicare",
+        item: absoluteUrl("/medicare"),
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: "Medigap",
+        item: absoluteUrl("/medicare/medigap"),
+      },
+    ],
+  };
+
   return (
     <Container className="py-14">
       <div className="space-y-10">
@@ -95,6 +150,8 @@ export default function Page() {
           ctaLabel="Request Medigap guidance"
         />
       </div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
     </Container>
   );
 }

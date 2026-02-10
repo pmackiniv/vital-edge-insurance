@@ -21,6 +21,38 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
+  const serviceJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Off-Exchange Coverage Education Guidance",
+    serviceType: "Insurance Guidance",
+    areaServed: "Florida",
+    provider: {
+      "@type": "InsuranceAgency",
+      name: "Vital Edge Insurance",
+      url: absoluteUrl("/"),
+    },
+    url: absoluteUrl("/off-exchange"),
+  };
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: absoluteUrl("/"),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Off-Exchange",
+        item: absoluteUrl("/off-exchange"),
+      },
+    ],
+  };
+
   return (
     <Container className="py-14">
       <div className="space-y-10">
@@ -121,6 +153,8 @@ export default function Page() {
           ctaLabel="Request off-exchange guidance"
         />
       </div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
     </Container>
   );
 }

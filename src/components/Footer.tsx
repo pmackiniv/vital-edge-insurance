@@ -43,12 +43,7 @@ export function Footer() {
           <div>
             <div className="text-sm font-semibold text-black">Compliance</div>
             <p className="mt-3 text-sm leading-6 text-black/70">
-              Licensed Insurance Agency. Serving Jacksonville and counties across Florida with education-first insurance
-              guidance.
-            </p>
-            <p className="mt-3 text-sm leading-6 text-black/70">
-              Not connected with or endorsed by the U.S. government or the federal Medicare program. We do not offer
-              every plan available in your area.
+              Education-first insurance guidance from a licensed agency serving Jacksonville and counties across Florida.
             </p>
             <div className="mt-4 flex gap-4 text-sm">
               <Link className="text-black/70 hover:text-black" href="/privacy">Privacy</Link>
