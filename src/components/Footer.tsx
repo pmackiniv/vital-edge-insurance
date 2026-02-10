@@ -28,11 +28,14 @@ export function Footer() {
           <div>
             <div className="text-sm font-semibold text-black">Explore</div>
             <ul className="mt-3 space-y-2 text-sm">
-              <li><Link className="text-black/70 hover:text-black" href="/services">Services</Link></li>
+              {site.nav.map((item) => (
+                <li key={item.href}>
+                  <Link className="text-black/70 hover:text-black" href={item.href}>
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
               <li><Link className="text-black/70 hover:text-black" href="/schedule">Schedule a call</Link></li>
-              <li><Link className="text-black/70 hover:text-black" href="/duval-county">Duval County</Link></li>
-              <li><Link className="text-black/70 hover:text-black" href="/miami">Miami-Dade County</Link></li>
-              <li><Link className="text-black/70 hover:text-black" href="/st-johns-county">St. Johns County</Link></li>
               <li><Link className="text-black/70 hover:text-black" href="/blog">Blog</Link></li>
             </ul>
           </div>

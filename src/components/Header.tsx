@@ -68,18 +68,12 @@ export function Header() {
             <div className="hidden items-center gap-3 md:flex">
               <motion.div whileHover={{ y: -1 }} whileTap={{ y: 0 }}>
                 <Link
-                  href="/chat"
+                  href="/contact"
                   className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[var(--brand-green)] focus:outline-none focus:ring-2 focus:ring-black/20"
                 >
-                  Get help now
+                  Get Personalized Medicare Advice
                 </Link>
               </motion.div>
-              <Link
-                href="/enroll"
-                className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-orange)] px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
-              >
-                Enroll
-              </Link>
             </div>
 
             <button
@@ -137,18 +131,11 @@ export function Header() {
                   </nav>
                   <div className="flex flex-col gap-3">
                     <Link
-                      href="/chat"
+                      href="/contact"
                       onClick={() => setMobileOpen(false)}
                       className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-green)]"
                     >
-                      Get help now
-                    </Link>
-                    <Link
-                      href="/enroll"
-                      onClick={() => setMobileOpen(false)}
-                      className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--brand-orange)] px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
-                    >
-                      Enroll
+                      Get Personalized Medicare Advice
                     </Link>
                   </div>
                 </div>

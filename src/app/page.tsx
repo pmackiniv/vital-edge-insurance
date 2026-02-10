@@ -75,7 +75,7 @@ const offerings = [
   {
     title: "Small Group",
     description: "Decision support for small employers evaluating group coverage.",
-    href: "/services",
+    href: "/small-group",
     iconSrc: "/images/offerings/small-group.svg",
     image: {
       mobileSrc: "/images/offerings/florida-night.png",
@@ -212,13 +212,13 @@ export default function HomePage() {
                 >
                   Get personalized Medicare advice
                 </Link>
-                <button
-                  type="button"
-                  onClick={() => setLeadModalOpen(true)}
-                  className="btn btn-outline-on-dark px-6 py-3 text-base"
-                >
-                  Request callback
+              </div>
+              <div className="text-sm text-white/80">
+                Prefer a callback?{" "}
+                <button type="button" onClick={() => setLeadModalOpen(true)} className="underline">
+                  Request one here
                 </button>
+                .
               </div>
               <div className="text-xs text-white/75">
                 Need immediate help?{" "}
@@ -291,13 +291,13 @@ export default function HomePage() {
                   >
                     Get personalized advice
                   </Link>
-                  <button
-                    type="button"
-                    onClick={() => setLeadModalOpen(true)}
-                    className="btn btn-secondary px-4 py-2 text-sm"
-                  >
-                    Request callback
+                </div>
+                <div className="mt-3 text-xs text-black/60">
+                  Prefer a callback?{" "}
+                  <button type="button" onClick={() => setLeadModalOpen(true)} className="underline">
+                    Request one
                   </button>
+                  .
                 </div>
               </div>
             </motion.div>
@@ -448,38 +448,6 @@ export default function HomePage() {
               variants={sectionReveal}
               transition={{ duration: 0.5, ease: "easeOut" }}
             >
-              Mission (draft)
-            </motion.h2>
-            <div className="mt-5 max-w-3xl rounded-2xl border border-black/10 bg-white p-6 text-sm text-black/70">
-              <p className="font-semibold text-black">Client-first guidance, 24/7 support.</p>
-              <p className="mt-2">
-                Vital Edge Insurance exists to keep coverage decisions clear and stress-free. We stay available year-round
-                to guide individuals, families, and small businesses through health, Medicare education, final expense,
-                term life, and ancillary coverage questions.
-              </p>
-              <p className="mt-2">
-                Our role is licensed guidance and enrollment support: we organize the next step, help you schedule
-                plan-specific information, and make it easy to reach us anytime.
-              </p>
-              <p className="mt-3 text-xs text-black/60">
-                Placeholder mission statement — final wording coming soon.
-              </p>
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      <section className="border-t border-white/10 bg-transparent">
-        <Container>
-          <div className="py-12">
-            <motion.h2
-              className="text-[clamp(1.8rem,2.6vw,2.6rem)] font-semibold tracking-tight text-black"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.4 }}
-              variants={sectionReveal}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            >
               Local guidance, clear next steps
             </motion.h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-black/70">
@@ -500,7 +468,7 @@ export default function HomePage() {
               </Link>
             </div>
             <div className="mt-6 flex flex-wrap gap-3 text-sm">
-              <Link className="text-black/70 hover:text-black" href="/services">Services</Link>
+              <Link className="text-black/70 hover:text-black" href="/small-group">Small Group</Link>
               <Link className="text-black/70 hover:text-black" href="/aca">ACA</Link>
               <Link className="text-black/70 hover:text-black" href="/medicare">Medicare</Link>
               <Link className="text-black/70 hover:text-black" href="/ichra">ICHRA</Link>
@@ -616,14 +584,14 @@ export default function HomePage() {
                 >
                   Start your contact request
                 </Link>
-                <button
-                  type="button"
-                  onClick={() => setLeadModalOpen(true)}
-                  className="btn btn-outline-on-dark px-5 py-3 text-sm"
-                >
-                  Request callback
-                </button>
               </div>
+              <p className="mt-3 text-xs text-white/80">
+                Prefer a callback?{" "}
+                <button type="button" onClick={() => setLeadModalOpen(true)} className="underline">
+                  Request one here
+                </button>
+                .
+              </p>
               <p className="mt-3 text-xs text-white/80">
                 Third-party enrollment partners. Licensed guidance is available if you prefer to enroll with help.
               </p>
