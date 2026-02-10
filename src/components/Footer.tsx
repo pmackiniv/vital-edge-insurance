@@ -2,8 +2,10 @@ import Link from "next/link";
 import { Container } from "@/components/Container";
 import { BottomFinePrint } from "@/components/BottomFinePrint";
 import { site } from "@/lib/site";
+import { externalLinkProps, FACEBOOK, GBP_REVIEWS, INSTAGRAM } from "@/lib/externalLinks";
 
 export function Footer() {
+  const linkProps = externalLinkProps();
   return (
     <footer className="border-t border-white/10 bg-transparent">
       <Container>
@@ -27,6 +29,7 @@ export function Footer() {
             <div className="text-sm font-semibold text-black">Explore</div>
             <ul className="mt-3 space-y-2 text-sm">
               <li><Link className="text-black/70 hover:text-black" href="/services">Services</Link></li>
+              <li><Link className="text-black/70 hover:text-black" href="/schedule">Schedule a call</Link></li>
               <li><Link className="text-black/70 hover:text-black" href="/duval-county">Duval County</Link></li>
               <li><Link className="text-black/70 hover:text-black" href="/miami">Miami-Dade County</Link></li>
               <li><Link className="text-black/70 hover:text-black" href="/st-johns-county">St. Johns County</Link></li>
@@ -37,15 +40,23 @@ export function Footer() {
           <div>
             <div className="text-sm font-semibold text-black">Compliance</div>
             <p className="mt-3 text-sm leading-6 text-black/70">
-              Not connected with or endorsed by the U.S. government or the federal Medicare program.
+              Licensed Insurance Agency. Serving Jacksonville and counties across Florida with education-first insurance
+              guidance.
             </p>
             <p className="mt-3 text-sm leading-6 text-black/70">
-              We do not offer every plan available in your area. Any information we provide is limited to plans we offer
-              in your area.
+              Not connected with or endorsed by the U.S. government or the federal Medicare program. We do not offer
+              every plan available in your area.
             </p>
             <div className="mt-4 flex gap-4 text-sm">
               <Link className="text-black/70 hover:text-black" href="/privacy">Privacy</Link>
               <Link className="text-black/70 hover:text-black" href="/contact">Contact</Link>
+              <a className="text-black/70 hover:text-black" href="https://www.medicare.gov" {...linkProps}>Medicare.gov</a>
+            </div>
+            <div className="mt-4 text-sm font-semibold text-black">Connect</div>
+            <div className="mt-3 space-y-2 text-sm">
+              <a className="block text-black/70 hover:text-black" href={FACEBOOK} {...linkProps}>Facebook</a>
+              <a className="block text-black/70 hover:text-black" href={INSTAGRAM} {...linkProps}>Instagram</a>
+              <a className="block text-black/70 hover:text-black" href={GBP_REVIEWS} {...linkProps}>Google Business Profile</a>
             </div>
           </div>
         </div>

@@ -7,7 +7,7 @@ import { chromium, devices } from "playwright";
 const DEFAULT_TIMEOUT_MS = 45_000;
 const CHAT_TEXT = "Hello from automated triage.";
 const CHAT_PLACEHOLDER_SNIPPET = "What is Part D";
-const MOBILE_LINK_LABELS = ["Services", "Enroll", "Resources", "Contact", "Get help now"];
+const MOBILE_LINK_LABELS = ["Home", "Medicare Advantage", "Medigap", "ACA / ICHRA", "Small Group", "Contact"];
 
 function parseArgs(argv) {
   const args = { baseUrl: process.env.BASE_URL || "", timeoutMs: DEFAULT_TIMEOUT_MS };
@@ -218,6 +218,8 @@ async function runMobile({
     passed: false,
     attempts: [],
     routeChangedCount: 0,
+    interceptedAttemptCount: 0,
+    failedAttemptCount: 0,
     error: null,
   };
   const screenshotPath = path.join(outDir, "mobile.png");
@@ -290,7 +292,8 @@ async function runMobile({
       try {
         const toggle = page.getByRole("button", { name: /Toggle navigation/i }).first();
         if (await toggle.count()) {
-          if (await toggle.isVisible()) {
+          const navExpanded = await toggle.getAttribute("aria-expanded");
+          if (await toggle.isVisible() && navExpanded !== "true") {
             await toggle.click();
           }
           attempt.navToggle = await toggle.evaluate((el) => ({
@@ -299,7 +302,10 @@ async function runMobile({
           }));
         }
 
-        const link = page.getByRole("link", { name: new RegExp(label, "i") }).first();
+        let link = page.locator("#mobile-nav-panel").getByRole("link", { name: new RegExp(label, "i") }).first();
+        if (!(await link.count())) {
+          link = page.getByRole("link", { name: new RegExp(label, "i") }).first();
+        }
         attempt.visible = await link.isVisible();
         if (!attempt.visible) {
           throw new Error(`Link not visible: ${label}`);
@@ -350,7 +356,17 @@ async function runMobile({
       result.attempts.push(attempt);
     }
 
-    result.passed = result.routeChangedCount > 0;
+    const interceptedAttempts = result.attempts.filter(
+      (attempt) => typeof attempt.error === "string" && attempt.error.toLowerCase().includes("intercepts pointer events"),
+    );
+    const failedAttempts = result.attempts.filter((attempt) => typeof attempt.error === "string" && attempt.error.length > 0);
+    result.interceptedAttemptCount = interceptedAttempts.length;
+    result.failedAttemptCount = failedAttempts.length;
+    result.passed = result.routeChangedCount > 0 && result.interceptedAttemptCount === 0;
+    appendLog(
+      logLines,
+      `Mobile summary: routeChanged=${result.routeChangedCount} intercepted=${result.interceptedAttemptCount} failed=${result.failedAttemptCount}`,
+    );
     await page.screenshot({ path: screenshotPath, fullPage: true });
   } catch (err) {
     result.error = err instanceof Error ? err.message : String(err);
