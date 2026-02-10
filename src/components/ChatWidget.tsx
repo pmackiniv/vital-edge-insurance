@@ -13,6 +13,12 @@ type LeadPayload = {
   contactMethod: string;
   message: string;
   consent: boolean;
+  dataSharingConsent: boolean;
+  dataSharingRecipient: string;
+  dataSharingEntities: string[];
+  leadTransferDisclosureAck: boolean;
+  beneficiaryInitiated: boolean;
+  productInterest: string;
 };
 
 const topics = [
@@ -50,6 +56,8 @@ export function ChatWidget() {
   });
   const [message, setMessage] = useState("");
   const [consent, setConsent] = useState(false);
+  const [dataSharingConsent, setDataSharingConsent] = useState(false);
+  const [leadTransferDisclosureAck, setLeadTransferDisclosureAck] = useState(false);
   const [zip, setZip] = useState("");
   const [mode, setMode] = useState<"intake" | "question">("question");
   const [error, setError] = useState("");
@@ -71,6 +79,8 @@ export function ChatWidget() {
     setContactDetail("");
     setMessage("");
     setConsent(false);
+    setDataSharingConsent(false);
+    setLeadTransferDisclosureAck(false);
     setZip("");
     setMode("intake");
     setError("");
@@ -114,8 +124,19 @@ export function ChatWidget() {
   const handleSubmit = async () => {
     setError("");
 
-    if (!firstName || !lastName || !topic || !county || !contactMethod || !contactDetail || !message || !consent) {
-      setError("Please complete all fields and provide consent to continue.");
+    if (
+      !firstName ||
+      !lastName ||
+      !topic ||
+      !county ||
+      !contactMethod ||
+      !contactDetail ||
+      !message ||
+      !consent ||
+      !dataSharingConsent ||
+      !leadTransferDisclosureAck
+    ) {
+      setError("Please complete all fields and all consent acknowledgments to continue.");
       return;
     }
 
@@ -128,6 +149,12 @@ export function ChatWidget() {
       contactMethod: `${contactMethod}: ${contactDetail}`,
       message: zip.length === 5 ? `${messageWithName}\nZIP: ${zip}` : messageWithName,
       consent,
+      dataSharingConsent,
+      dataSharingRecipient: "Vital Edge Licensed Agent",
+      dataSharingEntities: ["Vital Edge Licensed Agent"],
+      leadTransferDisclosureAck,
+      beneficiaryInitiated: true,
+      productInterest: topic,
     };
 
     setIsSubmitting(true);
@@ -159,7 +186,7 @@ export function ChatWidget() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-[80] flex flex-col items-end gap-2">
+    <div className="chat-widget-root fixed bottom-6 right-6 z-[80] flex flex-col items-end gap-2">
       <button
         type="button"
         onClick={() => {
@@ -465,6 +492,33 @@ export function ChatWidget() {
                         </p>
                       ) : null}
                     </div>
+                    <div className="rounded-xl border border-black/10 p-4 text-xs text-black/70">
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={dataSharingConsent}
+                          onChange={(event) => setDataSharingConsent(event.target.checked)}
+                          className="mt-0.5 shrink-0"
+                        />
+                        <span>
+                          I provide express written consent for my information to be shared with a licensed agent at
+                          Vital Edge Insurance for follow-up on this request.
+                        </span>
+                      </label>
+                    </div>
+                    <div className="rounded-xl border border-black/10 p-4 text-xs text-black/70">
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={leadTransferDisclosureAck}
+                          onChange={(event) => setLeadTransferDisclosureAck(event.target.checked)}
+                          className="mt-0.5 shrink-0"
+                        />
+                        <span>
+                          I understand my request may be transferred to a licensed agent for follow-up plan guidance.
+                        </span>
+                      </label>
+                    </div>
 
                     <div>
                       <div className="text-sm font-semibold text-black">Recommended resources</div>
@@ -501,11 +555,15 @@ export function ChatWidget() {
                       <button
                         type="button"
                         onClick={handleSubmit}
-                        disabled={!consent || isSubmitting || submitted}
+                        disabled={!consent || !dataSharingConsent || !leadTransferDisclosureAck || isSubmitting || submitted}
                         className="btn px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50 enabled:opacity-100 enabled:hover:opacity-90"
                         style={{ backgroundColor: "var(--brand-orange)" }}
-                        aria-disabled={!consent || isSubmitting || submitted}
-                        title={!consent ? "Check the consent box above to enable" : "Submit your request for a call back"}
+                        aria-disabled={!consent || !dataSharingConsent || !leadTransferDisclosureAck || isSubmitting || submitted}
+                        title={
+                          !consent || !dataSharingConsent || !leadTransferDisclosureAck
+                            ? "Check all consent boxes above to enable"
+                            : "Submit your request for a call back"
+                        }
                       >
                         {isSubmitting ? "Sending..." : "Request Call Back"}
                       </button>

@@ -7,18 +7,21 @@ export const site = {
   phoneE164: "+13522148879",
   email: "pmackiniv27@icloud.com",
   address: {
-    streetAddress: "Jacksonville, FL",
+    streetAddress: "11247 San Jose Blvd.",
     addressLocality: "Jacksonville",
     addressRegion: "FL",
-    postalCode: "32200",
+    postalCode: "32223",
     addressCountry: "US",
   },
   serviceAreas: ["Jacksonville, FL", "Duval County, FL", "St. Johns County, FL", "Miami-Dade County, FL"],
   sameAs: [
     "https://www.linkedin.com/in/patrick-mackin-iv-297574187",
     "https://www.linkedin.com/company/vital-edge-insurance/",
+    "https://www.facebook.com/pmackiniv",
+    "https://www.instagram.com/pmackiniv/",
+    "https://www.google.com/search?q=Vital+Edge+Insurance&stick=H4sIAAAAAAAA_-NgU1I1qEi0TDZOTUs1MzIwME4yT0uzMqgwSzE0sjA0NEpOSk5NMjEwWcQqEpZZkpij4JqSnqrgmVdcWpSYl5wKANLkHDxAAAAA&hl=en&mat=CW35JL1kTIqIElcBTVDHnqVfH-Wi1kZaybAAgEkbbguVbMIiOx3q7WK137Zlmt8PEjkzMjCVWgPbHAq2C2xH1w8p9BoEq0B1ljI2u_pt8FnNlaK60z23RCABICMr0GIQYIw&authuser=1",
   ],
-  logoPath: "/logo.svg",
+  logoPath: "/brand/vital-edge-logo.png",
   ogImagePath: "/og-image.svg",
   primaryCta: {
     label: "Request help",
@@ -27,9 +30,11 @@ export const site = {
   /** Cal.com, Calendly, or other booking embed URL. Set NEXT_PUBLIC_SCHEDULE_URL in Vercel. */
   scheduleUrl: process.env.NEXT_PUBLIC_SCHEDULE_URL || "",
   nav: [
-    { label: "Services", href: "/services" },
-    { label: "Enroll", href: "/enroll" },
-    { label: "Resources", href: "/resources" },
+    { label: "Home", href: "/" },
+    { label: "Medicare Advantage", href: "/medicare/ma-lead" },
+    { label: "Medigap", href: "/medicare/medigap-lead" },
+    { label: "ACA / ICHRA", href: "/aca" },
+    { label: "Small Group", href: "/small-group" },
     { label: "Contact", href: "/contact" },
   ],
 } as const;
@@ -84,8 +89,10 @@ export function insuranceAgencyJsonLd() {
     areaServed: site.serviceAreas.map((name) => ({ "@type": "AdministrativeArea", name })),
     address: {
       "@type": "PostalAddress",
+      streetAddress: site.address.streetAddress,
       addressLocality: site.address.addressLocality,
       addressRegion: site.address.addressRegion,
+      postalCode: site.address.postalCode,
       addressCountry: site.address.addressCountry,
     },
     sameAs: site.sameAs,

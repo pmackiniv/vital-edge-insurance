@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Container } from "@/components/Container";
 import { TrustStrip } from "@/components/TrustStrip";
+import { Suspense } from "react";
 import { LeadModal } from "@/components/LeadModal";
 import { externalLinkProps, LINKEDIN_COMPANY_PUBLIC, LINKEDIN_PERSONAL } from "@/lib/externalLinks";
 import { absoluteUrl, site } from "@/lib/site";
@@ -130,6 +131,14 @@ const faqs = [
     answer: "Yes. We provide secure enrollment links when appropriate.",
   },
   {
+    question: "Do you collect SSN or Medicare ID in chat?",
+    answer: "No. We keep chat privacy-first and avoid sensitive identifiers.",
+  },
+  {
+    question: "What happens after I submit a request?",
+    answer: "We review your request and respond with the next compliant step, usually by phone or email.",
+  },
+  {
     question: "Medicare: do I need an SOA to discuss plan details?",
     answer: "Yes. A Scope of Appointment is required before plan-specific Medicare discussions.",
   },
@@ -196,32 +205,31 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="flex flex-wrap gap-3">
-                <a
-                  href={`tel:${site.phoneE164}`}
+                <Link
+                  href="/contact"
                   className="btn px-6 py-3 text-base text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
                   style={{ backgroundColor: "#35B228", color: "#ffffff" }}
                 >
-                  Call/Text
-                </a>
+                  Get personalized Medicare advice
+                </Link>
                 <button
                   type="button"
                   onClick={() => setLeadModalOpen(true)}
                   className="btn btn-outline-on-dark px-6 py-3 text-base"
                 >
-                  Talk with a licensed agent now
+                  Request callback
                 </button>
-                <Link
-                  href="/chat"
-                  className="btn btn-outline-on-dark px-6 py-3 text-base"
-                >
-                  Chat
+              </div>
+              <div className="text-xs text-white/75">
+                Need immediate help?{" "}
+                <a href={`tel:${site.phoneE164}`} className="underline">
+                  Call or text {site.phoneDisplay}
+                </a>
+                . Prefer self-service?{" "}
+                <Link href="/enroll" className="underline">
+                  View enrollment links
                 </Link>
-                <Link
-                  href="/resources"
-                  className="btn btn-outline-on-dark px-6 py-3 text-base"
-                >
-                  Resources
-                </Link>
+                . Third-party enrollment partners. Licensed guidance is available if you prefer to enroll with help.
               </div>
               <div className="rounded-xl border border-white/20 bg-white/10 p-4 text-white/90 backdrop-blur">
                 <div className="text-xs font-semibold text-white">Founder</div>
@@ -277,26 +285,40 @@ export default function HomePage() {
                   </li>
                 </ol>
                 <div className="mt-6 flex flex-wrap gap-3">
+                  <Link
+                    href="/contact"
+                    className="btn btn-primary px-4 py-2 text-sm"
+                  >
+                    Get personalized advice
+                  </Link>
                   <button
                     type="button"
                     onClick={() => setLeadModalOpen(true)}
-                    className="btn btn-primary px-4 py-2 text-sm"
-                  >
-                    Talk with a licensed agent now
-                  </button>
-                  <a
-                    href={`tel:${site.phoneE164}`}
                     className="btn btn-secondary px-4 py-2 text-sm"
                   >
-                    Call/Text
-                  </a>
+                    Request callback
+                  </button>
                 </div>
               </div>
             </motion.div>
           </div>
         </Container>
       </section>
-      <TrustStrip />
+
+      <section className="border-t border-white/10 bg-transparent">
+        <Container>
+          <div className="py-10">
+            <div className="rounded-2xl border border-black/10 bg-white p-6 text-sm text-black/75">
+              <div className="text-xs font-semibold uppercase tracking-wide text-black/60">Answer</div>
+              <p className="mt-3 leading-7">
+                Vital Edge Insurance is a Jacksonville, Florida insurance guidance agency. We provide education on ACA
+                Marketplace, Medicare, ICHRA, and small group coverage, then route you to a licensed agent for plan-specific
+                decisions. Call or text {site.phoneDisplay} or use chat to get a clear next step.
+              </p>
+            </div>
+          </div>
+        </Container>
+      </section>
 
       <section className="relative border-t border-white/10">
         <div className="pointer-events-none absolute inset-0 bg-black/35 backdrop-blur" />
@@ -351,6 +373,104 @@ export default function HomePage() {
 
       <section className="border-t border-white/10 bg-transparent">
         <Container>
+          <div className="py-14">
+            <motion.h2
+              className="text-[clamp(1.8rem,2.6vw,2.6rem)] font-semibold tracking-tight text-black"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.4 }}
+              variants={sectionReveal}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            >
+              Three-step process
+            </motion.h2>
+            <div className="mt-8 grid gap-4 md:grid-cols-3">
+              {[
+                {
+                  title: "Clarify",
+                  copy: "We gather your goals, doctors, prescriptions (optional), and timing.",
+                },
+                {
+                  title: "Compare",
+                  copy: "We focus on what matters: networks, costs, and coverage priorities.",
+                },
+                {
+                  title: "Enroll & Support",
+                  copy: "We route you to the right enrollment path and stay available for follow-up.",
+                },
+              ].map((step, index) => (
+                <div key={step.title} className="rounded-2xl border border-black/10 bg-white p-6">
+                  <div className="text-xs font-semibold text-black/60">Step {index + 1}</div>
+                  <div className="mt-2 text-sm font-semibold text-black">{step.title}</div>
+                  <p className="mt-2 text-sm leading-6 text-black/70">{step.copy}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      <TrustStrip />
+
+      <section className="border-t border-white/10 bg-transparent">
+        <Container>
+          <div className="py-12">
+            <motion.h2
+              className="text-[clamp(1.8rem,2.6vw,2.6rem)] font-semibold tracking-tight text-black"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.4 }}
+              variants={sectionReveal}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            >
+              Why clients choose us
+            </motion.h2>
+            <div className="mt-6 grid gap-4 md:grid-cols-4">
+              {stats.map((stat) => (
+                <div key={stat.label} className="rounded-2xl border border-black/10 bg-white p-5">
+                  <div className="text-xs font-semibold uppercase tracking-wide text-black/60">{stat.label}</div>
+                  <div className="mt-3 text-sm font-semibold text-black">{stat.value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      <section className="border-t border-white/10 bg-transparent">
+        <Container>
+          <div className="py-12">
+            <motion.h2
+              className="text-[clamp(1.8rem,2.6vw,2.6rem)] font-semibold tracking-tight text-black"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.4 }}
+              variants={sectionReveal}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            >
+              Mission (draft)
+            </motion.h2>
+            <div className="mt-5 max-w-3xl rounded-2xl border border-black/10 bg-white p-6 text-sm text-black/70">
+              <p className="font-semibold text-black">Client-first guidance, 24/7 support.</p>
+              <p className="mt-2">
+                Vital Edge Insurance exists to keep coverage decisions clear and stress-free. We stay available year-round
+                to guide individuals, families, and small businesses through health, Medicare education, final expense,
+                term life, and ancillary coverage questions.
+              </p>
+              <p className="mt-2">
+                Our role is licensed guidance and enrollment support: we organize the next step, help you schedule
+                plan-specific information, and make it easy to reach us anytime.
+              </p>
+              <p className="mt-3 text-xs text-black/60">
+                Placeholder mission statement — final wording coming soon.
+              </p>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      <section className="border-t border-white/10 bg-transparent">
+        <Container>
           <div className="py-12">
             <motion.h2
               className="text-[clamp(1.8rem,2.6vw,2.6rem)] font-semibold tracking-tight text-black"
@@ -392,45 +512,6 @@ export default function HomePage() {
 
       <section className="border-t border-white/10 bg-transparent">
         <Container>
-          <div className="py-14">
-            <motion.h2
-              className="text-[clamp(1.8rem,2.6vw,2.6rem)] font-semibold tracking-tight text-black"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.4 }}
-              variants={sectionReveal}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            >
-              Three-step process
-            </motion.h2>
-            <div className="mt-8 grid gap-4 md:grid-cols-3">
-              {[
-                {
-                  title: "Clarify",
-                  copy: "We gather your goals, doctors, prescriptions (optional), and timing.",
-                },
-                {
-                  title: "Compare",
-                  copy: "We focus on what matters: networks, costs, and coverage priorities.",
-                },
-                {
-                  title: "Enroll & Support",
-                  copy: "We route you to the right enrollment path and stay available for follow-up.",
-                },
-              ].map((step, index) => (
-                <div key={step.title} className="rounded-2xl border border-black/10 bg-white p-6">
-                  <div className="text-xs font-semibold text-black/60">Step {index + 1}</div>
-                  <div className="mt-2 text-sm font-semibold text-black">{step.title}</div>
-                  <p className="mt-2 text-sm leading-6 text-black/70">{step.copy}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      <section className="border-t border-white/10 bg-transparent">
-        <Container>
           <div className="py-12">
             <motion.h2
               className="text-[clamp(1.8rem,2.6vw,2.6rem)] font-semibold tracking-tight text-black"
@@ -465,31 +546,6 @@ export default function HomePage() {
                     </div>
                   </div>
                 </Link>
-              ))}
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      <section className="border-t border-white/10 bg-transparent">
-        <Container>
-          <div className="py-12">
-            <motion.h2
-              className="text-[clamp(1.8rem,2.6vw,2.6rem)] font-semibold tracking-tight text-black"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.4 }}
-              variants={sectionReveal}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            >
-              Why clients choose us
-            </motion.h2>
-            <div className="mt-6 grid gap-4 md:grid-cols-4">
-              {stats.map((stat) => (
-                <div key={stat.label} className="rounded-2xl border border-black/10 bg-white p-5">
-                  <div className="text-xs font-semibold uppercase tracking-wide text-black/60">{stat.label}</div>
-                  <div className="mt-3 text-sm font-semibold text-black">{stat.value}</div>
-                </div>
               ))}
             </div>
           </div>
@@ -553,26 +609,31 @@ export default function HomePage() {
                 We will guide you to the right next step and keep the process simple.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <button
-                  type="button"
-                  onClick={() => setLeadModalOpen(true)}
+                <Link
+                  href="/contact"
                   className="btn px-5 py-3 text-sm text-white"
                   style={{ backgroundColor: "var(--brand-orange)" }}
                 >
-                  Talk with a licensed agent now
-                </button>
-                <Link
-                  href="/chat"
+                  Start your contact request
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setLeadModalOpen(true)}
                   className="btn btn-outline-on-dark px-5 py-3 text-sm"
                 >
-                  Chat now
-                </Link>
+                  Request callback
+                </button>
               </div>
+              <p className="mt-3 text-xs text-white/80">
+                Third-party enrollment partners. Licensed guidance is available if you prefer to enroll with help.
+              </p>
             </div>
           </div>
         </Container>
       </section>
-      <LeadModal isOpen={leadModalOpen} onClose={() => setLeadModalOpen(false)} />
+      <Suspense fallback={null}>
+        <LeadModal isOpen={leadModalOpen} onClose={() => setLeadModalOpen(false)} />
+      </Suspense>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(pageJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
     </div>

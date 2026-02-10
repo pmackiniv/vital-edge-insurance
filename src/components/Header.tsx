@@ -2,27 +2,38 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { site } from "@/lib/site";
 import { Container } from "@/components/Container";
 import { TopBar } from "@/components/TopBar";
 
-const serviceLinks = [
-  { label: "ACA Marketplace", href: "/aca", description: "Enrollment windows, subsidies, and plan basics." },
-  { label: "Medicare Guidance", href: "/medicare", description: "Routing for Medicare options with SOA compliance." },
-  { label: "Medigap", href: "/medicare", description: "Supplement education and timing considerations." },
-  { label: "ICHRA", href: "/ichra", description: "Defined contribution guidance for teams." },
-  { label: "Off-Exchange", href: "/off-exchange", description: "Alternatives beyond the marketplace." },
-  { label: "Small Group", href: "/services", description: "Support for small group decisions." },
-];
-
 export function Header() {
-  const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const originalOverflow = document.body.style.overflow;
+    const hadNavOpenFlag = document.body.dataset.mobileNavOpen;
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+      document.body.dataset.mobileNavOpen = "true";
+    } else {
+      document.body.style.overflow = originalOverflow || "";
+      delete document.body.dataset.mobileNavOpen;
+    }
+    return () => {
+      document.body.style.overflow = originalOverflow || "";
+      if (hadNavOpenFlag) {
+        document.body.dataset.mobileNavOpen = hadNavOpenFlag;
+      } else {
+        delete document.body.dataset.mobileNavOpen;
+      }
+    };
+  }, [mobileOpen]);
+
   return (
-    <header className="sticky top-0 z-50 border-b border-black/5 bg-white shadow-sm">
+    <header className="sticky top-0 z-[70] border-b border-black/5 bg-white shadow-sm">
       <TopBar />
       <div className="border-b border-black/5">
         <Container>
@@ -47,68 +58,11 @@ export function Header() {
             </Link>
 
             <nav className="hidden items-center gap-6 md:flex">
-              {site.nav.map((item) => {
-                if (item.label === "Services") {
-                  return (
-                    <div
-                      key={item.href}
-                      className="relative"
-                      onMouseEnter={() => setActiveMenu("services")}
-                      onMouseLeave={() => setActiveMenu(null)}
-                    >
-                      <button className="text-sm font-semibold text-black">Services</button>
-                      <AnimatePresence>
-                        {activeMenu === "services" ? (
-                          <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 10 }}
-                            transition={{ duration: 0.2, ease: "easeOut" }}
-                            className="absolute left-0 top-full z-50 mt-4 w-[520px] rounded-2xl border-2 border-gray-200 bg-white p-6 shadow-2xl"
-                            style={{ backgroundColor: "#ffffff" }}
-                          >
-                            <div className="text-xs font-semibold uppercase tracking-wide text-gray-900">Explore services</div>
-                            <div className="mt-4 grid gap-4 md:grid-cols-2">
-                              {serviceLinks.map((service) => (
-                                <Link key={service.label} href={service.href} className="block rounded-xl border border-gray-200 bg-gray-50 p-4 text-gray-900 hover:bg-gray-100">
-                                  <div className="text-sm font-semibold text-gray-900">{service.label}</div>
-                                  <p className="mt-2 text-xs leading-relaxed text-gray-700">{service.description}</p>
-                                </Link>
-                              ))}
-                            </div>
-                            <div className="mt-4 flex flex-wrap gap-3">
-                              <Link
-                                href="/chat"
-                                className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-green)]"
-                              >
-                                Get help now
-                              </Link>
-                              <Link
-                                href="/schedule"
-                                className="inline-flex items-center justify-center rounded-xl border-2 border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
-                              >
-                                Schedule a call
-                              </Link>
-                              <Link
-                                href="/enroll"
-                                className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-orange)] px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
-                              >
-                                Enroll
-                              </Link>
-                            </div>
-                          </motion.div>
-                        ) : null}
-                      </AnimatePresence>
-                    </div>
-                  );
-                }
-
-                return (
-                  <Link key={item.href} href={item.href} className="text-sm text-black/70 hover:text-black">
-                    {item.label}
-                  </Link>
-                );
-              })}
+              {site.nav.map((item) => (
+                <Link key={item.href} href={item.href} className="text-sm font-semibold text-black/75 hover:text-black">
+                  {item.label}
+                </Link>
+              ))}
             </nav>
 
             <div className="hidden items-center gap-3 md:flex">
@@ -132,6 +86,7 @@ export function Header() {
               type="button"
               className="inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
               aria-expanded={mobileOpen}
+              aria-controls="mobile-nav-panel"
               aria-label="Toggle navigation"
               onClick={() => setMobileOpen((prev) => !prev)}
             >
@@ -147,39 +102,59 @@ export function Header() {
 
       <AnimatePresence>
         {mobileOpen ? (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="border-b border-black/5 bg-white md:hidden"
-          >
-            <Container>
-              <div className="space-y-4 py-6">
-                <nav className="grid gap-3">
-                  {site.nav.map((item) => (
-                    <Link key={item.href} href={item.href} className="text-sm font-semibold text-black">
-                      {item.label}
+          <>
+            <motion.button
+              type="button"
+              aria-label="Close navigation menu"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="fixed inset-0 z-[90] bg-black/35 md:hidden"
+              onClick={() => setMobileOpen(false)}
+            />
+            <motion.div
+              id="mobile-nav-panel"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="relative z-[95] border-b border-black/5 bg-white shadow-lg md:hidden"
+            >
+              <Container>
+                <div className="space-y-4 py-6">
+                  <nav className="grid gap-2">
+                    {site.nav.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setMobileOpen(false)}
+                        className="rounded-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </nav>
+                  <div className="flex flex-col gap-3">
+                    <Link
+                      href="/chat"
+                      onClick={() => setMobileOpen(false)}
+                      className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-green)]"
+                    >
+                      Get help now
                     </Link>
-                  ))}
-                </nav>
-                <div className="flex flex-col gap-3">
-                  <Link
-                    href="/chat"
-                    className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-green)]"
-                  >
-                    Get help now
-                  </Link>
-                  <Link
-                    href="/enroll"
-                    className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-orange)] px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
-                  >
-                    Enroll
-                  </Link>
+                    <Link
+                      href="/enroll"
+                      onClick={() => setMobileOpen(false)}
+                      className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--brand-orange)] px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
+                    >
+                      Enroll
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            </Container>
-          </motion.div>
+              </Container>
+            </motion.div>
+          </>
         ) : null}
       </AnimatePresence>
     </header>
