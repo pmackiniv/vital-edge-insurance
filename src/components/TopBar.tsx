@@ -7,10 +7,10 @@ export function TopBar() {
   return (
     <div className="border-b border-black/5 bg-white">
       <Container>
-        <div className="flex flex-wrap items-center justify-between gap-2 py-2 text-sm text-black/70">
-          <span className="font-semibold text-black">Vital Edge Insurance</span>
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between gap-3 py-2 text-sm text-black/70">
+          <span className="hidden font-semibold text-black sm:inline">Vital Edge Insurance</span>
+          <div className="flex items-center gap-3">
+            <div className="hidden items-center gap-2 md:flex">
               <a
                 className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-black/10 text-black/70 hover:text-black"
                 href={FACEBOOK}
@@ -54,12 +54,12 @@ export function TopBar() {
                 <span className="sr-only">Google Business Profile</span>
               </a>
             </div>
-            <span className="hidden text-black/30 sm:inline">•</span>
-            <a className="hover:text-black" href={`tel:${site.phoneE164}`}>
+            <span className="hidden text-black/30 md:inline">•</span>
+            <a className="font-semibold hover:text-black" href={`tel:${site.phoneE164}`}>
               {site.phoneDisplay}
             </a>
-            <span className="hidden text-black/30 sm:inline">•</span>
-            <a className="hidden hover:text-black sm:inline" href={`mailto:${site.email}`}>
+            <span className="hidden text-black/30 md:inline">•</span>
+            <a className="hidden hover:text-black md:inline" href={`mailto:${site.email}`}>
               {site.email}
             </a>
           </div>
