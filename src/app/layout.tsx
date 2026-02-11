@@ -8,25 +8,31 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
 import TimedLeadPopup from "@/components/TimedLeadPopup";
-import { absoluteUrl, insuranceAgencyJsonLd, localBusinessJsonLd, organizationJsonLd, site } from "@/lib/site";
+import { insuranceAgencyJsonLd, localBusinessJsonLd, organizationJsonLd, personJsonLd } from "@/lib/site";
+
+const PRODUCTION_SITE_URL = "https://vital-edge-insurance.vercel.app";
+const METADATA_BASE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL && process.env.NEXT_PUBLIC_SITE_URL.startsWith("http")
+    ? process.env.NEXT_PUBLIC_SITE_URL
+    : PRODUCTION_SITE_URL;
 
 export const metadata: Metadata = {
-  metadataBase: new URL(site.siteUrl),
+  metadataBase: new URL(METADATA_BASE_URL),
   title: {
-    default: "Vital Edge Insurance | Licensed Florida Health Insurance Agency in Jacksonville",
+    default: "Vital Edge Insurance | Licensed Health Insurance Agency in Jacksonville, FL",
     template: "%s | Vital Edge Insurance",
   },
   description:
-    "Vital Edge Insurance provides licensed Florida health insurance guidance in Jacksonville and nearby counties. Education-first support for ACA Marketplace, Medicare, Medigap, ICHRA, and small business coverage.",
+    "Independent, licensed guidance for ACA Marketplace, Medicare Advantage, Medigap, and ICHRA in Jacksonville and nearby Florida counties. Call (352) 214-8879 or request a callback.",
   alternates: {
-    canonical: absoluteUrl("/"),
+    canonical: "/",
   },
   openGraph: {
     type: "website",
-    url: absoluteUrl("/"),
-    title: "Vital Edge Insurance | Florida Health Insurance Guidance",
+    url: "/",
+    title: "Vital Edge Insurance | Licensed Health Insurance Agency in Jacksonville, FL",
     description:
-      "Licensed Florida health insurance guidance for ACA, Medicare, and small business coverage in Jacksonville, Duval County, and St. Johns County.",
+      "Independent, licensed guidance for ACA Marketplace, Medicare Advantage, Medigap, and ICHRA in Jacksonville and nearby Florida counties. Call (352) 214-8879 or request a callback.",
     siteName: "Vital Edge Insurance",
     images: [
       {
@@ -43,8 +49,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vital Edge Insurance | Florida Health Insurance Guidance",
-    description: "Licensed Florida health insurance guidance for Jacksonville, Duval County, St. Johns County, and Miami-Dade County.",
+    title: "Vital Edge Insurance | Licensed Health Insurance Agency in Jacksonville, FL",
+    description:
+      "Independent, licensed guidance for ACA Marketplace, Medicare Advantage, Medigap, and ICHRA in Jacksonville and nearby Florida counties. Call (352) 214-8879 or request a callback.",
     images: ["/og.png"],
   },
   robots: {
@@ -57,6 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const org = organizationJsonLd();
   const local = localBusinessJsonLd();
   const agency = insuranceAgencyJsonLd();
+  const person = personJsonLd();
 
   return (
     <html lang="en" className="h-full">
@@ -85,6 +93,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(agency) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(person) }}
         />
       </body>
     </html>

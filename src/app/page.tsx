@@ -184,7 +184,7 @@ export default function HomePage() {
                 Florida-wide service with a Duval + St. Johns focus
               </p>
               <h1 className="text-white font-semibold tracking-tight text-[clamp(2.6rem,5vw,4.2rem)] leading-[1.05]">
-                Confused by Health Insurance or Medicare? We make the next step clear.
+                Vital Edge Insurance | Licensed Health Insurance Agency in Jacksonville, FL
               </h1>
               <p className="max-w-xl text-base leading-7 text-white/85">
                 Independent guidance for individuals, families, and small businesses in Florida, with a local focus in
