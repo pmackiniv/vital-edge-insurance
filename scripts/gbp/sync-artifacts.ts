@@ -2,10 +2,11 @@ import { createHash, randomUUID } from "node:crypto";
 import { execSync } from "node:child_process";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import type { Cadence, Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { getDb } from "../../src/lib/db";
 
 type CadenceArg = "weekly" | "monthly";
+type DbCadence = "WEEKLY" | "MONTHLY";
 
 type SyncOptions = {
   root: string;
@@ -67,7 +68,7 @@ function normalizeDate(value: string): string {
   return value;
 }
 
-function toCadenceEnum(value: CadenceArg): Cadence {
+function toCadenceEnum(value: CadenceArg): DbCadence {
   return value === "weekly" ? "WEEKLY" : "MONTHLY";
 }
 
