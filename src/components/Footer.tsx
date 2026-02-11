@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Container } from "@/components/Container";
 import { BottomFinePrint } from "@/components/BottomFinePrint";
 import { site } from "@/lib/site";
-import { externalLinkProps, FACEBOOK, GBP_REVIEWS, INSTAGRAM } from "@/lib/externalLinks";
+import { externalLinkProps, GBP_REVIEWS, LINKEDIN_COMPANY_PUBLIC } from "@/lib/externalLinks";
 
 export function Footer() {
   const linkProps = externalLinkProps();
@@ -35,13 +35,15 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
+              <li><Link className="text-black/70 hover:text-black" href="/schedule">Schedule a call</Link></li>
+              <li><Link className="text-black/70 hover:text-black" href="/blog">Blog</Link></li>
             </ul>
           </div>
 
           <div>
             <div className="text-sm font-semibold text-black">Compliance</div>
             <p className="mt-3 text-sm leading-6 text-black/70">
-              Education-first insurance guidance from a licensed agency serving Jacksonville and counties across Florida.
+              Licensed insurance agency serving Jacksonville and counties across Florida with education-first guidance.
             </p>
             <div className="mt-4 flex gap-4 text-sm">
               <Link className="text-black/70 hover:text-black" href="/privacy">Privacy</Link>
@@ -50,8 +52,7 @@ export function Footer() {
             </div>
             <div className="mt-4 text-sm font-semibold text-black">Connect</div>
             <div className="mt-3 space-y-2 text-sm">
-              <a className="block text-black/70 hover:text-black" href={FACEBOOK} {...linkProps}>Facebook</a>
-              <a className="block text-black/70 hover:text-black" href={INSTAGRAM} {...linkProps}>Instagram</a>
+              <a className="block text-black/70 hover:text-black" href={LINKEDIN_COMPANY_PUBLIC} {...linkProps}>LinkedIn</a>
               <a className="block text-black/70 hover:text-black" href={GBP_REVIEWS} {...linkProps}>Google Business Profile</a>
             </div>
           </div>
