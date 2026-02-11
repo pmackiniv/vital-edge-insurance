@@ -380,8 +380,7 @@ textarea::placeholder {
 
 @media (max-width: 767px) {
   body[data-mobile-nav-open="true"] .chat-widget-root {
-    pointer-events: none !important;
-    visibility: hidden;
+    pointer-events: none;
     opacity: 0;
     transform: translateY(0.75rem);
     transition: opacity 0.15s ease, transform 0.15s ease;

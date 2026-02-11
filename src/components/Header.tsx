@@ -27,16 +27,21 @@ export function Header() {
   useEffect(() => {
     if (typeof document === "undefined") return;
     const originalOverflow = document.body.style.overflow;
+    const hadNavOpenFlag = document.body.dataset.mobileNavOpen;
     if (mobileOpen) {
       document.body.style.overflow = "hidden";
       document.body.dataset.mobileNavOpen = "true";
     } else {
-      document.body.style.overflow = "";
+      document.body.style.overflow = originalOverflow || "";
       delete document.body.dataset.mobileNavOpen;
     }
     return () => {
       document.body.style.overflow = originalOverflow || "";
-      delete document.body.dataset.mobileNavOpen;
+      if (hadNavOpenFlag) {
+        document.body.dataset.mobileNavOpen = hadNavOpenFlag;
+      } else {
+        delete document.body.dataset.mobileNavOpen;
+      }
     };
   }, [mobileOpen]);
 
@@ -45,7 +50,6 @@ export function Header() {
       if (event.key !== "Escape") return;
       setDesktopOpenLabel(null);
       setMobileOpen(false);
-      setMobileOpenGroupLabel(null);
     };
     const handleOutsidePress = (event: MouseEvent) => {
       if (!(event.target instanceof Element)) return;
@@ -146,7 +150,7 @@ export function Header() {
                   href="/contact"
                   className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-blue)] px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[var(--brand-green)] focus:outline-none focus:ring-2 focus:ring-black/20"
                 >
-                  Get Personalized Medicare Advice
+                  {site.primaryCta.label}
                 </Link>
               </motion.div>
             </div>
@@ -179,7 +183,7 @@ export function Header() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="fixed inset-0 z-[9998] bg-black/35 md:hidden"
+              className="fixed inset-0 z-[90] bg-black/35 md:hidden"
               onClick={closeMobileNav}
             />
             <motion.div
@@ -188,7 +192,7 @@ export function Header() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="relative z-[9999] border-b border-black/5 bg-white shadow-lg md:hidden"
+              className="relative z-[95] border-b border-black/5 bg-white shadow-lg md:hidden"
             >
               <Container>
                 <div className="space-y-4 py-6">
@@ -212,32 +216,17 @@ export function Header() {
 
                       return (
                         <div key={item.label} className="rounded-xl border border-black/10">
-                          <div className="flex items-stretch">
-                            {item.href ? (
-                              <Link
-                                href={item.href}
-                                onClick={closeMobileNav}
-                                className="flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5"
-                              >
-                                {item.label}
-                              </Link>
-                            ) : (
-                              <div className="flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black">
-                                {item.label}
-                              </div>
-                            )}
-                            <button
-                              type="button"
-                              className="inline-flex items-center justify-center rounded-r-xl border-l border-black/10 px-3 py-3 text-black hover:bg-black/5"
-                              aria-expanded={groupOpen}
-                              aria-label={`Toggle ${item.label} submenu`}
-                              onClick={() => setMobileOpenGroupLabel((prev) => (prev === item.label ? null : item.label))}
-                            >
-                              <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
-                                <path d={groupOpen ? "m5 12 5-5 5 5" : "m5 7 5 5 5-5"} />
-                              </svg>
-                            </button>
-                          </div>
+                          <button
+                            type="button"
+                            className="flex w-full items-center justify-between px-3 py-3 text-left text-base font-semibold text-black"
+                            aria-expanded={groupOpen}
+                            onClick={() => setMobileOpenGroupLabel((prev) => (prev === item.label ? null : item.label))}
+                          >
+                            <span>{item.label}</span>
+                            <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+                              <path d={groupOpen ? "m5 12 5-5 5 5" : "m5 7 5 5 5-5"} />
+                            </svg>
+                          </button>
                           {groupOpen ? (
                             <div className="grid gap-1 px-2 pb-3">
                               {item.children?.map((child) => (
@@ -262,7 +251,7 @@ export function Header() {
                       onClick={closeMobileNav}
                       className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-green)]"
                     >
-                      Get Personalized Medicare Advice
+                      {site.primaryCta.label}
                     </Link>
                   </div>
                 </div>

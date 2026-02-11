@@ -26,10 +26,7 @@ export const site = {
   },
   serviceAreas: ["Jacksonville, FL", "Duval County, FL", "St. Johns County, FL", "Miami-Dade County, FL"],
   sameAs: [
-    "https://www.linkedin.com/in/patrick-mackin-iv-297574187",
     "https://www.linkedin.com/company/vital-edge-insurance/",
-    "https://www.facebook.com/pmackiniv",
-    "https://www.instagram.com/pmackiniv/",
     "https://www.google.com/search?q=Vital+Edge+Insurance&stick=H4sIAAAAAAAA_-NgU1I1qEi0TDZOTUs1MzIwME4yT0uzMqgwSzE0sjA0NEpOSk5NMjEwWcQqEpZZkpij4JqSnqrgmVdcWpSYl5wKANLkHDxAAAAA&hl=en&mat=CW35JL1kTIqIElcBTVDHnqVfH-Wi1kZaybAAgEkbbguVbMIiOx3q7WK137Zlmt8PEjkzMjCVWgPbHAq2C2xH1w8p9BoEq0B1ljI2u_pt8FnNlaK60z23RCABICMr0GIQYIw&authuser=1",
   ],
   logoPath: "/brand/vital-edge-logo.png",
@@ -81,7 +78,6 @@ export const site = {
     },
     {
       label: "Other Services",
-      href: "/contact?topic=other",
       children: [
         { label: "Life Insurance", href: "/contact?topic=life-insurance" },
         { label: "Final Expense", href: "/contact?topic=final-expense" },
@@ -101,7 +97,6 @@ export const site = {
     },
     {
       label: "Locations",
-      href: "/duval-county",
       children: [
         { label: "Duval County", href: "/duval-county" },
         { label: "St. Johns County", href: "/st-johns-county" },
