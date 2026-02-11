@@ -8,7 +8,7 @@ import { Container } from "@/components/Container";
 import { TrustStrip } from "@/components/TrustStrip";
 import { Suspense } from "react";
 import { LeadModal } from "@/components/LeadModal";
-import { externalLinkProps, LINKEDIN_COMPANY_PUBLIC, LINKEDIN_PERSONAL } from "@/lib/externalLinks";
+import { externalLinkProps, LINKEDIN_COMPANY_PUBLIC } from "@/lib/externalLinks";
 import { absoluteUrl, site } from "@/lib/site";
 
 const sectionReveal = {
@@ -232,16 +232,8 @@ export default function HomePage() {
                 . Third-party enrollment partners. Licensed guidance is available if you prefer to enroll with help.
               </div>
               <div className="rounded-xl border border-white/20 bg-white/10 p-4 text-white/90 backdrop-blur">
-                <div className="text-xs font-semibold text-white">Founder</div>
+                <div className="text-xs font-semibold text-white">Licensed Florida Health Insurance Agency</div>
                 <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-white/85">
-                  <span className="font-medium text-white">Patrick Mackin IV</span>
-                  <a
-                    href={LINKEDIN_PERSONAL}
-                    {...externalLinkProps()}
-                    className="rounded-full border border-white/30 px-3 py-1 text-xs font-semibold text-white hover:bg-white/15"
-                  >
-                    Connect on LinkedIn
-                  </a>
                   <a
                     href={LINKEDIN_COMPANY_PUBLIC}
                     {...externalLinkProps()}

@@ -3,17 +3,18 @@ import Link from "next/link";
 import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
 import { SeoFaq } from "@/components/SeoFaq";
-import { absoluteUrl } from "@/lib/site";
+import { absoluteUrl, site } from "@/lib/site";
+import { StructuredData } from "@/components/StructuredData";
 
 export const metadata: Metadata = {
   title: "Medicare Guidance in Jacksonville, FL | Medicare Supplement & Medigap Help",
   description:
-    "Patrick Mackin IV provides Medicare education, Medicare Supplement (Medigap), and Medicare Advantage guidance in Jacksonville, Duval County, and St. Johns County. Licensed Florida agent for Original Medicare, Part D, and supplemental coverage.",
+    "Vital Edge Insurance provides Medicare education, Medicare Supplement (Medigap), and Medicare Advantage guidance in Jacksonville, Duval County, and St. Johns County.",
   alternates: {
     canonical: absoluteUrl("/medicare"),
   },
   openGraph: {
-    title: "Medicare Help in Jacksonville, FL | Patrick Mackin IV | Vital Edge Insurance",
+    title: "Medicare Help in Jacksonville, FL | Vital Edge Insurance",
     description:
       "Licensed Medicare guidance for Jacksonville residents. Education on Medicare Supplement, Medigap, Part D, and enrollment timing.",
     url: absoluteUrl("/medicare"),
@@ -21,19 +22,31 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
+  const localBusinessJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "InsuranceAgency",
+    name: site.legalName,
+    url: absoluteUrl("/medicare"),
+    telephone: site.phoneDisplay,
+    email: site.email,
+    areaServed: "Florida",
+  };
+
   const serviceJsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: "Medicare Education Guidance",
-    serviceType: "Insurance Guidance",
-    areaServed: "Florida",
+    name: "Medicare guidance",
+    serviceType: "Medicare education",
     provider: {
       "@type": "InsuranceAgency",
-      name: "Vital Edge Insurance",
-      url: absoluteUrl("/"),
+      name: site.legalName,
     },
+    areaServed: "Florida",
     url: absoluteUrl("/medicare"),
+    description:
+      "Education-first Medicare guidance for timing, coverage basics, and next steps. Plan-specific discussions require a Scope of Appointment.",
   };
+
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -139,7 +152,7 @@ export default function Page() {
             {
               question: "Do you recommend specific Medicare plans?",
               answer:
-                "We do not recommend specific plans online. Plan-specific guidance requires a licensed agent.",
+                "We provide general education online and handle plan-specific guidance by appointment or call/text.",
             },
             {
               question: "Can I change Medicare coverage right now?",
@@ -152,12 +165,11 @@ export default function Page() {
         <LeadCtaSection
           eyebrow="Medicare education"
           title="Get clear Medicare guidance from a licensed agent."
-          description="We provide education first, then connect you to licensed plan-specific guidance."
+          description={`We provide education first, then help you schedule plan-specific information by appointment, call/text, or email ${site.email}.`}
           ctaLabel="Request Medicare guidance"
         />
       </div>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <StructuredData entries={[localBusinessJsonLd, serviceJsonLd, breadcrumbJsonLd]} />
     </Container>
   );
 }

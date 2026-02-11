@@ -91,7 +91,7 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
         throw new Error(data.error || "Unable to submit right now.");
       }
 
-      setSuccess("Got it, Patrick will follow up.");
+      setSuccess("Got it, a licensed agent will follow up.");
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unable to submit right now.";
       setError(message);
@@ -126,7 +126,7 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                 type="button"
                 onClick={onClose}
                 className="rounded-full border border-black/10 p-2 text-black/60 hover:text-black"
-                aria-label="Close lead form"
+                aria-label="Close request form"
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M6 6l12 12" />

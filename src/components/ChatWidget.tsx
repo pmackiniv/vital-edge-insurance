@@ -174,7 +174,7 @@ export function ChatWidget() {
       if (!response.ok) {
         throw new Error(data.error || "Unable to submit right now.");
       }
-      setSubmitMessage(data.message ?? "Got it, Patrick will follow up.");
+      setSubmitMessage(data.message ?? "Got it, a licensed agent will follow up.");
       setEmailSent(data.notifications?.email?.status === "sent");
       setSubmitted(true);
     } catch (err) {
@@ -538,7 +538,7 @@ export function ChatWidget() {
                     {error ? <p className="text-xs text-red-600">{error}</p> : null}
                     {submitted ? (
                       <div className="space-y-2 rounded-xl border border-green-200 bg-green-50 p-3 text-xs text-green-700">
-                        <p>{submitMessage || "Got it, Patrick will follow up."}</p>
+                        <p>{submitMessage || "Got it, a licensed agent will follow up."}</p>
                         {!emailSent ? (
                           <p>
                             If you don&apos;t hear back within an hour, please call us at{" "}
@@ -578,7 +578,7 @@ export function ChatWidget() {
                     </div>
 
                     <div className="rounded-xl border border-black/10 p-3 text-xs text-black/60">
-                      <div className="font-semibold text-black">Talk to Patrick now</div>
+                      <div className="font-semibold text-black">Talk to a licensed agent now</div>
                       <div className="mt-2 flex flex-wrap gap-3">
                         <a className="text-black hover:underline" href={`tel:${site.phoneE164}`}>
                           Call {site.phoneDisplay}

@@ -5,12 +5,12 @@ import { absoluteUrl } from "@/lib/site";
 export const metadata: Metadata = {
   title: "St. Johns County Health Insurance Agent | St. Augustine, FL",
   description:
-    "Patrick Mackin IV provides health insurance guidance in St. Johns County and St. Augustine, FL. Licensed agent for ACA Marketplace, Medicare, Medigap, and small business health insurance.",
+    "Vital Edge Insurance provides health insurance guidance in St. Johns County and St. Augustine, FL. Licensed Florida agency for ACA Marketplace, Medicare, Medigap, and small business health insurance.",
   alternates: {
     canonical: absoluteUrl("/st-johns-county"),
   },
   openGraph: {
-    title: "St. Johns County Health Insurance | Patrick Mackin IV",
+    title: "St. Johns County Health Insurance | Vital Edge Insurance",
     description:
       "Licensed Florida health insurance agent serving St. Johns County and St. Augustine with ACA, Medicare, and employer coverage guidance.",
     url: absoluteUrl("/st-johns-county"),

@@ -3,37 +3,49 @@ import Link from "next/link";
 import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
 import { SeoFaq } from "@/components/SeoFaq";
-import { absoluteUrl } from "@/lib/site";
+import { StructuredData } from "@/components/StructuredData";
+import { absoluteUrl, site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Medigap (Medicare Supplement) Education | Florida Licensed Agent Guidance",
+  title: "Medigap (Medicare Supplement) Guidance | Florida",
   description:
-    "Education-first Medigap and Medicare Supplement guidance for Florida residents. Learn timing, coverage basics, and next steps with a licensed agent.",
+    "Vital Edge Insurance provides Medigap (Medicare Supplement) guidance in Florida, including enrollment timing, preparation, and licensed follow-up options.",
   alternates: {
     canonical: absoluteUrl("/medicare/medigap"),
   },
   openGraph: {
-    title: "Medigap Education in Florida | Vital Edge Insurance",
-    description:
-      "Understand Medigap basics, enrollment timing, and preparation steps with licensed guidance.",
+    title: "Medigap Guidance in Florida | Vital Edge Insurance",
+    description: "General Medigap education and licensed follow-up guidance for Florida beneficiaries.",
     url: absoluteUrl("/medicare/medigap"),
   },
 };
 
 export default function Page() {
+  const localBusinessJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "InsuranceAgency",
+    name: site.legalName,
+    url: absoluteUrl("/medicare/medigap"),
+    telephone: site.phoneDisplay,
+    email: site.email,
+    areaServed: "Florida",
+  };
+
   const serviceJsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: "Medigap (Medicare Supplement) Education",
-    serviceType: "Insurance Guidance",
-    areaServed: "Florida",
+    name: "Medigap guidance",
+    serviceType: "Medicare Supplement education",
     provider: {
       "@type": "InsuranceAgency",
-      name: "Vital Edge Insurance",
-      url: absoluteUrl("/"),
+      name: site.legalName,
     },
+    areaServed: "Florida",
     url: absoluteUrl("/medicare/medigap"),
+    description:
+      "General Medigap education for enrollment timing, preparation, and licensed follow-up scheduling.",
   };
+
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -118,7 +130,12 @@ export default function Page() {
           <div className="rounded-2xl border border-black/10 bg-[var(--muted)] p-6">
             <h2 className="text-sm font-semibold text-black">Education-first guidance</h2>
             <p className="mt-3 text-sm leading-6 text-black/70">
-              We provide general education and routing. Plan-specific guidance requires a licensed agent.
+              We provide general education and routing. If you&apos;d like plan-specific information, please provide a bit
+              of information to{" "}
+              <Link className="underline" href="/schedule">schedule an appointment</Link> or{" "}
+              <Link className="underline" href="/chat">request a same-day callback/text/email</Link>. You can also email{" "}
+              <a className="underline" href={`mailto:${site.email}`}>{site.email}</a> or call/text{" "}
+              <a className="underline" href={`tel:${site.phoneE164}`}>{site.phoneDisplay}</a>.
             </p>
           </div>
         </div>
@@ -138,7 +155,7 @@ export default function Page() {
             {
               question: "Do you recommend a specific Medigap plan?",
               answer:
-                "We do not recommend specific plans online. We provide education and then route you to a licensed agent for plan-specific guidance.",
+                "We provide general education online and handle plan-specific guidance by appointment or call/text.",
             },
           ]}
         />
@@ -150,8 +167,7 @@ export default function Page() {
           ctaLabel="Request Medigap guidance"
         />
       </div>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <StructuredData entries={[localBusinessJsonLd, serviceJsonLd, breadcrumbJsonLd]} />
     </Container>
   );
 }

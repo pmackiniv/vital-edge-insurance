@@ -9,7 +9,7 @@ export default function SchedulePage() {
       <div className="max-w-4xl">
         <h1 className="text-3xl font-semibold tracking-tight text-black">Schedule a call</h1>
         <p className="mt-3 text-sm leading-6 text-black/70">
-          Book time with Patrick Mackin IV for a consultation. Choose a slot that works for you.
+          Book time with a licensed agent for a consultation. Choose a slot that works for you.
         </p>
 
         {scheduleUrl ? (

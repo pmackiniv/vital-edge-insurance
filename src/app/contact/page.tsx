@@ -102,7 +102,7 @@ function ContactForm() {
   };
 
   const answerBlock =
-    `How do you contact Vital Edge Insurance? You can call or text ${site.phoneDisplay}, use the form below, or request a callback from the chat. We respond as quickly as possible during business hours. Patrick Mackin IV is the licensed agent.`;
+    `How do you contact Vital Edge Insurance? You can call or text ${site.phoneDisplay}, use the form below, or request a callback from the chat. We respond as quickly as possible during business hours. A licensed agent will follow up.`;
 
   const contactFaqs = [
     {

@@ -8,32 +8,32 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
 import TimedLeadPopup from "@/components/TimedLeadPopup";
-import { absoluteUrl, insuranceAgencyJsonLd, localBusinessJsonLd, organizationJsonLd, personJsonLd, site } from "@/lib/site";
+import { absoluteUrl, insuranceAgencyJsonLd, localBusinessJsonLd, organizationJsonLd, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.siteUrl),
   title: {
-    default: "Patrick Mackin IV | Vital Edge Insurance | Licensed Florida Health Insurance Agent in Jacksonville",
-    template: "%s | Patrick Mackin IV | Vital Edge Insurance",
+    default: "Vital Edge Insurance | Licensed Florida Health Insurance Agency in Jacksonville",
+    template: "%s | Vital Edge Insurance",
   },
   description:
-    "Patrick Mackin IV, licensed Florida health insurance agent serving Jacksonville, Duval County, St. Johns County. Independent guidance for ACA Marketplace, Medicare, Medigap, ICHRA, and small business health insurance. Vital Edge Insurance provides education-first support for individuals, families, and employers.",
+    "Vital Edge Insurance provides licensed Florida health insurance guidance in Jacksonville and nearby counties. Education-first support for ACA Marketplace, Medicare, Medigap, ICHRA, and small business coverage.",
   alternates: {
     canonical: absoluteUrl("/"),
   },
   openGraph: {
     type: "website",
     url: absoluteUrl("/"),
-    title: "Patrick Mackin IV | Vital Edge Insurance | Florida Health Insurance Agent",
+    title: "Vital Edge Insurance | Florida Health Insurance Guidance",
     description:
-      "Licensed Florida health insurance agent Patrick Mackin IV provides independent guidance for ACA, Medicare, and small business coverage in Jacksonville, Duval County, and St. Johns County.",
+      "Licensed Florida health insurance guidance for ACA, Medicare, and small business coverage in Jacksonville, Duval County, and St. Johns County.",
     siteName: "Vital Edge Insurance",
     images: [
       {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Patrick Mackin IV - Vital Edge Insurance - Licensed Florida Health Insurance Agent",
+        alt: "Vital Edge Insurance - Licensed Florida Health Insurance Guidance",
       },
     ],
   },
@@ -43,8 +43,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Patrick Mackin IV | Vital Edge Insurance | Florida Health Insurance Agent",
-    description: "Licensed Florida health insurance agent serving Jacksonville, Duval County, St. Johns County, and Miami-Dade County.",
+    title: "Vital Edge Insurance | Florida Health Insurance Guidance",
+    description: "Licensed Florida health insurance guidance for Jacksonville, Duval County, St. Johns County, and Miami-Dade County.",
     images: ["/og.png"],
   },
   robots: {
@@ -57,7 +57,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const org = organizationJsonLd();
   const local = localBusinessJsonLd();
   const agency = insuranceAgencyJsonLd();
-  const person = personJsonLd();
 
   return (
     <html lang="en" className="h-full">
@@ -86,10 +85,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(agency) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(person) }}
         />
       </body>
     </html>

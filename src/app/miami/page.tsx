@@ -5,12 +5,12 @@ import { absoluteUrl } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Miami-Dade County Health Insurance Agent | Miami, FL",
   description:
-    "Patrick Mackin IV serves Miami-Dade County with health insurance guidance for ACA Marketplace, Medicare, and small business coverage. Licensed Florida agent with regional support for Miami metro area.",
+    "Vital Edge Insurance serves Miami-Dade County with health insurance guidance for ACA Marketplace, Medicare, and small business coverage. Licensed Florida agency with regional support for the Miami metro area.",
   alternates: {
     canonical: absoluteUrl("/miami"),
   },
   openGraph: {
-    title: "Miami-Dade Health Insurance | Patrick Mackin IV | Vital Edge Insurance",
+    title: "Miami-Dade Health Insurance | Vital Edge Insurance",
     description:
       "Licensed health insurance agent serving Miami-Dade County with ACA, Medicare, and employer coverage guidance.",
     url: absoluteUrl("/miami"),

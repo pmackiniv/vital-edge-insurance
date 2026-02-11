@@ -3,17 +3,19 @@ import Link from "next/link";
 import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
 import { SeoFaq } from "@/components/SeoFaq";
+import { site } from "@/lib/site";
 import { absoluteUrl } from "@/lib/site";
+import { StructuredData } from "@/components/StructuredData";
 
 export const metadata: Metadata = {
   title: "ICHRA Health Insurance | Individual Coverage HRA | Florida Employer Guide",
   description:
-    "Patrick Mackin IV helps Florida employers and employees navigate ICHRA (Individual Coverage Health Reimbursement Arrangement). Licensed agent guidance for defined contribution health benefits in Jacksonville and Miami.",
+    "Vital Edge Insurance helps Florida employers and employees navigate ICHRA (Individual Coverage Health Reimbursement Arrangement) with licensed guidance for defined contribution health benefits.",
   alternates: {
     canonical: absoluteUrl("/ichra"),
   },
   openGraph: {
-    title: "ICHRA Guidance in Florida | Patrick Mackin IV | Vital Edge Insurance",
+    title: "ICHRA Guidance in Florida | Vital Edge Insurance",
     description:
       "Licensed agent support for ICHRA setup, employee guidance, and compliance in Florida.",
     url: absoluteUrl("/ichra"),
@@ -21,19 +23,31 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
+  const localBusinessJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "InsuranceAgency",
+    name: site.legalName,
+    url: absoluteUrl("/ichra"),
+    telephone: site.phoneDisplay,
+    email: site.email,
+    areaServed: "Florida",
+  };
+
   const serviceJsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: "ICHRA Education Guidance",
-    serviceType: "Insurance Guidance",
-    areaServed: "Florida",
+    name: "ICHRA guidance",
+    serviceType: "Individual Coverage HRA guidance",
     provider: {
       "@type": "InsuranceAgency",
-      name: "Vital Edge Insurance",
-      url: absoluteUrl("/"),
+      name: site.legalName,
     },
+    areaServed: "Florida",
     url: absoluteUrl("/ichra"),
+    description:
+      "Independent education for employers and employees exploring Individual Coverage HRAs.",
   };
+
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -112,7 +126,12 @@ export default function Page() {
           <div className="rounded-2xl border border-black/10 bg-[var(--muted)] p-6">
             <h2 className="text-sm font-semibold text-black">Education-first guidance</h2>
             <p className="mt-3 text-sm leading-6 text-black/70">
-              We provide education and routing. We do not make plan recommendations or enrollment decisions.
+              We provide general education and routing. If you&apos;d like plan-specific information, please provide a bit
+              of information to{" "}
+              <Link className="underline" href="/schedule">schedule an appointment</Link> or{" "}
+              <Link className="underline" href="/chat">request a same-day callback/text/email</Link>. You can also email{" "}
+              <a className="underline" href={`mailto:${site.email}`}>{site.email}</a> or call/text{" "}
+              <a className="underline" href={`tel:${site.phoneE164}`}>{site.phoneDisplay}</a>.
             </p>
           </div>
         </div>
@@ -136,7 +155,7 @@ export default function Page() {
             {
               question: "Do you recommend specific plans for ICHRA?",
               answer:
-                "We do not recommend specific plans online. We provide education and route you to licensed guidance when needed.",
+                "We provide general education online and handle plan-specific guidance by appointment or call/text.",
             },
             {
               question: "What should an employer prepare before an ICHRA review?",
@@ -153,8 +172,7 @@ export default function Page() {
           ctaLabel="Request ICHRA guidance"
         />
       </div>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <StructuredData entries={[localBusinessJsonLd, serviceJsonLd, breadcrumbJsonLd]} />
     </Container>
   );
 }

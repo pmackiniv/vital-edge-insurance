@@ -3,17 +3,19 @@ import Link from "next/link";
 import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
 import { SeoFaq } from "@/components/SeoFaq";
+import { site } from "@/lib/site";
 import { absoluteUrl } from "@/lib/site";
+import { StructuredData } from "@/components/StructuredData";
 
 export const metadata: Metadata = {
   title: "Small Business Health Insurance | Florida Group Coverage | Jacksonville",
   description:
-    "Patrick Mackin IV helps Florida small businesses with group health insurance, renewals, and employee benefits. Licensed agent serving Jacksonville, Duval County, St. Johns County, and Miami-Dade County employers.",
+    "Vital Edge Insurance helps Florida small businesses with group health insurance, renewals, and employee benefits in Jacksonville and nearby counties.",
   alternates: {
     canonical: absoluteUrl("/small-group"),
   },
   openGraph: {
-    title: "Small Business Health Insurance in Florida | Patrick Mackin IV",
+    title: "Small Business Health Insurance in Florida | Vital Edge Insurance",
     description:
       "Licensed agent support for small group health insurance, renewals, and employee benefits in Florida.",
     url: absoluteUrl("/small-group"),
@@ -21,19 +23,31 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
+  const localBusinessJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "InsuranceAgency",
+    name: site.legalName,
+    url: absoluteUrl("/small-group"),
+    telephone: site.phoneDisplay,
+    email: site.email,
+    areaServed: "Florida",
+  };
+
   const serviceJsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: "Small Group Benefits Education Guidance",
-    serviceType: "Insurance Guidance",
-    areaServed: "Florida",
+    name: "Small group benefits guidance",
+    serviceType: "Small business health insurance guidance",
     provider: {
       "@type": "InsuranceAgency",
-      name: "Vital Edge Insurance",
-      url: absoluteUrl("/"),
+      name: site.legalName,
     },
+    areaServed: "Florida",
     url: absoluteUrl("/small-group"),
+    description:
+      "Education-first guidance for small employers exploring group benefits, renewals, and employee communication planning.",
   };
+
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -112,7 +126,12 @@ export default function Page() {
           <div className="rounded-2xl border border-black/10 bg-[var(--muted)] p-6">
             <h2 className="text-sm font-semibold text-black">Education-first guidance</h2>
             <p className="mt-3 text-sm leading-6 text-black/70">
-              We provide education and routing. We do not make plan recommendations or negotiate on your behalf.
+              We provide general education and routing. If you&apos;d like plan-specific information, please provide a bit
+              of information to{" "}
+              <Link className="underline" href="/schedule">schedule an appointment</Link> or{" "}
+              <Link className="underline" href="/chat">request a same-day callback/text/email</Link>. You can also email{" "}
+              <a className="underline" href={`mailto:${site.email}`}>{site.email}</a> or call/text{" "}
+              <a className="underline" href={`tel:${site.phoneE164}`}>{site.phoneDisplay}</a>.
             </p>
           </div>
         </div>
@@ -127,7 +146,7 @@ export default function Page() {
             {
               question: "Can you recommend a specific group plan?",
               answer:
-                "We do not recommend specific plans online. We provide education and route you to a licensed agent for plan-specific guidance.",
+                "We provide general education online and handle plan-specific guidance by appointment or call/text.",
             },
             {
               question: "What is the first step for a small group review?",
@@ -144,8 +163,7 @@ export default function Page() {
           ctaLabel="Request group benefits guidance"
         />
       </div>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <StructuredData entries={[localBusinessJsonLd, serviceJsonLd, breadcrumbJsonLd]} />
     </Container>
   );
 }

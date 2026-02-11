@@ -15,10 +15,7 @@ export const site = {
   },
   serviceAreas: ["Jacksonville, FL", "Duval County, FL", "St. Johns County, FL", "Miami-Dade County, FL"],
   sameAs: [
-    "https://www.linkedin.com/in/patrick-mackin-iv-297574187",
     "https://www.linkedin.com/company/vital-edge-insurance/",
-    "https://www.facebook.com/pmackiniv",
-    "https://www.instagram.com/pmackiniv/",
     "https://www.google.com/search?q=Vital+Edge+Insurance&stick=H4sIAAAAAAAA_-NgU1I1qEi0TDZOTUs1MzIwME4yT0uzMqgwSzE0sjA0NEpOSk5NMjEwWcQqEpZZkpij4JqSnqrgmVdcWpSYl5wKANLkHDxAAAAA&hl=en&mat=CW35JL1kTIqIElcBTVDHnqVfH-Wi1kZaybAAgEkbbguVbMIiOx3q7WK137Zlmt8PEjkzMjCVWgPbHAq2C2xH1w8p9BoEq0B1ljI2u_pt8FnNlaK60z23RCABICMr0GIQYIw&authuser=1",
   ],
   logoPath: "/brand/vital-edge-logo.png",
@@ -31,8 +28,8 @@ export const site = {
   scheduleUrl: process.env.NEXT_PUBLIC_SCHEDULE_URL || "",
   nav: [
     { label: "Home", href: "/" },
-    { label: "Medicare Advantage", href: "/medicare/ma-lead" },
-    { label: "Medigap", href: "/medicare/medigap-lead" },
+    { label: "Medicare Advantage", href: "/medicare/medicare-advantage-request" },
+    { label: "Medigap", href: "/medicare/medigap-request" },
     { label: "ACA / ICHRA", href: "/aca" },
     { label: "Small Group", href: "/small-group" },
     { label: "Contact", href: "/contact" },
@@ -97,39 +94,5 @@ export function insuranceAgencyJsonLd() {
     },
     sameAs: site.sameAs,
     logo: absoluteUrl(site.logoPath),
-  };
-}
-
-export function personJsonLd() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: "Patrick Mackin IV",
-    jobTitle: "Licensed Health Insurance Agent",
-    worksFor: {
-      "@type": "InsuranceAgency",
-      name: site.legalName,
-    },
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: site.address.addressLocality,
-      addressRegion: site.address.addressRegion,
-      addressCountry: site.address.addressCountry,
-    },
-    telephone: site.phoneE164,
-    email: site.email,
-    url: absoluteUrl("/about"),
-    sameAs: site.sameAs,
-    areaServed: site.serviceAreas.map((name) => ({ "@type": "AdministrativeArea", name })),
-    knowsAbout: [
-      "ACA Marketplace",
-      "Medicare",
-      "Medicare Supplement",
-      "Medigap",
-      "ICHRA",
-      "Small Group Health Insurance",
-      "Florida Health Insurance",
-      "Health Insurance Compliance",
-    ],
   };
 }

@@ -3,17 +3,18 @@ import Link from "next/link";
 import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
 import { SeoFaq } from "@/components/SeoFaq";
-import { absoluteUrl } from "@/lib/site";
+import { absoluteUrl, site } from "@/lib/site";
+import { StructuredData } from "@/components/StructuredData";
 
 export const metadata: Metadata = {
   title: "ACA Marketplace Health Insurance | Florida HealthCare.gov Enrollment Help",
   description:
-    "Patrick Mackin IV provides ACA Marketplace enrollment guidance in Jacksonville, FL. Get help with HealthCare.gov eligibility, subsidies, Special Enrollment Periods, and plan selection for Duval, St. Johns, and Miami-Dade counties.",
+    "Vital Edge Insurance provides ACA Marketplace enrollment guidance in Jacksonville, FL. Get help with HealthCare.gov eligibility, subsidies, Special Enrollment Periods, and plan selection for Duval, St. Johns, and Miami-Dade counties.",
   alternates: {
     canonical: absoluteUrl("/aca"),
   },
   openGraph: {
-    title: "ACA Marketplace Help in Jacksonville, FL | Patrick Mackin IV",
+    title: "ACA Marketplace Help in Jacksonville, FL | Vital Edge Insurance",
     description:
       "Licensed agent support for Florida ACA Marketplace enrollment, subsidies, and plan selection.",
     url: absoluteUrl("/aca"),
@@ -21,19 +22,31 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
+  const localBusinessJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "InsuranceAgency",
+    name: site.legalName,
+    url: absoluteUrl("/aca"),
+    telephone: site.phoneDisplay,
+    email: site.email,
+    areaServed: "Florida",
+  };
+
   const serviceJsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: "ACA Marketplace Education Guidance",
-    serviceType: "Insurance Guidance",
-    areaServed: "Florida",
+    name: "ACA Marketplace guidance",
+    serviceType: "ACA Marketplace enrollment guidance",
     provider: {
       "@type": "InsuranceAgency",
-      name: "Vital Edge Insurance",
-      url: absoluteUrl("/"),
+      name: site.legalName,
     },
+    areaServed: "Florida",
     url: absoluteUrl("/aca"),
+    description:
+      "Education-first guidance for ACA Marketplace enrollment, eligibility questions, and timeline planning.",
   };
+
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -47,7 +60,7 @@ export default function Page() {
       {
         "@type": "ListItem",
         position: 2,
-        name: "ACA / ICHRA",
+        name: "ACA Marketplace",
         item: absoluteUrl("/aca"),
       },
     ],
@@ -112,8 +125,12 @@ export default function Page() {
           <div className="rounded-2xl border border-black/10 bg-[var(--muted)] p-6">
             <h2 className="text-sm font-semibold text-black">Education-only guidance</h2>
             <p className="mt-3 text-sm leading-6 text-black/70">
-              We provide general education and routing. We do not make plan recommendations or enrollment decisions on
-              your behalf.
+              We provide general education and routing. If you&apos;d like plan-specific information, please provide a bit
+              of information to{" "}
+              <Link className="underline" href="/schedule">schedule an appointment</Link> or{" "}
+              <Link className="underline" href="/chat">request a same-day callback/text/email</Link>. You can also email{" "}
+              <a className="underline" href={`mailto:${site.email}`}>{site.email}</a> or call/text{" "}
+              <a className="underline" href={`tel:${site.phoneE164}`}>{site.phoneDisplay}</a>.
             </p>
           </div>
         </div>
@@ -136,9 +153,9 @@ export default function Page() {
                 "Enrollment happens during Open Enrollment or a Special Enrollment Period if you qualify. We provide education and help you prepare for licensed guidance.",
             },
             {
-              question: "Do you recommend specific Marketplace plans?",
+              question: "How do you handle plan-specific guidance?",
               answer:
-                "We do not recommend specific plans online. We provide education and route you to a licensed agent for plan-specific guidance.",
+                "We provide general education online and handle plan-specific guidance by appointment or call/text.",
             },
             {
               question: "What should I prepare before applying?",
@@ -155,8 +172,7 @@ export default function Page() {
           ctaLabel="Request ACA guidance"
         />
       </div>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <StructuredData entries={[localBusinessJsonLd, serviceJsonLd, breadcrumbJsonLd]} />
     </Container>
   );
 }

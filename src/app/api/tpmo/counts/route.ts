@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { appendAgentEvent } from "@/lib/agentEvents";
+import { requireAdminKey } from "@/lib/adminAuth";
 import { getTpmoCounts, type TpmoCountContext } from "@/lib/tpmo/tpmoCounts";
 
 type TpmoCountsRequest = {
@@ -17,6 +18,11 @@ function statusCodeForError(error: string): number {
 }
 
 export async function POST(req: Request) {
+  const auth = requireAdminKey(req);
+  if (!auth.ok) {
+    return NextResponse.json(auth.body, { status: auth.status });
+  }
+
   let body: TpmoCountsRequest;
   try {
     body = (await req.json()) as TpmoCountsRequest;

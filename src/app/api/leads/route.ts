@@ -245,7 +245,7 @@ export async function POST(req: Request) {
 
     const responseMessage =
       emailSuccess
-        ? "Got it, Patrick will follow up."
+        ? "Got it, a licensed agent will follow up."
         : `We received your request. If you don't hear back within an hour, please call us at ${site.phoneDisplay}.`;
 
     return NextResponse.json({

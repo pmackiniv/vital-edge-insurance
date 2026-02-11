@@ -90,7 +90,7 @@ export function AIChatPanel() {
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="e.g. What is Part D? How do I speak to Patrick?"
+          placeholder="e.g. What is Part D? How do I speak to a licensed agent?"
           rows={3}
           className="w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
           disabled={isDisabled}
