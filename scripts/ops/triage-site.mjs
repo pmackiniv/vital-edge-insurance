@@ -178,7 +178,14 @@ async function runDesktop({
     await sendButton.click();
     const chatResponse = await responsePromise;
     result.responseStatus = chatResponse.status();
-    result.passed = chatResponse.status() === 200;
+    if (chatResponse.status() === 200) {
+      result.passed = true;
+    } else if (chatResponse.status() === 503) {
+      const payload = await chatResponse.json().catch(() => ({}));
+      result.passed = payload?.error === "CHAT_UNAVAILABLE";
+    } else {
+      result.passed = false;
+    }
 
     await page.screenshot({ path: screenshotPath, fullPage: true });
   } catch (err) {

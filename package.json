@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
+    "postinstall": "prisma generate",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
@@ -16,7 +17,21 @@
     "ops:bootstrap": "node scripts/ops/bootstrap-proof.mjs",
     "ops:prove": "node scripts/ops/prove-site.mjs --baseUrl $BASE_URL",
     "ops:triage": "node scripts/ops/triage-site.mjs",
-    "socials:daily": "node scripts/socials/create-daily-socials.mjs"
+    "ops:audit:public": "node scripts/ops/public-exposure-audit.mjs",
+    "ops:compare:merebenefits": "node scripts/ops/compare-merebenefits.mjs",
+    "socials:daily": "node scripts/socials/create-daily-socials.mjs",
+    "gbp:run": "tsx scripts/gbp/run-cycle.ts",
+    "gbp:daily": "tsx scripts/gbp/run-cycle.ts --mode daily",
+    "gbp:weekly": "tsx scripts/gbp/run-cycle.ts --mode weekly",
+    "gbp:monthly": "tsx scripts/gbp/run-cycle.ts --mode monthly",
+    "gbp:quarterly": "tsx scripts/gbp/run-cycle.ts --mode quarterly",
+    "gbp:packet:init": "tsx scripts/gbp/init-packet.ts",
+    "gbp:audit:monthly": "tsx scripts/gbp/run-cycle.ts --mode monthly --require-packet --strict-access --emit-scorecard",
+    "gbp:memo:weekly": "tsx scripts/gbp/run-cycle.ts --mode weekly --require-packet",
+    "gbp:review-library": "tsx scripts/gbp/run-cycle.ts --mode weekly",
+    "gbp:sync": "tsx scripts/gbp/sync-artifacts.ts",
+    "gbp:ads:plan": "tsx scripts/gbp/generate-ads-plan.ts",
+    "gbp:validate": "tsx scripts/gbp/run-cycle.ts --mode monthly --dry-run --strict --emit-scorecard"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.25",
