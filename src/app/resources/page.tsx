@@ -127,7 +127,7 @@ export default async function ResourcesPage() {
   const resources = await loadResources();
   return (
     <Container className="py-14">
-      <div className="max-w-3xl">
+      <div id="starter-kit" className="max-w-3xl">
         <h1 className="text-3xl font-semibold tracking-tight text-black">Resources</h1>
         <p className="mt-3 text-sm leading-6 text-black/70">
           Client education hub with clear primers, checklists, and step-by-step guidance. Built for Florida residents
