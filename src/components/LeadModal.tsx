@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { site } from "@/lib/site";
 
@@ -44,7 +43,6 @@ const topicParamToOffering: Record<string, string> = {
 };
 
 export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const searchParams = useSearchParams();
   const [formState, setFormState] = useState<LeadPayload>({
     firstName: "",
     lastName: "",
@@ -72,8 +70,9 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
 
   useEffect(() => {
     if (!isOpen) return;
-    const topic = (searchParams.get("topic")?.trim() || "").toLowerCase();
-    const county = searchParams.get("county")?.trim() || "";
+    const params = typeof window === "undefined" ? null : new URLSearchParams(window.location.search);
+    const topic = (params?.get("topic")?.trim() || "").toLowerCase();
+    const county = params?.get("county")?.trim() || "";
     if (topic && topicParamToOffering[topic] && offerings.includes(topicParamToOffering[topic])) {
       setSelectedOfferings([topicParamToOffering[topic]]);
     }
@@ -87,7 +86,7 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
       firstName: prev.firstName || storedFirst,
       lastName: prev.lastName || storedLast,
     }));
-  }, [isOpen, searchParams]);
+  }, [isOpen]);
 
   const toggleOffering = (offering: string) => {
     setSelectedOfferings((prev) =>
