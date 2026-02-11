@@ -8,32 +8,38 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
 import TimedLeadPopup from "@/components/TimedLeadPopup";
-import { absoluteUrl, insuranceAgencyJsonLd, localBusinessJsonLd, organizationJsonLd, personJsonLd, site } from "@/lib/site";
+import { insuranceAgencyJsonLd, localBusinessJsonLd, organizationJsonLd, personJsonLd } from "@/lib/site";
+
+const PRODUCTION_SITE_URL = "https://vital-edge-insurance.vercel.app";
+const METADATA_BASE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL && process.env.NEXT_PUBLIC_SITE_URL.startsWith("http")
+    ? process.env.NEXT_PUBLIC_SITE_URL
+    : PRODUCTION_SITE_URL;
 
 export const metadata: Metadata = {
-  metadataBase: new URL(site.siteUrl),
+  metadataBase: new URL(METADATA_BASE_URL),
   title: {
-    default: "Patrick Mackin IV | Vital Edge Insurance | Licensed Florida Health Insurance Agent in Jacksonville",
-    template: "%s | Patrick Mackin IV | Vital Edge Insurance",
+    default: "Vital Edge Insurance | Licensed Health Insurance Agency in Jacksonville, FL",
+    template: "%s | Vital Edge Insurance",
   },
   description:
-    "Patrick Mackin IV, licensed Florida health insurance agent serving Jacksonville, Duval County, St. Johns County. Independent guidance for ACA Marketplace, Medicare, Medigap, ICHRA, and small business health insurance. Vital Edge Insurance provides education-first support for individuals, families, and employers.",
+    "Independent, licensed guidance for ACA Marketplace, Medicare Advantage, Medigap, and ICHRA in Jacksonville and nearby Florida counties. Call (352) 214-8879 or request a callback.",
   alternates: {
-    canonical: absoluteUrl("/"),
+    canonical: "/",
   },
   openGraph: {
     type: "website",
-    url: absoluteUrl("/"),
-    title: "Patrick Mackin IV | Vital Edge Insurance | Florida Health Insurance Agent",
+    url: "/",
+    title: "Vital Edge Insurance | Licensed Health Insurance Agency in Jacksonville, FL",
     description:
-      "Licensed Florida health insurance agent Patrick Mackin IV provides independent guidance for ACA, Medicare, and small business coverage in Jacksonville, Duval County, and St. Johns County.",
+      "Independent, licensed guidance for ACA Marketplace, Medicare Advantage, Medigap, and ICHRA in Jacksonville and nearby Florida counties. Call (352) 214-8879 or request a callback.",
     siteName: "Vital Edge Insurance",
     images: [
       {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Patrick Mackin IV - Vital Edge Insurance - Licensed Florida Health Insurance Agent",
+        alt: "Vital Edge Insurance - Licensed Florida Health Insurance Guidance",
       },
     ],
   },
@@ -43,8 +49,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Patrick Mackin IV | Vital Edge Insurance | Florida Health Insurance Agent",
-    description: "Licensed Florida health insurance agent serving Jacksonville, Duval County, St. Johns County, and Miami-Dade County.",
+    title: "Vital Edge Insurance | Licensed Health Insurance Agency in Jacksonville, FL",
+    description:
+      "Independent, licensed guidance for ACA Marketplace, Medicare Advantage, Medigap, and ICHRA in Jacksonville and nearby Florida counties. Call (352) 214-8879 or request a callback.",
     images: ["/og.png"],
   },
   robots: {
