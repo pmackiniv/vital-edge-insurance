@@ -7,7 +7,7 @@ import { chromium, devices } from "playwright";
 const DEFAULT_TIMEOUT_MS = 45_000;
 const CHAT_TEXT = "Hello from automated triage.";
 const CHAT_PLACEHOLDER_SNIPPET = "What is Part D";
-const MOBILE_LINK_LABELS = ["Home", "Medicare Advantage", "Medigap", "ACA / ICHRA", "Small Group", "Contact"];
+const MOBILE_LINK_LABELS = ["Home", "About", "Medicare", "Health Insurance", "Other Services", "Resources", "Locations"];
 
 function parseArgs(argv) {
   const args = { baseUrl: process.env.BASE_URL || "", timeoutMs: DEFAULT_TIMEOUT_MS };
@@ -31,6 +31,10 @@ function parseArgs(argv) {
     throw new Error("Missing --baseUrl and BASE_URL is not set.");
   }
   return args;
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function timestamp() {
@@ -63,6 +67,29 @@ async function ensureOutputDir() {
   const outDir = path.join(process.cwd(), "outputs", "triage", timestamp());
   await fs.mkdir(outDir, { recursive: true });
   return outDir;
+}
+
+async function clickFirstVisible(locator) {
+  const count = await locator.count();
+  for (let i = 0; i < count; i += 1) {
+    const candidate = locator.nth(i);
+    if (await candidate.isVisible()) {
+      await candidate.click();
+      return true;
+    }
+  }
+  return false;
+}
+
+async function findFirstVisibleEnabled(locator) {
+  const count = await locator.count();
+  for (let i = 0; i < count; i += 1) {
+    const candidate = locator.nth(i);
+    if (await candidate.isVisible() && await candidate.isEnabled()) {
+      return candidate;
+    }
+  }
+  return null;
 }
 
 async function runDesktop({
@@ -141,28 +168,28 @@ async function runDesktop({
       await page.goto(result.fallbackUrl, { waitUntil: "domcontentloaded" });
     }
 
-    const chatLauncher = page.getByRole("button", { name: /Chat with a licensed agent now/i });
-    if (await chatLauncher.count()) {
-      const launcher = chatLauncher.first();
-      if (await launcher.isVisible()) {
-        await launcher.click();
-      }
+    const launchers = page.getByRole("button", { name: /chat with a licensed agent now|talk with a licensed agent now|live help/i });
+    const launcherClicked = await clickFirstVisible(launchers);
+    if (launcherClicked) {
+      await page.getByText(/Talk with a licensed agent now/i).first().waitFor({ state: "visible", timeout: 8_000 }).catch(() => {});
     }
 
     const askQuestion = page.getByRole("button", { name: /Ask a question/i });
-    if (await askQuestion.count()) {
-      const askButton = askQuestion.first();
-      if (await askButton.isVisible()) {
-        await askButton.click();
-      }
-    }
+    await clickFirstVisible(askQuestion);
 
-    let chatInput = page.getByPlaceholder(new RegExp(CHAT_PLACEHOLDER_SNIPPET, "i")).first();
-    if (!(await chatInput.count())) {
-      chatInput = page.locator("textarea").first();
+    let chatInput = await findFirstVisibleEnabled(page.locator(".chat-widget-root textarea"));
+    if (!chatInput) {
+      const fullChatLink = page.getByRole("link", { name: /Open full chat page/i });
+      const fullChatOpened = await clickFirstVisible(fullChatLink);
+      if (fullChatOpened) {
+        await page.waitForLoadState("domcontentloaded");
+      } else if (!page.url().includes("/chat")) {
+        await page.goto(result.fallbackUrl, { waitUntil: "domcontentloaded" });
+      }
+      chatInput = await findFirstVisibleEnabled(page.locator("textarea"));
     }
-    if (!(await chatInput.isVisible()) || !(await chatInput.isEnabled())) {
-      throw new Error("No visible and enabled chat textarea found.");
+    if (!chatInput) {
+      throw new Error("No visible and enabled chat textarea found after opening chat widget and /chat fallback.");
     }
 
     await chatInput.fill(CHAT_TEXT);
@@ -309,10 +336,9 @@ async function runMobile({
           }));
         }
 
-        let link = page.locator("#mobile-nav-panel").getByRole("link", { name: new RegExp(label, "i") }).first();
-        if (!(await link.count())) {
-          link = page.getByRole("link", { name: new RegExp(label, "i") }).first();
-        }
+        const panel = page.locator("#mobile-nav-panel");
+        const labelPattern = new RegExp(`^${escapeRegExp(label)}$`, "i");
+        const link = panel.getByRole("link", { name: labelPattern }).first();
         attempt.visible = await link.isVisible();
         if (!attempt.visible) {
           throw new Error(`Link not visible: ${label}`);
@@ -369,7 +395,9 @@ async function runMobile({
     const failedAttempts = result.attempts.filter((attempt) => typeof attempt.error === "string" && attempt.error.length > 0);
     result.interceptedAttemptCount = interceptedAttempts.length;
     result.failedAttemptCount = failedAttempts.length;
-    result.passed = result.routeChangedCount > 0 && result.interceptedAttemptCount === 0;
+    result.passed = result.routeChangedCount > 0
+      && result.interceptedAttemptCount === 0
+      && result.failedAttemptCount === 0;
     appendLog(
       logLines,
       `Mobile summary: routeChanged=${result.routeChangedCount} intercepted=${result.interceptedAttemptCount} failed=${result.failedAttemptCount}`,
