@@ -1,3 +1,14 @@
+export type SiteNavItem = {
+  label: string;
+  href: string;
+};
+
+export type SiteMainNavItem = {
+  label: string;
+  href?: string;
+  children?: SiteNavItem[];
+};
+
 export const site = {
   name: "Vital Edge Insurance",
   legalName: "Vital Edge Insurance",
@@ -33,7 +44,66 @@ export const site = {
     { label: "ACA / ICHRA", href: "/aca" },
     { label: "Small Group", href: "/small-group" },
     { label: "Contact", href: "/contact" },
-  ],
+  ] as SiteNavItem[],
+  mainNav: [
+    { label: "Home", href: "/" },
+    {
+      label: "About",
+      href: "/about",
+      children: [
+        { label: "About Vital Edge", href: "/about" },
+        { label: "Contact", href: "/contact" },
+        { label: "Schedule a Call", href: "/schedule" },
+      ],
+    },
+    {
+      label: "Medicare",
+      href: "/medicare",
+      children: [
+        { label: "Medicare Overview", href: "/medicare" },
+        { label: "Medicare Advantage Request", href: "/medicare/medicare-advantage-request" },
+        { label: "Medigap Request", href: "/medicare/medigap-request" },
+        { label: "Enrollment Links", href: "/enroll" },
+      ],
+    },
+    {
+      label: "Health Insurance",
+      href: "/aca",
+      children: [
+        { label: "ACA Marketplace", href: "/aca" },
+        { label: "ICHRA", href: "/ichra" },
+        { label: "Off-Exchange", href: "/off-exchange" },
+        { label: "Small Group", href: "/small-group" },
+      ],
+    },
+    {
+      label: "Other Services",
+      children: [
+        { label: "Life Insurance", href: "/contact?topic=life-insurance" },
+        { label: "Final Expense", href: "/contact?topic=final-expense" },
+        { label: "Term Life", href: "/contact?topic=term-life" },
+        { label: "Dental / Vision / Hearing", href: "/contact?topic=dental-vision-hearing" },
+        { label: "Hospital Plans", href: "/contact?topic=hospital-plans" },
+        { label: "Cancer / Heart Attack / Stroke", href: "/contact?topic=cancer-heart-stroke" },
+      ],
+    },
+    {
+      label: "Resources",
+      href: "/resources",
+      children: [
+        { label: "Resources", href: "/resources" },
+        { label: "Blog", href: "/blog" },
+      ],
+    },
+    {
+      label: "Locations",
+      children: [
+        { label: "Duval County", href: "/duval-county" },
+        { label: "St. Johns County", href: "/st-johns-county" },
+        { label: "Miami-Dade", href: "/miami" },
+      ],
+    },
+  ] as SiteMainNavItem[],
 } as const;
 
 export function absoluteUrl(path = "/") {

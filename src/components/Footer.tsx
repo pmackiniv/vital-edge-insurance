@@ -2,65 +2,73 @@ import Link from "next/link";
 import { Container } from "@/components/Container";
 import { BottomFinePrint } from "@/components/BottomFinePrint";
 import { site } from "@/lib/site";
-import { externalLinkProps, GBP_REVIEWS, LINKEDIN_COMPANY_PUBLIC } from "@/lib/externalLinks";
+import {
+  externalLinkProps,
+  FACEBOOK,
+  GBP_REVIEWS,
+  INSTAGRAM,
+  LINKEDIN_COMPANY_PUBLIC,
+} from "@/lib/externalLinks";
 
 export function Footer() {
   const linkProps = externalLinkProps();
   return (
-    <footer className="border-t border-white/10 bg-transparent">
+    <footer className="border-t border-white/10 bg-[rgba(7,18,36,0.86)] text-white backdrop-blur-md">
       <Container>
         <div className="grid gap-8 py-12 md:grid-cols-3">
           <div>
-            <div className="text-sm font-semibold text-black">{site.name}</div>
-            <p className="mt-2 text-sm leading-6 text-black/70">
+            <div className="text-sm font-semibold text-white">{site.name}</div>
+            <p className="mt-2 text-sm leading-6 text-white/80">
               Independent guidance for individuals, families, and small businesses in Jacksonville and nearby counties.
             </p>
             <div className="mt-3 space-y-1 text-sm">
-              <a className="block text-black/70 hover:text-black" href={`tel:${site.phoneE164}`}>
+              <a className="block text-white/80 hover:text-white" href={`tel:${site.phoneE164}`}>
                 {site.phoneDisplay}
               </a>
-              <a className="block text-black/70 hover:text-black" href={`mailto:${site.email}`}>
+              <a className="block text-white/80 hover:text-white" href={`mailto:${site.email}`}>
                 {site.email}
               </a>
             </div>
           </div>
 
           <div>
-            <div className="text-sm font-semibold text-black">Explore</div>
+            <div className="text-sm font-semibold text-white">Explore</div>
             <ul className="mt-3 space-y-2 text-sm">
               {site.nav.map((item) => (
                 <li key={item.href}>
-                  <Link className="text-black/70 hover:text-black" href={item.href}>
+                  <Link className="text-white/80 hover:text-white" href={item.href}>
                     {item.label}
                   </Link>
                 </li>
               ))}
-              <li><Link className="text-black/70 hover:text-black" href="/schedule">Schedule a call</Link></li>
-              <li><Link className="text-black/70 hover:text-black" href="/blog">Blog</Link></li>
+              <li><Link className="text-white/80 hover:text-white" href="/schedule">Schedule a call</Link></li>
+              <li><Link className="text-white/80 hover:text-white" href="/blog">Blog</Link></li>
             </ul>
           </div>
 
           <div>
-            <div className="text-sm font-semibold text-black">Compliance</div>
-            <p className="mt-3 text-sm leading-6 text-black/70">
+            <div className="text-sm font-semibold text-white">Compliance</div>
+            <p className="mt-3 text-sm leading-6 text-white/80">
               Licensed insurance agency serving Jacksonville and counties across Florida with education-first guidance.
             </p>
             <div className="mt-4 flex gap-4 text-sm">
-              <Link className="text-black/70 hover:text-black" href="/privacy">Privacy</Link>
-              <Link className="text-black/70 hover:text-black" href="/contact">Contact</Link>
-              <a className="text-black/70 hover:text-black" href="https://www.medicare.gov" {...linkProps}>Medicare.gov</a>
+              <Link className="text-white/80 hover:text-white" href="/privacy">Privacy</Link>
+              <Link className="text-white/80 hover:text-white" href="/contact">Contact</Link>
+              <a className="text-white/80 hover:text-white" href="https://www.medicare.gov" {...linkProps}>Medicare.gov</a>
             </div>
-            <div className="mt-4 text-sm font-semibold text-black">Connect</div>
+            <div className="mt-4 text-sm font-semibold text-white">Connect</div>
             <div className="mt-3 space-y-2 text-sm">
-              <a className="block text-black/70 hover:text-black" href={LINKEDIN_COMPANY_PUBLIC} {...linkProps}>LinkedIn</a>
-              <a className="block text-black/70 hover:text-black" href={GBP_REVIEWS} {...linkProps}>Google Business Profile</a>
+              <a className="block text-white/80 hover:text-white" href={FACEBOOK} {...linkProps}>Facebook</a>
+              <a className="block text-white/80 hover:text-white" href={LINKEDIN_COMPANY_PUBLIC} {...linkProps}>LinkedIn</a>
+              <a className="block text-white/80 hover:text-white" href={INSTAGRAM} {...linkProps}>Instagram</a>
+              <a className="block text-white/80 hover:text-white" href={GBP_REVIEWS} {...linkProps}>Google Business Profile</a>
             </div>
           </div>
         </div>
 
         <BottomFinePrint />
 
-        <div className="border-t border-black/5 py-6 text-sm text-black/60">
+        <div className="border-t border-white/10 py-6 text-sm text-white/70">
           © {new Date().getFullYear()} {site.legalName}. All rights reserved.
         </div>
       </Container>

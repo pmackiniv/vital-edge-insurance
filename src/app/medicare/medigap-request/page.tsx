@@ -12,8 +12,7 @@ export default function MedigapRequestPage() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [consent, setConsent] = useState(false);
-  const [dataSharingConsent, setDataSharingConsent] = useState(false);
-  const [leadTransferDisclosureAck, setLeadTransferDisclosureAck] = useState(false);
+  const [licensedAgentDisclosure, setLicensedAgentDisclosure] = useState(false);
   const [callRecordingConsent, setCallRecordingConsent] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -24,8 +23,8 @@ export default function MedigapRequestPage() {
     setError("");
     setSuccess("");
 
-    if (!firstName || !lastName || !phone || !zip || !consent || !dataSharingConsent || !leadTransferDisclosureAck) {
-      setError("Complete all required fields and disclosures.");
+    if (!firstName || !lastName || !phone || !zip || !consent || !licensedAgentDisclosure) {
+      setError("Complete all required fields and consent acknowledgments.");
       return;
     }
 
@@ -160,20 +159,14 @@ export default function MedigapRequestPage() {
         <label className="flex items-start gap-2 text-xs text-black/70">
           <input
             type="checkbox"
-            checked={dataSharingConsent}
-            onChange={(event) => setDataSharingConsent(event.target.checked)}
+            checked={licensedAgentDisclosure}
+            onChange={(event) => setLicensedAgentDisclosure(event.target.checked)}
             required
           />
-          <span>I provide express written consent for my information to be shared with Vital Edge Licensed Agent.</span>
-        </label>
-        <label className="flex items-start gap-2 text-xs text-black/70">
-          <input
-            type="checkbox"
-            checked={leadTransferDisclosureAck}
-            onChange={(event) => setLeadTransferDisclosureAck(event.target.checked)}
-            required
-          />
-          <span>I understand my request may be transferred to a licensed agent for follow-up.</span>
+          <span>
+            I provide express written consent for my information to be shared with a licensed agent at Vital Edge
+            Insurance for follow-up, and I understand my request may be transferred for follow-up.
+          </span>
         </label>
 
         <button

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { site } from "@/lib/site";
 
@@ -13,20 +14,37 @@ type LeadPayload = {
   county: string;
   message: string;
   consent: boolean;
+  licensedAgentDisclosure: boolean;
 };
 
 const offerings = [
   "ACA Marketplace",
-  "Medicare Guidance",
-  "Medigap",
-  "ICHRA",
-  "Off-Exchange",
-  "Small Group",
+  "Cancer / Heart Attack / Stroke",
+  "Dental / Vision / Hearing",
+  "Group Benefits",
+  "Hospital Plans",
+  "Life Insurance",
+  "Final Expense",
+  "Term Life",
+  "Medicare",
+  "Medicare Supplement/Medigap Plan",
+  "Prescription Drug Savings",
+  "Other",
 ];
 
 const counties = ["Duval County", "St. Johns County", "Other"];
 
+const topicParamToOffering: Record<string, string> = {
+  medicare: "Medicare",
+  medigap: "Medicare Supplement/Medigap Plan",
+  aca: "ACA Marketplace",
+  ichra: "Group Benefits",
+  "off-exchange": "Other",
+  "small group": "Group Benefits",
+};
+
 export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  const searchParams = useSearchParams();
   const [formState, setFormState] = useState<LeadPayload>({
     firstName: "",
     lastName: "",
@@ -36,6 +54,7 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
     county: "",
     message: "",
     consent: false,
+    licensedAgentDisclosure: false,
   });
   const [selectedOfferings, setSelectedOfferings] = useState<string[]>([]);
   const [error, setError] = useState("");
@@ -51,6 +70,25 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
     };
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const topic = (searchParams.get("topic")?.trim() || "").toLowerCase();
+    const county = searchParams.get("county")?.trim() || "";
+    if (topic && topicParamToOffering[topic] && offerings.includes(topicParamToOffering[topic])) {
+      setSelectedOfferings([topicParamToOffering[topic]]);
+    }
+    if (county && counties.includes(county)) {
+      setFormState((prev) => ({ ...prev, county }));
+    }
+    const storedFirst = window.localStorage.getItem("ve_lead_first_name") ?? "";
+    const storedLast = window.localStorage.getItem("ve_lead_last_name") ?? "";
+    setFormState((prev) => ({
+      ...prev,
+      firstName: prev.firstName || storedFirst,
+      lastName: prev.lastName || storedLast,
+    }));
+  }, [isOpen, searchParams]);
+
   const toggleOffering = (offering: string) => {
     setSelectedOfferings((prev) =>
       prev.includes(offering) ? prev.filter((item) => item !== offering) : [...prev, offering],
@@ -60,6 +98,12 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
   const updateField = (field: keyof LeadPayload) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const value = event.target.type === "checkbox" ? (event.target as HTMLInputElement).checked : event.target.value;
     setFormState((prev) => ({ ...prev, [field]: value }));
+    if (field === "firstName" && typeof window !== "undefined") {
+      window.localStorage.setItem("ve_lead_first_name", String(value));
+    }
+    if (field === "lastName" && typeof window !== "undefined") {
+      window.localStorage.setItem("ve_lead_last_name", String(value));
+    }
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -67,13 +111,22 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
     setError("");
     setSuccess("");
 
-    if (!formState.firstName || !formState.lastName || !formState.phone || !formState.email || !formState.consent) {
-      setError("Please complete required fields and consent.");
+    if (
+      !formState.firstName ||
+      !formState.lastName ||
+      !formState.phone ||
+      !formState.email ||
+      !formState.consent ||
+      !formState.licensedAgentDisclosure
+    ) {
+      setError("Please complete required fields and all consent acknowledgments.");
       return;
     }
 
     setIsSubmitting(true);
     try {
+      const nameLine = `Name: ${formState.firstName} ${formState.lastName}`.trim();
+      const messageWithName = [nameLine, formState.message || ""].filter(Boolean).join("\n");
       const response = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -81,17 +134,22 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
           topic: selectedOfferings.length ? selectedOfferings.join(", ") : "General inquiry",
           county: formState.county || "",
           contactMethod: `Phone: ${formState.phone} | Email: ${formState.email}`,
-          message: formState.message || "",
+          message: messageWithName,
           consent: formState.consent,
+          dataSharingConsent: formState.licensedAgentDisclosure,
+          dataSharingRecipient: "Vital Edge Licensed Agent",
+          dataSharingEntities: ["Vital Edge Licensed Agent"],
+          leadTransferDisclosureAck: formState.licensedAgentDisclosure,
+          beneficiaryInitiated: true,
+          productInterest: selectedOfferings.length ? selectedOfferings.join(", ") : "General inquiry",
         }),
       });
 
+      const data = (await response.json().catch(() => ({}))) as { ok?: boolean; error?: string; message?: string };
       if (!response.ok) {
-        const data = (await response.json().catch(() => ({}))) as { error?: string };
         throw new Error(data.error || "Unable to submit right now.");
       }
-
-      setSuccess("Got it, a licensed agent will follow up.");
+      setSuccess(data.message ?? "Got it, a licensed agent will follow up.");
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unable to submit right now.";
       setError(message);
@@ -148,6 +206,7 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                       onChange={updateField("firstName")}
                       className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
                       required
+                      autoComplete="given-name"
                     />
                   </div>
                   <div>
@@ -157,6 +216,7 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                       onChange={updateField("lastName")}
                       className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
                       required
+                      autoComplete="family-name"
                     />
                   </div>
                 </div>
@@ -167,6 +227,8 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                     onChange={updateField("phone")}
                     className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
                     required
+                    type="tel"
+                    autoComplete="tel"
                   />
                 </div>
                 <div>
@@ -177,6 +239,7 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                     onChange={updateField("email")}
                     className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
                     required
+                    autoComplete="email"
                   />
                 </div>
                 <div>
@@ -213,8 +276,23 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                       required
                     />
                     <span>
-                      I consent to be contacted by Vital Edge Insurance by phone, text, and email regarding insurance
-                      coverage and related services. Message and data rates may apply. Reply STOP to opt out of texts.
+                      By checking this box, you agree to be contacted by call, text, and/or email about your request.
+                      Message &amp; data rates may apply. Reply STOP to opt out.
+                    </span>
+                  </label>
+                </div>
+                <div className="rounded-xl border border-black/10 p-4 text-xs text-black/70">
+                  <label className="flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      checked={formState.licensedAgentDisclosure}
+                      onChange={updateField("licensedAgentDisclosure")}
+                      className="mt-0.5"
+                      required
+                    />
+                    <span>
+                      I provide express written consent for my information to be shared with a licensed agent at Vital
+                      Edge Insurance for follow-up, and I understand my request may be transferred for follow-up.
                     </span>
                   </label>
                 </div>
