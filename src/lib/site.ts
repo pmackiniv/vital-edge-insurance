@@ -81,6 +81,7 @@ export const site = {
     },
     {
       label: "Other Services",
+      href: "/contact?topic=other",
       children: [
         { label: "Life Insurance", href: "/contact?topic=life-insurance" },
         { label: "Final Expense", href: "/contact?topic=final-expense" },
@@ -100,6 +101,7 @@ export const site = {
     },
     {
       label: "Locations",
+      href: "/duval-county",
       children: [
         { label: "Duval County", href: "/duval-county" },
         { label: "St. Johns County", href: "/st-johns-county" },
