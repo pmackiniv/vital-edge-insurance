@@ -1,3 +1,14 @@
+export type SiteNavItem = {
+  label: string;
+  href: string;
+};
+
+export type SiteMainNavItem = {
+  label: string;
+  href?: string;
+  children?: SiteNavItem[];
+};
+
 export const site = {
   name: "Vital Edge Insurance",
   legalName: "Vital Edge Insurance",
@@ -24,19 +35,78 @@ export const site = {
   logoPath: "/brand/vital-edge-logo.png",
   ogImagePath: "/og-image.svg",
   primaryCta: {
-    label: "Request help",
+    label: "Get Personalized Medicare Advice",
     href: "/contact",
   },
   /** Cal.com, Calendly, or other booking embed URL. Set NEXT_PUBLIC_SCHEDULE_URL in Vercel. */
   scheduleUrl: process.env.NEXT_PUBLIC_SCHEDULE_URL || "",
   nav: [
     { label: "Home", href: "/" },
-    { label: "Medicare Advantage", href: "/medicare/ma-lead" },
-    { label: "Medigap", href: "/medicare/medigap-lead" },
+    { label: "Medicare Advantage", href: "/medicare/medicare-advantage-request" },
+    { label: "Medigap", href: "/medicare/medigap-request" },
     { label: "ACA / ICHRA", href: "/aca" },
     { label: "Small Group", href: "/small-group" },
     { label: "Contact", href: "/contact" },
-  ],
+  ] as SiteNavItem[],
+  mainNav: [
+    { label: "Home", href: "/" },
+    {
+      label: "About",
+      href: "/about",
+      children: [
+        { label: "About Vital Edge", href: "/about" },
+        { label: "Contact", href: "/contact" },
+        { label: "Schedule a Call", href: "/schedule" },
+      ],
+    },
+    {
+      label: "Medicare",
+      href: "/medicare",
+      children: [
+        { label: "Medicare Overview", href: "/medicare" },
+        { label: "Medicare Advantage Request", href: "/medicare/medicare-advantage-request" },
+        { label: "Medigap Request", href: "/medicare/medigap-request" },
+        { label: "Enrollment Links", href: "/enroll" },
+      ],
+    },
+    {
+      label: "Health Insurance",
+      href: "/aca",
+      children: [
+        { label: "ACA Marketplace", href: "/aca" },
+        { label: "ICHRA", href: "/ichra" },
+        { label: "Off-Exchange", href: "/off-exchange" },
+        { label: "Small Group", href: "/small-group" },
+      ],
+    },
+    {
+      label: "Other Services",
+      children: [
+        { label: "Life Insurance", href: "/contact?topic=life-insurance" },
+        { label: "Final Expense", href: "/contact?topic=final-expense" },
+        { label: "Term Life", href: "/contact?topic=term-life" },
+        { label: "Dental / Vision / Hearing", href: "/contact?topic=dental-vision-hearing" },
+        { label: "Hospital Plans", href: "/contact?topic=hospital-plans" },
+        { label: "Cancer / Heart Attack / Stroke", href: "/contact?topic=cancer-heart-stroke" },
+      ],
+    },
+    {
+      label: "Resources",
+      href: "/resources",
+      children: [
+        { label: "Resources", href: "/resources" },
+        { label: "Blog", href: "/blog" },
+      ],
+    },
+    {
+      label: "Locations",
+      children: [
+        { label: "Duval County", href: "/duval-county" },
+        { label: "St. Johns County", href: "/st-johns-county" },
+        { label: "Miami-Dade", href: "/miami" },
+      ],
+    },
+  ] as SiteMainNavItem[],
 } as const;
 
 export function absoluteUrl(path = "/") {
@@ -97,39 +167,5 @@ export function insuranceAgencyJsonLd() {
     },
     sameAs: site.sameAs,
     logo: absoluteUrl(site.logoPath),
-  };
-}
-
-export function personJsonLd() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: "Patrick Mackin IV",
-    jobTitle: "Licensed Health Insurance Agent",
-    worksFor: {
-      "@type": "InsuranceAgency",
-      name: site.legalName,
-    },
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: site.address.addressLocality,
-      addressRegion: site.address.addressRegion,
-      addressCountry: site.address.addressCountry,
-    },
-    telephone: site.phoneE164,
-    email: site.email,
-    url: absoluteUrl("/about"),
-    sameAs: site.sameAs,
-    areaServed: site.serviceAreas.map((name) => ({ "@type": "AdministrativeArea", name })),
-    knowsAbout: [
-      "ACA Marketplace",
-      "Medicare",
-      "Medicare Supplement",
-      "Medigap",
-      "ICHRA",
-      "Small Group Health Insurance",
-      "Florida Health Insurance",
-      "Health Insurance Compliance",
-    ],
   };
 }

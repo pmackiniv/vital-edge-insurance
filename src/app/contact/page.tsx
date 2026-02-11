@@ -10,7 +10,18 @@ function ContactForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const topicParam = (searchParams.get("topic")?.trim() || "").toLowerCase();
-  const topicMap: Record<string, string> = { aca: "ACA", medicare: "Medicare", ichra: "ICHRA", other: "Other" };
+  const topicMap: Record<string, string> = {
+    aca: "ACA",
+    medicare: "Medicare",
+    ichra: "ICHRA",
+    "life-insurance": "Life Insurance",
+    "final-expense": "Final Expense",
+    "term-life": "Term Life",
+    "dental-vision-hearing": "Dental / Vision / Hearing",
+    "hospital-plans": "Hospital Plans",
+    "cancer-heart-stroke": "Cancer / Heart Attack / Stroke",
+    other: "Other",
+  };
   const defaultTopic = topicMap[topicParam] || "";
   const storedFirst = typeof window !== "undefined" ? window.localStorage.getItem("ve_lead_first_name") ?? "" : "";
   const storedLast = typeof window !== "undefined" ? window.localStorage.getItem("ve_lead_last_name") ?? "" : "";
@@ -47,6 +58,7 @@ function ContactForm() {
     const topic = String(formData.get("topic") || "").trim();
     const message = String(formData.get("message") || "").trim();
     const consent = String(formData.get("consent") || "") === "yes";
+    const licensedAgentDisclosure = String(formData.get("licensed_agent_disclosure") || "") === "yes";
 
     if (!name || !message) {
       setError("Please provide your name and a short message.");
@@ -60,6 +72,10 @@ function ContactForm() {
 
     if (!consent) {
       setError("Please provide consent to be contacted.");
+      return;
+    }
+    if (!licensedAgentDisclosure) {
+      setError("Please acknowledge that your information may be shared with a licensed agent for follow-up.");
       return;
     }
 
@@ -85,6 +101,12 @@ function ContactForm() {
           contactMethod: contactMethod || "Contact provided",
           message: enrichedMessage,
           consent: true,
+          dataSharingConsent: true,
+          dataSharingRecipient: "Vital Edge Licensed Agent",
+          dataSharingEntities: ["Vital Edge Licensed Agent"],
+          leadTransferDisclosureAck: true,
+          beneficiaryInitiated: true,
+          productInterest: topic || "General inquiry",
           intent,
         }),
       });
@@ -102,7 +124,7 @@ function ContactForm() {
   };
 
   const answerBlock =
-    `How do you contact Vital Edge Insurance? You can call or text ${site.phoneDisplay}, use the form below, or request a callback from the chat. We respond as quickly as possible during business hours. Patrick Mackin IV is the licensed agent.`;
+    `How do you contact Vital Edge Insurance? You can call or text ${site.phoneDisplay}, use the form below, or request a callback from the chat. We respond as quickly as possible during business hours. A licensed agent will follow up with you.`;
 
   const contactFaqs = [
     {
@@ -217,6 +239,12 @@ function ContactForm() {
                   <option value="ACA">ACA</option>
                   <option value="Medicare">Medicare</option>
                   <option value="ICHRA">ICHRA</option>
+                  <option value="Life Insurance">Life Insurance</option>
+                  <option value="Final Expense">Final Expense</option>
+                  <option value="Term Life">Term Life</option>
+                  <option value="Dental / Vision / Hearing">Dental / Vision / Hearing</option>
+                  <option value="Hospital Plans">Hospital Plans</option>
+                  <option value="Cancer / Heart Attack / Stroke">Cancer / Heart Attack / Stroke</option>
                   <option value="Other">Other</option>
                 </select>
               </div>
@@ -305,6 +333,21 @@ function ContactForm() {
                 <span>
                   By checking this box, you agree to be contacted by call, text, and/or email about your request.
                   Message &amp; data rates may apply. Reply STOP to opt out.
+                </span>
+              </label>
+            </div>
+            <div className="rounded-xl border border-black/10 p-3">
+              <label className="flex items-start gap-3 text-xs text-black/70">
+                <input
+                  type="checkbox"
+                  name="licensed_agent_disclosure"
+                  value="yes"
+                  className="mt-0.5"
+                  required
+                />
+                <span>
+                  I provide express written consent for my information to be shared with a licensed agent at Vital Edge
+                  Insurance for follow-up, and I understand my request may be transferred for follow-up.
                 </span>
               </label>
             </div>

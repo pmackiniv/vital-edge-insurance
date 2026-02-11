@@ -8,6 +8,7 @@ import { Container } from "@/components/Container";
 import { TrustStrip } from "@/components/TrustStrip";
 import { Suspense } from "react";
 import { LeadModal } from "@/components/LeadModal";
+import { GetInTouchSection } from "@/components/GetInTouchSection";
 import { externalLinkProps, LINKEDIN_COMPANY_PUBLIC, LINKEDIN_PERSONAL } from "@/lib/externalLinks";
 import { absoluteUrl, site } from "@/lib/site";
 
@@ -210,7 +211,7 @@ export default function HomePage() {
                   className="btn px-6 py-3 text-base text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
                   style={{ backgroundColor: "#35B228", color: "#ffffff" }}
                 >
-                  Get personalized Medicare advice
+                  Get Personalized Medicare Advice
                 </Link>
               </div>
               <div className="text-sm text-white/80">
@@ -232,15 +233,15 @@ export default function HomePage() {
                 . Third-party enrollment partners. Licensed guidance is available if you prefer to enroll with help.
               </div>
               <div className="rounded-xl border border-white/20 bg-white/10 p-4 text-white/90 backdrop-blur">
-                <div className="text-xs font-semibold text-white">Founder</div>
+                <div className="text-xs font-semibold text-white">Agency credentials</div>
                 <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-white/85">
-                  <span className="font-medium text-white">Patrick Mackin IV</span>
+                  <span className="font-medium text-white">Licensed Florida Health Insurance Agency</span>
                   <a
                     href={LINKEDIN_PERSONAL}
                     {...externalLinkProps()}
                     className="rounded-full border border-white/30 px-3 py-1 text-xs font-semibold text-white hover:bg-white/15"
                   >
-                    Connect on LinkedIn
+                    Agency updates on LinkedIn
                   </a>
                   <a
                     href={LINKEDIN_COMPANY_PUBLIC}
@@ -411,6 +412,8 @@ export default function HomePage() {
       </section>
 
       <TrustStrip />
+
+      <GetInTouchSection />
 
       <section className="border-t border-white/10 bg-transparent">
         <Container>
