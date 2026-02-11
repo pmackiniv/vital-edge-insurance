@@ -169,3 +169,37 @@ export function insuranceAgencyJsonLd() {
     logo: absoluteUrl(site.logoPath),
   };
 }
+
+export function personJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Patrick Mackin IV",
+    jobTitle: "Licensed Health Insurance Agent",
+    worksFor: {
+      "@type": "InsuranceAgency",
+      name: site.legalName,
+    },
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: site.address.addressLocality,
+      addressRegion: site.address.addressRegion,
+      addressCountry: site.address.addressCountry,
+    },
+    telephone: site.phoneE164,
+    email: site.email,
+    url: absoluteUrl("/about"),
+    sameAs: site.sameAs,
+    areaServed: site.serviceAreas.map((name) => ({ "@type": "AdministrativeArea", name })),
+    knowsAbout: [
+      "ACA Marketplace",
+      "Medicare",
+      "Medicare Supplement",
+      "Medigap",
+      "ICHRA",
+      "Small Group Health Insurance",
+      "Florida Health Insurance",
+      "Health Insurance Compliance",
+    ],
+  };
+}
