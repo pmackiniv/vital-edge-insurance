@@ -182,7 +182,7 @@ export function ChatWidget() {
   };
 
   return (
-    <div className="chat-widget-root fixed bottom-6 right-6 z-[80] flex flex-col items-end gap-2">
+    <div className="chat-widget-root fixed bottom-6 right-6 z-[60] flex flex-col items-end gap-2">
       <button
         type="button"
         onClick={() => {
