@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { createHash, randomUUID } from "node:crypto";
 import { execSync } from "node:child_process";
 import { readdir, readFile } from "node:fs/promises";
