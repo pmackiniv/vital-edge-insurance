@@ -59,7 +59,7 @@ const acaFaqItems = [
   {
     question: "How do I choose a plan without guessing?",
     answer:
-      "Compare plan options by looking at provider network access, prescription needs, monthly premiums, and expected out-of-pocket costs. The goal is to match coverage details to your usage patterns, not just pick the lowest monthly number. A documented comparison checklist can make decisions clearer.",
+      "Compare plan options by looking at provider network access, prescription needs, monthly premiums, and expected out-of-pocket costs. The goal is to match coverage details to your usage patterns and care priorities with a documented checklist. A documented comparison checklist can make decisions clearer.",
     learnMoreHref: "/resources#marketplace-sep-checklist",
     learnMoreLabel: "Learn more about plan comparison checklists",
   },
