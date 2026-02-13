@@ -115,7 +115,7 @@ async function loadAliasRows(): Promise<SponsorAliasRecord[]> {
     where: { active: true },
     orderBy: [{ priority: "asc" }, { alias: "asc" }],
   });
-  return rows.map((row: any) => ({
+  return rows.map((row) => ({
     alias: row.alias,
     sponsorKey: row.sponsorKey as SponsorAliasRecord["sponsorKey"],
     priority: row.priority,
@@ -138,7 +138,7 @@ async function loadActiveAppointments(): Promise<Set<string>> {
     },
     select: { sponsorKey: true },
   });
-  return new Set(rows.map((row: any) => row.sponsorKey));
+  return new Set(rows.map((row) => row.sponsorKey));
 }
 
 export async function ingestCmsLandscape(input: IngestCmsLandscapeInput): Promise<IngestCmsLandscapeResult> {

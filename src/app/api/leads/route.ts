@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
 import { findSensitiveIdentifier } from "@/lib/leadGuard";
 import { sendLeadEmail } from "@/lib/notify";
 import { syncLeadToNotion } from "@/lib/notionLead";
@@ -168,7 +169,7 @@ export async function POST(req: Request) {
           leadRequestId,
           leadTransferDisclosureAck: body.leadTransferDisclosureAck === true,
           dataSharingConsent: body.dataSharingConsent === true,
-          dataSharingEntitiesJson: JSON.parse(JSON.stringify(dataSharingEntities)) as any,
+          dataSharingEntitiesJson: JSON.parse(JSON.stringify(dataSharingEntities)) as Prisma.InputJsonValue,
           beneficiaryInitiated,
           sourceRoute: "/api/leads",
           zip: zip || null,

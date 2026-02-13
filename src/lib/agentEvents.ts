@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import { getPrismaClient } from "@/lib/prisma";
 
 export type AgentEventType =
@@ -83,10 +84,10 @@ function mapDbEvent(row: {
   };
 }
 
-function parseMeta(meta: AgentEvent["meta"]): any {
+function parseMeta(meta: AgentEvent["meta"]): Prisma.InputJsonValue | undefined {
   if (!meta) return undefined;
   // Normalize unknown values into JSON-compatible data for Prisma Json fields.
-  return JSON.parse(JSON.stringify(meta));
+  return JSON.parse(JSON.stringify(meta)) as Prisma.InputJsonValue;
 }
 
 async function ensureAgentEventTable() {

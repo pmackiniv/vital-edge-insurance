@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
 import { appendAgentEvent } from "@/lib/agentEvents";
 import { resolveAgentActor } from "@/lib/agentAuth";
 import { evaluateCompliance } from "@/lib/compliance/gatekeeper";
@@ -40,8 +41,8 @@ type ApiFinding = {
   message: string;
 };
 
-function parseJson(value: unknown): any {
-  return JSON.parse(JSON.stringify(value));
+function parseJson(value: unknown): Prisma.InputJsonValue {
+  return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 }
 
 function zip5(value: string | undefined): string {
