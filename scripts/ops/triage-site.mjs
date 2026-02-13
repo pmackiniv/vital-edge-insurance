@@ -6,7 +6,6 @@ import { chromium, devices } from "playwright";
 
 const DEFAULT_TIMEOUT_MS = 45_000;
 const CHAT_TEXT = "Hello from automated triage.";
-const CHAT_PLACEHOLDER_SNIPPET = "What is Part D";
 const MOBILE_LINK_LABELS = ["Home", "About", "Medicare", "Health Insurance", "Other Services", "Resources", "Locations"];
 
 function parseArgs(argv) {

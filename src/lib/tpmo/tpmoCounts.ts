@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import { getPersistenceMode, getPrismaClient, type PersistenceMode } from "@/lib/prisma";
 import { CALL_RECORDING_POLICY_VERSION, RETENTION_POLICY_YEARS, TPMO_POLICY_VERSION } from "@/lib/compliance/policy";
 import { TPMO_ALIAS_MAP_VERSION, TPMO_DATASET_SOURCE, type SponsorKey } from "@/lib/tpmo/constants";
@@ -84,8 +85,8 @@ function zip5(raw: string): string {
   return String(raw || "").replace(/\D/g, "").slice(0, 5);
 }
 
-function parseJsonInput(value: unknown): any {
-  return JSON.parse(JSON.stringify(value));
+function parseJsonInput(value: unknown): Prisma.InputJsonValue {
+  return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 }
 
 function isCallChannel(channel: string): boolean {
@@ -103,7 +104,7 @@ async function readAliasRows(): Promise<{ rows: SponsorAliasRecord[]; aliasMapVe
     where: { active: true },
     orderBy: [{ priority: "asc" }, { alias: "asc" }],
   });
-  const mapped: SponsorAliasRecord[] = rows.map((row: any) => ({
+  const mapped: SponsorAliasRecord[] = rows.map((row) => ({
     alias: row.alias,
     sponsorKey: row.sponsorKey as SponsorAliasRecord["sponsorKey"],
     priority: row.priority,
@@ -186,7 +187,7 @@ export async function getTpmoStatus(planYearInput?: number): Promise<TpmoStatus>
     recordingArchiveMode: process.env.RECORDING_ARCHIVE_MODE?.trim() || "unconfigured",
     databaseConfigured,
     persistenceMode,
-    appointmentSponsors: appointmentSponsors.map((row: any) => ({
+    appointmentSponsors: appointmentSponsors.map((row) => ({
       sponsorKey: row.sponsorKey,
       displayName: row.displayName,
       status: row.status,
@@ -262,8 +263,8 @@ export async function getTpmoCounts(input: TpmoCountsInput): Promise<TpmoCountsR
     };
   }
 
-  const activeAppointmentKeys = new Set<string>(appointments.map((row: any) => String(row.sponsorKey)));
-  const normalizedRows: Array<{ planId: string; sponsorKey: SponsorKey }> = zipRows.map((row: any) => {
+  const activeAppointmentKeys = new Set<string>(appointments.map((row) => String(row.sponsorKey)));
+  const normalizedRows: Array<{ planId: string; sponsorKey: SponsorKey }> = zipRows.map((row) => {
     const fallbackNormalize = normalizeSponsorName(row.rawSponsorName, {
       aliases: aliases.rows,
       activeAppointmentSponsorKeys: activeAppointmentKeys,
