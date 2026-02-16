@@ -50,6 +50,13 @@ export function AIChatPanel() {
         chat. We will connect you with a licensed agent for your convenience, call or text {site.phoneDisplay}, request a
         callback, or schedule a call.
       </p>
+      <p className="text-xs text-black/60">
+        For secure enrollment links, use{" "}
+        <Link href="/enroll" className="underline">
+          /enroll
+        </Link>
+        .
+      </p>
 
       {showError ? (
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800">

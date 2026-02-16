@@ -258,6 +258,13 @@ export function Header() {
                   </nav>
                   <div className="flex flex-col gap-3">
                     <Link
+                      href="/enroll"
+                      onClick={closeMobileNav}
+                      className="inline-flex min-h-11 items-center justify-center rounded-xl border border-black/10 px-4 py-2 text-sm font-semibold text-black hover:bg-black/5"
+                    >
+                      Secure enrollment links
+                    </Link>
+                    <Link
                       href="/contact"
                       onClick={closeMobileNav}
                       className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-green)]"
