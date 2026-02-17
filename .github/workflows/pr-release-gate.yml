@@ -1,0 +1,79 @@
+name: PR Release Gate
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  detect-mobile-nav-changes:
+    name: Detect Mobile Nav Changes
+    runs-on: ubuntu-latest
+    outputs:
+      mobile_nav: ${{ steps.filter.outputs.mobile_nav }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Filter paths
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            mobile_nav:
+              - 'src/components/ChatWidget.tsx'
+              - 'src/components/Header.tsx'
+              - 'src/app/globals.css'
+
+  quality:
+    name: Lint Test Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+  mobile-nav-playwright:
+    name: Mobile Nav Playwright
+    needs: [detect-mobile-nav-changes, quality]
+    if: needs.detect-mobile-nav-changes.outputs.mobile_nav == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Assert mobile nav regression test exists
+        run: |
+          test -f playwright.config.ts
+          test -f test/playwright/mobile-nav-after-chat.spec.ts
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run mobile nav regression
+        run: npx playwright test test/playwright/mobile-nav-after-chat.spec.ts --project=mobile-chromium
