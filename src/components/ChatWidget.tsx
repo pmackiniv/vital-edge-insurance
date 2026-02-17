@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { resourcesForTopic } from "@/lib/knowledgeBase";
@@ -69,6 +69,20 @@ export function ChatWidget() {
   const contactLabel = contactMethod === "Email" ? "Best email address" : "Best phone number";
   const contactPlaceholder = contactMethod === "Email" ? "you@email.com" : "(904) 555-1234";
 
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (open) {
+      document.body.style.overflow = "hidden";
+      document.body.dataset.chatWidgetOpen = "true";
+      return;
+    }
+
+    if (document.body.dataset.mobileNavOpen !== "true") {
+      document.body.style.overflow = "";
+    }
+    delete document.body.dataset.chatWidgetOpen;
+  }, [open]);
+
   const resetFlow = () => {
     setStep(1);
     setTopic("");
@@ -85,6 +99,11 @@ export function ChatWidget() {
     setSubmitMessage("");
     setEmailSent(true);
     setIsSubmitting(false);
+  };
+
+  const closeWidget = () => {
+    setOpen(false);
+    resetFlow();
   };
 
   const goNext = () => {
@@ -182,7 +201,7 @@ export function ChatWidget() {
   };
 
   return (
-    <div className="chat-widget-root fixed bottom-6 right-6 z-[60] flex flex-col items-end gap-2">
+    <div className="chat-widget-root fixed bottom-6 right-6 z-[120] flex flex-col items-end gap-2">
       <button
         type="button"
         onClick={() => {
@@ -199,14 +218,25 @@ export function ChatWidget() {
 
       <AnimatePresence>
         {open ? (
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 40 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="fixed inset-y-0 right-0 w-full max-w-md border-l border-black/10 bg-white shadow-2xl"
-          >
-            <div className="flex h-full flex-col">
+          <>
+            <motion.button
+              type="button"
+              aria-label="Close chat panel"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="fixed inset-0 z-[119] bg-black/35 md:hidden"
+              onClick={closeWidget}
+            />
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 40 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="fixed inset-y-0 right-0 z-[120] w-full max-w-md border-l border-black/10 bg-white shadow-2xl"
+            >
+              <div className="flex h-full flex-col">
               <div className="flex flex-col gap-2 border-b border-black/10 p-4">
                 <div className="flex items-center justify-between gap-2">
                   <div>
@@ -217,10 +247,7 @@ export function ChatWidget() {
                   </div>
                   <button
                     type="button"
-                    onClick={() => {
-                      setOpen(false);
-                      resetFlow();
-                    }}
+                    onClick={closeWidget}
                     className="rounded-full border border-black/10 p-2 text-black/60 hover:text-black"
                     aria-label="Close chat"
                   >
@@ -574,8 +601,9 @@ export function ChatWidget() {
                   </div>
                 ) : null}
               </div>
-            </div>
-          </motion.div>
+              </div>
+            </motion.div>
+          </>
         ) : null}
       </AnimatePresence>
     </div>
