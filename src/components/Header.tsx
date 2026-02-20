@@ -65,7 +65,7 @@ export function Header() {
       <TopBar />
       <div className="border-b border-black/5">
         <Container>
-          <div className="flex h-16 items-center justify-between gap-4">
+          <div className="flex h-20 items-center justify-between gap-4">
             <Link
               href="/"
               className="flex items-center gap-3"
@@ -74,10 +74,10 @@ export function Header() {
               <Image
                 src="/brand/vital-edge-logo.png"
                 alt="Vital Edge Insurance logo"
-                width={180}
-                height={60}
+                width={240}
+                height={80}
                 priority
-                className="h-10 w-auto"
+                className="h-14 w-auto sm:h-16"
               />
               <div className="leading-tight">
                 <div className="text-sm font-semibold text-black">{site.name}</div>

@@ -7,6 +7,19 @@ import { resourcesForTopic } from "@/lib/knowledgeBase";
 import { site } from "@/lib/site";
 import { AIChatPanel } from "@/components/AIChatPanel";
 
+const STORAGE_KEY_OPEN = "ve_chat_open";
+const STORAGE_KEY_MINIMIZED = "ve_chat_minimized";
+
+function getStoredOpen(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.localStorage.getItem(STORAGE_KEY_OPEN) === "true";
+}
+
+function getStoredMinimized(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.localStorage.getItem(STORAGE_KEY_MINIMIZED) === "true";
+}
+
 type LeadPayload = {
   topic: string;
   county: string;
@@ -40,6 +53,8 @@ const contactMethods = ["Call", "Text", "Email"];
 
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
+  const [minimized, setMinimized] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
   const [step, setStep] = useState(1);
   const [topic, setTopic] = useState("");
   const [county, setCounty] = useState("");
@@ -70,18 +85,35 @@ export function ChatWidget() {
   const contactPlaceholder = contactMethod === "Email" ? "you@email.com" : "(904) 555-1234";
 
   useEffect(() => {
-    if (typeof document === "undefined") return;
-    if (open) {
-      document.body.style.overflow = "hidden";
-      document.body.dataset.chatWidgetOpen = "true";
-      return;
-    }
+    setHydrated(true);
+  }, []);
 
-    if (document.body.dataset.mobileNavOpen !== "true") {
-      document.body.style.overflow = "";
-    }
-    delete document.body.dataset.chatWidgetOpen;
-  }, [open]);
+  useEffect(() => {
+    if (!hydrated) return;
+    setOpen(getStoredOpen());
+    setMinimized(getStoredMinimized());
+  }, [hydrated]);
+
+  useEffect(() => {
+    if (!hydrated || typeof window === "undefined") return;
+    window.localStorage.setItem(STORAGE_KEY_OPEN, String(open));
+  }, [hydrated, open]);
+
+  useEffect(() => {
+    if (!hydrated || typeof window === "undefined") return;
+    window.localStorage.setItem(STORAGE_KEY_MINIMIZED, String(minimized));
+  }, [hydrated, minimized]);
+
+  const openPanel = () => {
+    setMode("question");
+    setOpen(true);
+    setMinimized(false);
+  };
+
+  const minimizePanel = () => {
+    setMinimized(true);
+    setOpen(false);
+  };
 
   const resetFlow = () => {
     setStep(1);
@@ -103,6 +135,7 @@ export function ChatWidget() {
 
   const closeWidget = () => {
     setOpen(false);
+    setMinimized(false);
     resetFlow();
   };
 
@@ -200,74 +233,78 @@ export function ChatWidget() {
     }
   };
 
+  const showPanel = hydrated && open && !minimized;
+  const showBubble = !showPanel;
+
   return (
-    <div className="chat-widget-root fixed bottom-6 right-6 z-[120] flex flex-col items-end gap-2">
-      <button
-        type="button"
-        onClick={() => {
-          setMode("question");
-          setOpen(true);
-        }}
-        className="btn btn-primary items-start rounded-full px-5 py-3 text-left text-sm shadow-lg"
-      >
-        <span className="flex flex-col">
-          <span className="text-xs font-semibold uppercase tracking-wide text-white/80">Live help 24/7</span>
-          <span className="text-sm font-semibold">Chat with a licensed agent now</span>
-        </span>
-      </button>
+    <div className="chat-widget-root fixed bottom-4 right-4 z-[120] flex flex-col items-end gap-0 sm:bottom-6 sm:right-6">
+      {showBubble ? (
+        <motion.button
+          type="button"
+          initial={false}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          className="btn btn-primary flex items-center gap-2 rounded-full px-4 py-3 text-left text-sm shadow-lg sm:px-5"
+          onClick={openPanel}
+          aria-label="Open chat"
+        >
+          <span className="flex flex-col">
+            <span className="text-xs font-semibold uppercase tracking-wide text-white/80">Live help 24/7</span>
+            <span className="text-sm font-semibold">Chat with a licensed agent now</span>
+          </span>
+        </motion.button>
+      ) : null}
 
       <AnimatePresence>
-        {open ? (
-          <>
-            <motion.button
-              type="button"
-              aria-label="Close chat panel"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              className="fixed inset-0 z-[119] bg-black/35 md:hidden"
-              onClick={closeWidget}
-            />
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 40 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              className="fixed inset-y-0 right-0 z-[120] w-full max-w-md border-l border-black/10 bg-white shadow-2xl"
-            >
-              <div className="flex h-full flex-col">
-              <div className="flex flex-col gap-2 border-b border-black/10 p-4">
-                <div className="flex items-center justify-between gap-2">
-                  <div>
-                    <div className="text-sm font-semibold text-black">Talk with a licensed agent now</div>
-                    <div className="text-xs text-black/60">
-                      Chat here or request a callback. Plan-specific guidance by licensed agent.
-                    </div>
+        {showPanel ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.96 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="flex h-[500px] w-[380px] max-h-[85vh] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-black/10 bg-white shadow-2xl"
+          >
+            <div className="flex shrink-0 flex-col gap-2 border-b border-black/10 p-3">
+              <div className="flex items-center justify-between gap-2">
+                <div className="min-w-0">
+                  <div className="text-sm font-semibold text-black">Talk with a licensed agent now</div>
+                  <div className="text-xs text-black/60">
+                    Chat here or request a callback. Plan-specific guidance by licensed agent.
                   </div>
+                </div>
+                <div className="flex shrink-0 items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={minimizePanel}
+                    className="rounded-full border border-black/10 p-2 text-black/60 hover:bg-black/5 hover:text-black"
+                    aria-label="Minimize chat"
+                    title="Minimize"
+                  >
+                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M19 12H5" />
+                    </svg>
+                  </button>
                   <button
                     type="button"
                     onClick={closeWidget}
-                    className="rounded-full border border-black/10 p-2 text-black/60 hover:text-black"
+                    className="rounded-full border border-black/10 p-2 text-black/60 hover:bg-black/5 hover:text-black"
                     aria-label="Close chat"
                   >
                     <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.5">
                       <path d="M6 6l12 12" />
-                    <path d="M18 6l-12 12" />
-                  </svg>
-                </button>
+                      <path d="M18 6l-12 12" />
+                    </svg>
+                  </button>
+                </div>
               </div>
-                <Link
-                  href="/chat"
-                  className="text-xs font-medium text-[var(--brand-blue)] hover:underline"
-                >
-                  Open full chat page (like messaging) →
-                </Link>
-              </div>
+              <Link href="/chat" className="text-xs font-medium text-[var(--brand-blue)] hover:underline">
+                Open full chat page (like messaging) →
+              </Link>
+            </div>
 
-              <div className="border-b border-black/10 bg-white/70 p-4">
-                <div className="text-xs font-semibold uppercase tracking-wide text-black/60">Self-service enrollment</div>
-                <div className="mt-3 flex flex-wrap gap-2">
+            <div className="shrink-0 border-b border-black/10 bg-white/70 p-3">
+              <div className="text-xs font-semibold uppercase tracking-wide text-black/60">Self-service enrollment</div>
+              <div className="mt-2 flex flex-wrap gap-2">
                   <Link
                     href="/enroll"
                     className="btn btn-primary px-3 py-2 text-xs"
@@ -286,7 +323,7 @@ export function ChatWidget() {
                 </p>
               </div>
 
-              <div className="space-y-4 overflow-y-auto p-5">
+            <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-3">
                 <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
@@ -600,10 +637,8 @@ export function ChatWidget() {
                     </div>
                   </div>
                 ) : null}
-              </div>
-              </div>
-            </motion.div>
-          </>
+            </div>
+          </motion.div>
         ) : null}
       </AnimatePresence>
     </div>
