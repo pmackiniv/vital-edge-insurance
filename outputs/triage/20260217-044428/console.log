@@ -1,0 +1,11 @@
+[2026-02-17T04:44:28.940Z] Triage start baseUrl=https://vital-edge-insurance.vercel.app timeoutMs=45000
+[2026-02-17T04:44:28.940Z] Artifact directory: /Users/patrickmackiniv/Projects/vital-edge-insurance/outputs/triage/20260217-044428
+[2026-02-17T04:44:30.101Z] Desktop navigation start: https://vital-edge-insurance.vercel.app/contact
+[2026-02-17T04:44:43.745Z] Mobile nav attempt Home: clicked=true visible=true routeChanged=false 
+[2026-02-17T04:44:44.257Z] Mobile nav attempt About: clicked=true visible=true routeChanged=false 
+[2026-02-17T04:44:44.772Z] Mobile nav attempt Medicare: clicked=true visible=true routeChanged=true 
+[2026-02-17T04:44:45.304Z] Mobile nav attempt Health Insurance: clicked=true visible=true routeChanged=true 
+[2026-02-17T04:44:45.806Z] Mobile nav attempt Other Services: clicked=true visible=true routeChanged=true 
+[2026-02-17T04:44:46.305Z] Mobile nav attempt Resources: clicked=true visible=true routeChanged=true 
+[2026-02-17T04:44:46.805Z] Mobile nav attempt Locations: clicked=true visible=true routeChanged=true 
+[2026-02-17T04:44:46.805Z] Mobile summary: routeChanged=5 intercepted=0 failed=0

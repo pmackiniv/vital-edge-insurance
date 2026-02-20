@@ -1,0 +1,772 @@
+{
+  "summary": {
+    "baseUrl": "https://vital-edge-insurance.vercel.app",
+    "timeoutMs": 45000,
+    "desktop": {
+      "passed": true,
+      "endpoint": "/api/chat",
+      "responseStatus": 200,
+      "contactUrl": "https://vital-edge-insurance.vercel.app/contact",
+      "fallbackUrl": "https://vital-edge-insurance.vercel.app/chat",
+      "error": null,
+      "screenshotPath": "/Users/patrickmackiniv/Projects/vital-edge-insurance/outputs/triage/20260217-044428/desktop.png",
+      "tracePath": "/Users/patrickmackiniv/Projects/vital-edge-insurance/outputs/triage/20260217-044428/trace.zip"
+    },
+    "mobile": {
+      "passed": true,
+      "attempts": [
+        {
+          "label": "Home",
+          "clicked": true,
+          "beforeUrl": "https://vital-edge-insurance.vercel.app/",
+          "afterUrl": "https://vital-edge-insurance.vercel.app/",
+          "routeChanged": false,
+          "visible": true,
+          "boundingBox": {
+            "x": 16,
+            "y": 133.82135009765625,
+            "width": 358,
+            "height": 48
+          },
+          "centerPoint": {
+            "x": 195,
+            "y": 158
+          },
+          "blocker": {
+            "tag": "a",
+            "id": null,
+            "className": "rounded-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+            "pointerEvents": "auto",
+            "zIndex": "auto",
+            "position": "static",
+            "text": "Home"
+          },
+          "navToggle": {
+            "ariaExpanded": "true",
+            "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+          },
+          "error": null
+        },
+        {
+          "label": "About",
+          "clicked": true,
+          "beforeUrl": "https://vital-edge-insurance.vercel.app/",
+          "afterUrl": "https://vital-edge-insurance.vercel.app/",
+          "routeChanged": false,
+          "visible": true,
+          "boundingBox": {
+            "x": 17,
+            "y": 187,
+            "width": 315,
+            "height": 48
+          },
+          "centerPoint": {
+            "x": 175,
+            "y": 211
+          },
+          "blocker": {
+            "tag": "a",
+            "id": null,
+            "className": "flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+            "pointerEvents": "auto",
+            "zIndex": "auto",
+            "position": "static",
+            "text": "About"
+          },
+          "navToggle": {
+            "ariaExpanded": "true",
+            "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+          },
+          "error": null
+        },
+        {
+          "label": "Medicare",
+          "clicked": true,
+          "beforeUrl": "https://vital-edge-insurance.vercel.app/",
+          "afterUrl": "https://vital-edge-insurance.vercel.app/about",
+          "routeChanged": true,
+          "visible": true,
+          "boundingBox": {
+            "x": 17,
+            "y": 245,
+            "width": 315,
+            "height": 48
+          },
+          "centerPoint": {
+            "x": 175,
+            "y": 269
+          },
+          "blocker": {
+            "tag": "a",
+            "id": null,
+            "className": "flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+            "pointerEvents": "auto",
+            "zIndex": "auto",
+            "position": "static",
+            "text": "Medicare"
+          },
+          "navToggle": {
+            "ariaExpanded": "true",
+            "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+          },
+          "error": null
+        },
+        {
+          "label": "Health Insurance",
+          "clicked": true,
+          "beforeUrl": "https://vital-edge-insurance.vercel.app/about",
+          "afterUrl": "https://vital-edge-insurance.vercel.app/medicare",
+          "routeChanged": true,
+          "visible": true,
+          "boundingBox": {
+            "x": 17,
+            "y": 303.8504638671875,
+            "width": 315,
+            "height": 48
+          },
+          "centerPoint": {
+            "x": 175,
+            "y": 328
+          },
+          "blocker": {
+            "tag": "a",
+            "id": null,
+            "className": "flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+            "pointerEvents": "auto",
+            "zIndex": "auto",
+            "position": "static",
+            "text": "Health Insurance"
+          },
+          "navToggle": {
+            "ariaExpanded": "true",
+            "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+          },
+          "error": null
+        },
+        {
+          "label": "Other Services",
+          "clicked": true,
+          "beforeUrl": "https://vital-edge-insurance.vercel.app/medicare",
+          "afterUrl": "https://vital-edge-insurance.vercel.app/aca",
+          "routeChanged": true,
+          "visible": true,
+          "boundingBox": {
+            "x": 17,
+            "y": 361,
+            "width": 315,
+            "height": 48
+          },
+          "centerPoint": {
+            "x": 175,
+            "y": 385
+          },
+          "blocker": {
+            "tag": "a",
+            "id": null,
+            "className": "flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+            "pointerEvents": "auto",
+            "zIndex": "auto",
+            "position": "static",
+            "text": "Other Services"
+          },
+          "navToggle": {
+            "ariaExpanded": "true",
+            "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+          },
+          "error": null
+        },
+        {
+          "label": "Resources",
+          "clicked": true,
+          "beforeUrl": "https://vital-edge-insurance.vercel.app/aca",
+          "afterUrl": "https://vital-edge-insurance.vercel.app/contact?topic=other",
+          "routeChanged": true,
+          "visible": true,
+          "boundingBox": {
+            "x": 17,
+            "y": 419,
+            "width": 315,
+            "height": 48
+          },
+          "centerPoint": {
+            "x": 175,
+            "y": 443
+          },
+          "blocker": {
+            "tag": "a",
+            "id": null,
+            "className": "flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+            "pointerEvents": "auto",
+            "zIndex": "auto",
+            "position": "static",
+            "text": "Resources"
+          },
+          "navToggle": {
+            "ariaExpanded": "true",
+            "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+          },
+          "error": null
+        },
+        {
+          "label": "Locations",
+          "clicked": true,
+          "beforeUrl": "https://vital-edge-insurance.vercel.app/contact?topic=other",
+          "afterUrl": "https://vital-edge-insurance.vercel.app/resources",
+          "routeChanged": true,
+          "visible": true,
+          "boundingBox": {
+            "x": 17,
+            "y": 477,
+            "width": 315,
+            "height": 48
+          },
+          "centerPoint": {
+            "x": 175,
+            "y": 501
+          },
+          "blocker": {
+            "tag": "a",
+            "id": null,
+            "className": "flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+            "pointerEvents": "auto",
+            "zIndex": "auto",
+            "position": "static",
+            "text": "Locations"
+          },
+          "navToggle": {
+            "ariaExpanded": "true",
+            "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+          },
+          "error": null
+        }
+      ],
+      "routeChangedCount": 5,
+      "interceptedAttemptCount": 0,
+      "failedAttemptCount": 0,
+      "error": null,
+      "screenshotPath": "/Users/patrickmackiniv/Projects/vital-edge-insurance/outputs/triage/20260217-044428/mobile.png"
+    },
+    "events": [
+      {
+        "type": "mobile_nav_attempt",
+        "at": "2026-02-17T04:44:43.745Z",
+        "attempt": {
+          "label": "Home",
+          "clicked": true,
+          "beforeUrl": "https://vital-edge-insurance.vercel.app/",
+          "afterUrl": "https://vital-edge-insurance.vercel.app/",
+          "routeChanged": false,
+          "visible": true,
+          "boundingBox": {
+            "x": 16,
+            "y": 133.82135009765625,
+            "width": 358,
+            "height": 48
+          },
+          "centerPoint": {
+            "x": 195,
+            "y": 158
+          },
+          "blocker": {
+            "tag": "a",
+            "id": null,
+            "className": "rounded-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+            "pointerEvents": "auto",
+            "zIndex": "auto",
+            "position": "static",
+            "text": "Home"
+          },
+          "navToggle": {
+            "ariaExpanded": "true",
+            "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+          },
+          "error": null
+        }
+      },
+      {
+        "type": "mobile_nav_attempt",
+        "at": "2026-02-17T04:44:44.257Z",
+        "attempt": {
+          "label": "About",
+          "clicked": true,
+          "beforeUrl": "https://vital-edge-insurance.vercel.app/",
+          "afterUrl": "https://vital-edge-insurance.vercel.app/",
+          "routeChanged": false,
+          "visible": true,
+          "boundingBox": {
+            "x": 17,
+            "y": 187,
+            "width": 315,
+            "height": 48
+          },
+          "centerPoint": {
+            "x": 175,
+            "y": 211
+          },
+          "blocker": {
+            "tag": "a",
+            "id": null,
+            "className": "flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+            "pointerEvents": "auto",
+            "zIndex": "auto",
+            "position": "static",
+            "text": "About"
+          },
+          "navToggle": {
+            "ariaExpanded": "true",
+            "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+          },
+          "error": null
+        }
+      },
+      {
+        "type": "mobile_nav_attempt",
+        "at": "2026-02-17T04:44:44.772Z",
+        "attempt": {
+          "label": "Medicare",
+          "clicked": true,
+          "beforeUrl": "https://vital-edge-insurance.vercel.app/",
+          "afterUrl": "https://vital-edge-insurance.vercel.app/about",
+          "routeChanged": true,
+          "visible": true,
+          "boundingBox": {
+            "x": 17,
+            "y": 245,
+            "width": 315,
+            "height": 48
+          },
+          "centerPoint": {
+            "x": 175,
+            "y": 269
+          },
+          "blocker": {
+            "tag": "a",
+            "id": null,
+            "className": "flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+            "pointerEvents": "auto",
+            "zIndex": "auto",
+            "position": "static",
+            "text": "Medicare"
+          },
+          "navToggle": {
+            "ariaExpanded": "true",
+            "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+          },
+          "error": null
+        }
+      },
+      {
+        "type": "mobile_nav_attempt",
+        "at": "2026-02-17T04:44:45.304Z",
+        "attempt": {
+          "label": "Health Insurance",
+          "clicked": true,
+          "beforeUrl": "https://vital-edge-insurance.vercel.app/about",
+          "afterUrl": "https://vital-edge-insurance.vercel.app/medicare",
+          "routeChanged": true,
+          "visible": true,
+          "boundingBox": {
+            "x": 17,
+            "y": 303.8504638671875,
+            "width": 315,
+            "height": 48
+          },
+          "centerPoint": {
+            "x": 175,
+            "y": 328
+          },
+          "blocker": {
+            "tag": "a",
+            "id": null,
+            "className": "flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+            "pointerEvents": "auto",
+            "zIndex": "auto",
+            "position": "static",
+            "text": "Health Insurance"
+          },
+          "navToggle": {
+            "ariaExpanded": "true",
+            "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+          },
+          "error": null
+        }
+      },
+      {
+        "type": "mobile_nav_attempt",
+        "at": "2026-02-17T04:44:45.806Z",
+        "attempt": {
+          "label": "Other Services",
+          "clicked": true,
+          "beforeUrl": "https://vital-edge-insurance.vercel.app/medicare",
+          "afterUrl": "https://vital-edge-insurance.vercel.app/aca",
+          "routeChanged": true,
+          "visible": true,
+          "boundingBox": {
+            "x": 17,
+            "y": 361,
+            "width": 315,
+            "height": 48
+          },
+          "centerPoint": {
+            "x": 175,
+            "y": 385
+          },
+          "blocker": {
+            "tag": "a",
+            "id": null,
+            "className": "flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+            "pointerEvents": "auto",
+            "zIndex": "auto",
+            "position": "static",
+            "text": "Other Services"
+          },
+          "navToggle": {
+            "ariaExpanded": "true",
+            "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+          },
+          "error": null
+        }
+      },
+      {
+        "type": "mobile_nav_attempt",
+        "at": "2026-02-17T04:44:46.305Z",
+        "attempt": {
+          "label": "Resources",
+          "clicked": true,
+          "beforeUrl": "https://vital-edge-insurance.vercel.app/aca",
+          "afterUrl": "https://vital-edge-insurance.vercel.app/contact?topic=other",
+          "routeChanged": true,
+          "visible": true,
+          "boundingBox": {
+            "x": 17,
+            "y": 419,
+            "width": 315,
+            "height": 48
+          },
+          "centerPoint": {
+            "x": 175,
+            "y": 443
+          },
+          "blocker": {
+            "tag": "a",
+            "id": null,
+            "className": "flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+            "pointerEvents": "auto",
+            "zIndex": "auto",
+            "position": "static",
+            "text": "Resources"
+          },
+          "navToggle": {
+            "ariaExpanded": "true",
+            "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+          },
+          "error": null
+        }
+      },
+      {
+        "type": "mobile_nav_attempt",
+        "at": "2026-02-17T04:44:46.805Z",
+        "attempt": {
+          "label": "Locations",
+          "clicked": true,
+          "beforeUrl": "https://vital-edge-insurance.vercel.app/contact?topic=other",
+          "afterUrl": "https://vital-edge-insurance.vercel.app/resources",
+          "routeChanged": true,
+          "visible": true,
+          "boundingBox": {
+            "x": 17,
+            "y": 477,
+            "width": 315,
+            "height": 48
+          },
+          "centerPoint": {
+            "x": 175,
+            "y": 501
+          },
+          "blocker": {
+            "tag": "a",
+            "id": null,
+            "className": "flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+            "pointerEvents": "auto",
+            "zIndex": "auto",
+            "position": "static",
+            "text": "Locations"
+          },
+          "navToggle": {
+            "ariaExpanded": "true",
+            "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+          },
+          "error": null
+        }
+      }
+    ],
+    "fatalError": null,
+    "passed": true
+  },
+  "requests": [
+    {
+      "context": "desktop",
+      "url": "https://vital-edge-insurance.vercel.app/api/chat",
+      "method": "POST",
+      "requestTs": "2026-02-17T04:44:40.597Z",
+      "status": 200,
+      "ok": true,
+      "failureText": null,
+      "responseTs": "2026-02-17T04:44:42.085Z"
+    }
+  ],
+  "events": [
+    {
+      "type": "mobile_nav_attempt",
+      "at": "2026-02-17T04:44:43.745Z",
+      "attempt": {
+        "label": "Home",
+        "clicked": true,
+        "beforeUrl": "https://vital-edge-insurance.vercel.app/",
+        "afterUrl": "https://vital-edge-insurance.vercel.app/",
+        "routeChanged": false,
+        "visible": true,
+        "boundingBox": {
+          "x": 16,
+          "y": 133.82135009765625,
+          "width": 358,
+          "height": 48
+        },
+        "centerPoint": {
+          "x": 195,
+          "y": 158
+        },
+        "blocker": {
+          "tag": "a",
+          "id": null,
+          "className": "rounded-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+          "pointerEvents": "auto",
+          "zIndex": "auto",
+          "position": "static",
+          "text": "Home"
+        },
+        "navToggle": {
+          "ariaExpanded": "true",
+          "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+        },
+        "error": null
+      }
+    },
+    {
+      "type": "mobile_nav_attempt",
+      "at": "2026-02-17T04:44:44.257Z",
+      "attempt": {
+        "label": "About",
+        "clicked": true,
+        "beforeUrl": "https://vital-edge-insurance.vercel.app/",
+        "afterUrl": "https://vital-edge-insurance.vercel.app/",
+        "routeChanged": false,
+        "visible": true,
+        "boundingBox": {
+          "x": 17,
+          "y": 187,
+          "width": 315,
+          "height": 48
+        },
+        "centerPoint": {
+          "x": 175,
+          "y": 211
+        },
+        "blocker": {
+          "tag": "a",
+          "id": null,
+          "className": "flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+          "pointerEvents": "auto",
+          "zIndex": "auto",
+          "position": "static",
+          "text": "About"
+        },
+        "navToggle": {
+          "ariaExpanded": "true",
+          "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+        },
+        "error": null
+      }
+    },
+    {
+      "type": "mobile_nav_attempt",
+      "at": "2026-02-17T04:44:44.772Z",
+      "attempt": {
+        "label": "Medicare",
+        "clicked": true,
+        "beforeUrl": "https://vital-edge-insurance.vercel.app/",
+        "afterUrl": "https://vital-edge-insurance.vercel.app/about",
+        "routeChanged": true,
+        "visible": true,
+        "boundingBox": {
+          "x": 17,
+          "y": 245,
+          "width": 315,
+          "height": 48
+        },
+        "centerPoint": {
+          "x": 175,
+          "y": 269
+        },
+        "blocker": {
+          "tag": "a",
+          "id": null,
+          "className": "flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+          "pointerEvents": "auto",
+          "zIndex": "auto",
+          "position": "static",
+          "text": "Medicare"
+        },
+        "navToggle": {
+          "ariaExpanded": "true",
+          "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+        },
+        "error": null
+      }
+    },
+    {
+      "type": "mobile_nav_attempt",
+      "at": "2026-02-17T04:44:45.304Z",
+      "attempt": {
+        "label": "Health Insurance",
+        "clicked": true,
+        "beforeUrl": "https://vital-edge-insurance.vercel.app/about",
+        "afterUrl": "https://vital-edge-insurance.vercel.app/medicare",
+        "routeChanged": true,
+        "visible": true,
+        "boundingBox": {
+          "x": 17,
+          "y": 303.8504638671875,
+          "width": 315,
+          "height": 48
+        },
+        "centerPoint": {
+          "x": 175,
+          "y": 328
+        },
+        "blocker": {
+          "tag": "a",
+          "id": null,
+          "className": "flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+          "pointerEvents": "auto",
+          "zIndex": "auto",
+          "position": "static",
+          "text": "Health Insurance"
+        },
+        "navToggle": {
+          "ariaExpanded": "true",
+          "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+        },
+        "error": null
+      }
+    },
+    {
+      "type": "mobile_nav_attempt",
+      "at": "2026-02-17T04:44:45.806Z",
+      "attempt": {
+        "label": "Other Services",
+        "clicked": true,
+        "beforeUrl": "https://vital-edge-insurance.vercel.app/medicare",
+        "afterUrl": "https://vital-edge-insurance.vercel.app/aca",
+        "routeChanged": true,
+        "visible": true,
+        "boundingBox": {
+          "x": 17,
+          "y": 361,
+          "width": 315,
+          "height": 48
+        },
+        "centerPoint": {
+          "x": 175,
+          "y": 385
+        },
+        "blocker": {
+          "tag": "a",
+          "id": null,
+          "className": "flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+          "pointerEvents": "auto",
+          "zIndex": "auto",
+          "position": "static",
+          "text": "Other Services"
+        },
+        "navToggle": {
+          "ariaExpanded": "true",
+          "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+        },
+        "error": null
+      }
+    },
+    {
+      "type": "mobile_nav_attempt",
+      "at": "2026-02-17T04:44:46.305Z",
+      "attempt": {
+        "label": "Resources",
+        "clicked": true,
+        "beforeUrl": "https://vital-edge-insurance.vercel.app/aca",
+        "afterUrl": "https://vital-edge-insurance.vercel.app/contact?topic=other",
+        "routeChanged": true,
+        "visible": true,
+        "boundingBox": {
+          "x": 17,
+          "y": 419,
+          "width": 315,
+          "height": 48
+        },
+        "centerPoint": {
+          "x": 175,
+          "y": 443
+        },
+        "blocker": {
+          "tag": "a",
+          "id": null,
+          "className": "flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+          "pointerEvents": "auto",
+          "zIndex": "auto",
+          "position": "static",
+          "text": "Resources"
+        },
+        "navToggle": {
+          "ariaExpanded": "true",
+          "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+        },
+        "error": null
+      }
+    },
+    {
+      "type": "mobile_nav_attempt",
+      "at": "2026-02-17T04:44:46.805Z",
+      "attempt": {
+        "label": "Locations",
+        "clicked": true,
+        "beforeUrl": "https://vital-edge-insurance.vercel.app/contact?topic=other",
+        "afterUrl": "https://vital-edge-insurance.vercel.app/resources",
+        "routeChanged": true,
+        "visible": true,
+        "boundingBox": {
+          "x": 17,
+          "y": 477,
+          "width": 315,
+          "height": 48
+        },
+        "centerPoint": {
+          "x": 175,
+          "y": 501
+        },
+        "blocker": {
+          "tag": "a",
+          "id": null,
+          "className": "flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5",
+          "pointerEvents": "auto",
+          "zIndex": "auto",
+          "position": "static",
+          "text": "Locations"
+        },
+        "navToggle": {
+          "ariaExpanded": "true",
+          "className": "inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+        },
+        "error": null
+      }
+    }
+  ]
+}
