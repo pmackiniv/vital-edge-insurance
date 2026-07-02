@@ -23,14 +23,14 @@ export function SeoFaq({ title = "Frequently asked questions", items }: SeoFaqPr
   };
 
   return (
-    <section className="rounded-2xl border border-white/30 bg-white/35 p-6 text-white/90 backdrop-blur">
-      <h2 className="text-sm font-semibold text-white">{title}</h2>
-      <div className="mt-4 space-y-4 text-sm text-white/85">
+    <section className="rounded-3xl border border-[var(--ve-teal)]/10 bg-white p-6 text-slate-900 shadow-[0_18px_52px_rgba(15,23,42,0.08)]">
+      <h2 className="font-display text-3xl font-bold tracking-normal text-[var(--ve-teal)]">{title}</h2>
+      <div className="mt-5 grid gap-4 md:grid-cols-2">
         {items.map((item) => (
-          <div key={item.question}>
-            <div className="font-semibold text-white">{item.question}</div>
-            <p className="mt-2 leading-7">{item.answer}</p>
-          </div>
+          <article key={item.question} className="rounded-2xl border border-[var(--ve-teal)]/10 bg-[var(--ve-bg)]/55 p-5">
+            <div className="font-sans text-base font-extrabold text-[var(--ve-teal)]">{item.question}</div>
+            <p className="mt-2 font-sans text-sm leading-7 text-slate-700">{item.answer}</p>
+          </article>
         ))}
       </div>
       <script

@@ -1,7 +1,11 @@
-import { streamText } from "ai";
+import { createUIMessageStream, createUIMessageStreamResponse, streamText } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { buildChatSystemPrompt } from "@/lib/chatSystemPrompt";
 import { normalizeChatMessages } from "@/lib/chatMessages";
+import {
+  chatMessagesContainSensitiveIdentifier,
+  SENSITIVE_IDENTIFIER_CHAT_RESPONSE,
+} from "@/lib/chatPrivacyGuard";
 import {
   classifyChatProviderError,
   ensureChatProviderAvailable,
@@ -9,6 +13,19 @@ import {
 } from "@/lib/chatProviderGuard";
 
 export const maxDuration = 30;
+
+function cannedChatResponse(text: string) {
+  const stream = createUIMessageStream({
+    execute({ writer }) {
+      const id = crypto.randomUUID();
+      writer.write({ type: "text-start", id });
+      writer.write({ type: "text-delta", id, delta: text });
+      writer.write({ type: "text-end", id });
+    },
+  });
+
+  return createUIMessageStreamResponse({ stream });
+}
 
 export async function POST(req: Request) {
   const startMs = Date.now();
@@ -40,6 +57,19 @@ export async function POST(req: Request) {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
+    }
+
+    if (chatMessagesContainSensitiveIdentifier(messages)) {
+      console.info("chat_request", {
+        request_id: requestId,
+        status: 200,
+        reason: "sensitive_identifier_guard",
+        duration_ms: Date.now() - startMs,
+        message_count: messages.length,
+        vercel_env: vercelEnv,
+        git_commit: gitCommit,
+      });
+      return cannedChatResponse(SENSITIVE_IDENTIFIER_CHAT_RESPONSE);
     }
 
     const availability = await ensureChatProviderAvailable();

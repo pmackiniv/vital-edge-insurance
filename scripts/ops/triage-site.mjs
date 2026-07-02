@@ -6,7 +6,20 @@ import { chromium, devices } from "playwright";
 
 const DEFAULT_TIMEOUT_MS = 45_000;
 const CHAT_TEXT = "Hello from automated triage.";
-const MOBILE_LINK_LABELS = ["Home", "About", "Medicare", "Health Insurance", "Other Services", "Resources", "Locations"];
+const MOBILE_NAV_LINK_LABELS = [
+  "Medicare",
+  "Health Insurance (ACA)",
+  "Ancillary Coverage",
+  "Resources",
+  "About",
+  "Contact",
+  "Request a Call",
+];
+const MOBILE_HOME_CTA_LABELS = [
+  "Start My Review",
+  "Dental, Vision & Hospital Coverage",
+  "Request a Call",
+];
 
 function parseArgs(argv) {
   const args = { baseUrl: process.env.BASE_URL || "", timeoutMs: DEFAULT_TIMEOUT_MS };
@@ -89,6 +102,18 @@ async function findFirstVisibleEnabled(locator) {
     }
   }
   return null;
+}
+
+async function countVisibleText(page, label) {
+  const locator = page.getByText(new RegExp(`^${escapeRegExp(label)}$`, "i"));
+  const count = await locator.count();
+  let visibleCount = 0;
+  for (let i = 0; i < count; i += 1) {
+    if (await locator.nth(i).isVisible()) {
+      visibleCount += 1;
+    }
+  }
+  return visibleCount;
 }
 
 async function runDesktop({
@@ -308,7 +333,24 @@ async function runMobile({
 
     await page.goto(withBase(baseUrl, "/"), { waitUntil: "domcontentloaded" });
 
-    for (const label of MOBILE_LINK_LABELS) {
+    result.ctaChecks = [];
+    for (const label of MOBILE_HOME_CTA_LABELS) {
+      const visibleCount = await countVisibleText(page, label);
+      const check = {
+        label,
+        visible: visibleCount > 0,
+        visibleCount,
+        error: visibleCount > 0 ? null : `CTA not visible: ${label}`,
+      };
+      result.ctaChecks.push(check);
+      if (check.error) {
+        appendLog(logLines, `Mobile CTA check ${label}: error=${check.error}`);
+      } else {
+        appendLog(logLines, `Mobile CTA check ${label}: visibleCount=${visibleCount}`);
+      }
+    }
+
+    for (const label of MOBILE_NAV_LINK_LABELS) {
       const attempt = {
         label,
         clicked: false,
@@ -392,14 +434,17 @@ async function runMobile({
       (attempt) => typeof attempt.error === "string" && attempt.error.toLowerCase().includes("intercepts pointer events"),
     );
     const failedAttempts = result.attempts.filter((attempt) => typeof attempt.error === "string" && attempt.error.length > 0);
+    const failedCtaChecks = result.ctaChecks.filter((check) => typeof check.error === "string" && check.error.length > 0);
     result.interceptedAttemptCount = interceptedAttempts.length;
     result.failedAttemptCount = failedAttempts.length;
+    result.failedCtaCheckCount = failedCtaChecks.length;
     result.passed = result.routeChangedCount > 0
       && result.interceptedAttemptCount === 0
-      && result.failedAttemptCount === 0;
+      && result.failedAttemptCount === 0
+      && result.failedCtaCheckCount === 0;
     appendLog(
       logLines,
-      `Mobile summary: routeChanged=${result.routeChangedCount} intercepted=${result.interceptedAttemptCount} failed=${result.failedAttemptCount}`,
+      `Mobile summary: routeChanged=${result.routeChangedCount} intercepted=${result.interceptedAttemptCount} failed=${result.failedAttemptCount} ctaFailed=${result.failedCtaCheckCount}`,
     );
     await page.screenshot({ path: screenshotPath, fullPage: true });
   } catch (err) {

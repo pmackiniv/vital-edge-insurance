@@ -1,34 +1,29 @@
-import Link from "next/link";
 import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
+import { PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
 import { SeoFaq } from "@/components/SeoFaq";
 
 export default function Page() {
   return (
-    <Container className="py-14">
-      <div className="space-y-10">
-        <div className="max-w-3xl space-y-3 rounded-3xl border border-white/60 bg-white/90 p-6 shadow-lg backdrop-blur">
-          <h1 className="text-2xl font-semibold tracking-tight text-black">ACA Special Enrollment Periods (SEP)</h1>
-          <p className="text-black/70">
-            Education-first guidance on Marketplace Special Enrollment Periods, qualifying life events, and what
-            information to gather before applying.
-          </p>
-          <div className="flex flex-wrap gap-3 pt-2">
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-green)]"
-            >
-              Request guidance
-            </Link>
-            <Link
-              href="/chat"
-              className="inline-flex items-center justify-center rounded-xl border border-black/10 px-4 py-2 text-sm font-semibold text-black hover:bg-black/5"
-            >
-              Chat with our team
-            </Link>
-          </div>
-        </div>
+    <>
+      <PremiumInteriorHero
+        eyebrow="ACA Marketplace"
+        title="ACA Special Enrollment Periods"
+        subtitle="Education-first guidance on Marketplace Special Enrollment Periods, qualifying life events, and what information to gather before applying."
+        actions={[
+          { label: "Request Guidance", href: "/contact", kind: "primary" },
+          { label: "ACA Overview", href: "/aca", kind: "gold" },
+          { label: "Chat With Our Team", href: "/chat", kind: "light" },
+        ]}
+      >
+        <PremiumDisclosure>
+          ACA eligibility, enrollment windows, document requirements, and plan availability vary by household, state,
+          county, carrier, and qualifying event.
+        </PremiumDisclosure>
+      </PremiumInteriorHero>
 
+    <Container className="py-12">
+      <div className="space-y-10">
         <div className="grid gap-4 md:grid-cols-3">
           {[
             {
@@ -44,25 +39,25 @@ export default function Page() {
               body: "Enrollment windows are time-limited and can vary by event.",
             },
           ].map((item) => (
-            <div key={item.title} className="rounded-2xl border border-black/10 bg-white p-6">
-              <div className="text-sm font-semibold text-black">{item.title}</div>
-              <p className="mt-2 text-sm leading-6 text-black/70">{item.body}</p>
+            <div key={item.title} className="rounded-2xl border border-[var(--ve-teal)]/10 bg-white p-6 shadow-[0_18px_48px_rgba(15,23,42,0.08)]">
+              <div className="text-sm font-extrabold text-[var(--ve-teal)]">{item.title}</div>
+              <p className="mt-2 text-sm leading-6 text-slate-700">{item.body}</p>
             </div>
           ))}
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-2xl border border-black/10 bg-white p-6">
-            <h2 className="text-sm font-semibold text-black">What to prepare</h2>
-            <ul className="mt-3 space-y-2 text-sm text-black/70">
+          <div className="rounded-3xl border border-[var(--ve-teal)]/10 bg-white p-6 shadow-[0_18px_52px_rgba(15,23,42,0.08)]">
+            <h2 className="text-sm font-extrabold text-[var(--ve-teal)]">What to prepare</h2>
+            <ul className="mt-3 space-y-2 text-sm text-slate-700">
               <li>Description of the qualifying event and date.</li>
               <li>Household member details and coverage status.</li>
               <li>Preferred contact method and timing.</li>
             </ul>
           </div>
-          <div className="rounded-2xl border border-black/10 bg-[var(--muted)] p-6">
-            <h2 className="text-sm font-semibold text-black">Education-first guidance</h2>
-            <p className="mt-3 text-sm leading-6 text-black/70">
+          <div className="rounded-3xl border border-[var(--ve-teal)]/10 bg-[linear-gradient(135deg,rgba(228,246,247,0.92),rgba(255,255,255,0.94))] p-6 shadow-[0_18px_52px_rgba(15,23,42,0.08)]">
+            <h2 className="text-sm font-extrabold text-[var(--ve-teal)]">Education-first guidance</h2>
+            <p className="mt-3 text-sm leading-6 text-slate-700">
               We provide general education and routing. A licensed agent can confirm whether a specific SEP applies.
             </p>
           </div>
@@ -96,5 +91,6 @@ export default function Page() {
         />
       </div>
     </Container>
+    </>
   );
 }

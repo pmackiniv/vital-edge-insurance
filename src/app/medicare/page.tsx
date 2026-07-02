@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
+import { PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
+import { PLANENROLL } from "@/lib/externalLinks";
 import { absoluteUrl, site } from "@/lib/site";
 import { StructuredData } from "@/components/StructuredData";
 
@@ -137,33 +139,28 @@ export default function Page() {
   };
 
   return (
-    <Container className="py-14">
-      <div className="space-y-10">
-        <div className="max-w-3xl space-y-3 rounded-3xl border border-white/30 bg-white/35 p-6 shadow-lg backdrop-blur">
-          <h1 className="text-2xl font-semibold tracking-tight text-black">Medicare help in Jacksonville, FL</h1>
-          <p className="text-black/70">
-            Clear, neutral Medicare education for timing, coverage basics, and next steps. Plan-specific discussions
-            require a Scope of Appointment.
-          </p>
-          <div className="flex flex-wrap gap-3 pt-2">
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-green)]"
-            >
-              Request guidance
-            </Link>
-            <Link
-              href="/chat"
-              className="inline-flex items-center justify-center rounded-xl border border-black/10 px-4 py-2 text-sm font-semibold text-black hover:bg-black/5"
-            >
-              Chat with our team
-            </Link>
-          </div>
-        </div>
+    <>
+      <PremiumInteriorHero
+        eyebrow="Medicare"
+        title="Medicare Guidance"
+        subtitle="Clear, neutral Medicare education for timing, coverage basics, and next steps. Plan-specific discussions require a Scope of Appointment."
+        actions={[
+          { label: "Start My Review", href: PLANENROLL, kind: "primary", external: true },
+          { label: "D-SNP Education", href: "/medicare/d-snp", kind: "gold" },
+          { label: `Call ${site.phoneDisplay}`, href: `tel:${site.phoneE164}`, kind: "light" },
+        ]}
+      >
+        <PremiumDisclosure>
+          We do not offer every plan available in your area. Any information we provide is limited to those plans we do
+          offer in your area. Please contact Medicare.gov or 1-800-MEDICARE to get information on all of your options.
+        </PremiumDisclosure>
+      </PremiumInteriorHero>
 
-        <section className="rounded-2xl border border-black/10 bg-white p-6">
-          <h2 className="text-lg font-semibold text-black">Medicare in Florida: your options</h2>
-          <div className="mt-3 space-y-3 text-sm leading-7 text-black/75">
+    <Container className="py-12">
+      <div className="space-y-10">
+        <section className="rounded-3xl border border-[var(--ve-teal)]/10 bg-white p-6 shadow-[0_22px_70px_rgba(15,23,42,0.08)] md:p-8">
+          <h2 className="font-display text-3xl font-bold tracking-normal text-[var(--ve-teal)]">Medicare in Florida: your options</h2>
+          <div className="mt-4 space-y-3 font-sans text-sm leading-7 text-slate-700">
             <p>
               Medicare generally starts with Part A and Part B, known as Original Medicare. Original Medicare helps with hospital and medical services, and many people add separate coverage to reduce out-of-pocket exposure.
               Medicare Advantage plans are an alternative way to receive Medicare benefits through private carriers, while Medigap works alongside Original Medicare rather than replacing it.
@@ -206,50 +203,50 @@ export default function Page() {
               body: "General education on prescription coverage timing and preparation.",
             },
           ].map((item) => (
-            <div key={item.title} className="rounded-2xl border border-black/10 bg-white p-6">
-              <div className="text-sm font-semibold text-black">{item.title}</div>
-              <p className="mt-2 text-sm leading-6 text-black/70">{item.body}</p>
+            <div key={item.title} className="rounded-2xl border border-[var(--ve-teal)]/10 bg-white p-6 shadow-[0_18px_48px_rgba(15,23,42,0.08)]">
+              <div className="text-sm font-extrabold text-[var(--ve-teal)]">{item.title}</div>
+              <p className="mt-2 text-sm leading-6 text-slate-700">{item.body}</p>
             </div>
           ))}
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-2xl border border-black/10 bg-white p-6">
-            <h2 className="text-sm font-semibold text-black">What to prepare</h2>
-            <ul className="mt-3 space-y-2 text-sm text-black/70">
+          <div className="rounded-3xl border border-[var(--ve-teal)]/10 bg-white p-6 shadow-[0_18px_52px_rgba(15,23,42,0.08)]">
+            <h2 className="text-sm font-extrabold text-[var(--ve-teal)]">What to prepare</h2>
+            <ul className="mt-3 space-y-2 text-sm text-slate-700">
               <li>Preferred contact method and timing.</li>
               <li>List of doctors and medications for general guidance.</li>
               <li>Any recent Medicare or coverage notices.</li>
             </ul>
           </div>
-          <div className="rounded-2xl border border-black/10 bg-[var(--muted)] p-6">
-            <h2 className="text-sm font-semibold text-black">Scope of Appointment</h2>
-            <p className="mt-3 text-sm leading-6 text-black/70">
+          <div className="rounded-3xl border border-[var(--ve-teal)]/10 bg-[linear-gradient(135deg,rgba(228,246,247,0.92),rgba(255,255,255,0.94))] p-6 shadow-[0_18px_52px_rgba(15,23,42,0.08)]">
+            <h2 className="text-sm font-extrabold text-[var(--ve-teal)]">Scope of Appointment</h2>
+            <p className="mt-3 text-sm leading-6 text-slate-700">
               Plan‑specific Medicare discussions require a Scope of Appointment. We can provide education first and help
               coordinate the proper next steps.
             </p>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-black/10 bg-white p-6">
-          <h2 className="text-sm font-semibold text-black">Helpful resources</h2>
+        <div className="rounded-3xl border border-[var(--ve-teal)]/10 bg-white p-6 shadow-[0_18px_52px_rgba(15,23,42,0.08)]">
+          <h2 className="text-sm font-extrabold text-[var(--ve-teal)]">Helpful resources</h2>
           <div className="mt-3 flex flex-wrap gap-3 text-sm">
-            <Link className="text-black/70 hover:text-black" href="/resources#new-to-medicare">New to Medicare</Link>
-            <Link className="text-black/70 hover:text-black" href="/resources#medicare-coverage-pathways">Coverage pathways</Link>
-            <Link className="text-black/70 hover:text-black" href="/resources#part-d-basics">Part D basics</Link>
-            <Link className="text-black/70 hover:text-black" href="/medicare/medigap">Medigap basics</Link>
-            <Link className="text-black/70 hover:text-black" href="/medicare/snp">C-SNP & D-SNP</Link>
+            <Link className="font-bold text-[var(--ve-teal)] underline underline-offset-4" href="/resources#new-to-medicare">New to Medicare</Link>
+            <Link className="font-bold text-[var(--ve-teal)] underline underline-offset-4" href="/resources#medicare-coverage-pathways">Coverage pathways</Link>
+            <Link className="font-bold text-[var(--ve-teal)] underline underline-offset-4" href="/resources#part-d-basics">Part D basics</Link>
+            <Link className="font-bold text-[var(--ve-teal)] underline underline-offset-4" href="/medicare/medigap">Medigap basics</Link>
+            <Link className="font-bold text-[var(--ve-teal)] underline underline-offset-4" href="/medicare/snp">C-SNP & D-SNP</Link>
           </div>
         </div>
 
         <section className="space-y-5">
-          <h2 className="text-2xl font-semibold tracking-tight text-black">Frequently asked questions</h2>
+          <h2 className="font-display text-3xl font-bold tracking-normal text-[var(--ve-teal)]">Frequently asked questions</h2>
           <div className="space-y-4">
             {medicareFaqItems.map((item) => (
-              <article key={item.question} className="rounded-2xl border border-black/10 bg-white p-5">
-                <h3 className="text-base font-semibold text-black">{item.question}</h3>
-                <p className="mt-2 text-sm leading-6 text-black/75">{item.answer}</p>
-                <Link className="mt-2 inline-flex text-sm font-medium text-[var(--brand-blue)] underline" href={item.learnMoreHref}>
+              <article key={item.question} className="rounded-2xl border border-[var(--ve-teal)]/10 bg-white p-5 shadow-[0_14px_38px_rgba(15,23,42,0.07)]">
+                <h3 className="text-base font-extrabold text-[var(--ve-teal)]">{item.question}</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-700">{item.answer}</p>
+                <Link className="mt-2 inline-flex text-sm font-bold text-[var(--ve-teal)] underline underline-offset-4" href={item.learnMoreHref}>
                   {item.learnMoreLabel}
                 </Link>
               </article>
@@ -266,5 +263,6 @@ export default function Page() {
       </div>
       <StructuredData entries={[localBusinessJsonLd, serviceJsonLd, breadcrumbJsonLd, faqJsonLd]} />
     </Container>
+    </>
   );
 }

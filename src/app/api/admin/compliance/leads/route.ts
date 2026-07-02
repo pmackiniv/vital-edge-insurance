@@ -8,12 +8,30 @@ type LeadAuditRecord = {
   timestamp: string;
   leadRequestId: string;
   leadTransferDisclosureAck: boolean;
+  permissionToContact: boolean;
+  permissionToContactMethod: string | null;
+  permissionToContactText: string | null;
+  permissionToContactVersion: string | null;
+  automatedContactConsent: boolean;
+  automatedContactConsentText: string | null;
+  automatedContactConsentVersion: string | null;
   dataSharingConsent: boolean;
   dataSharingEntities: string[];
   beneficiaryInitiated: boolean;
   sourceRoute: string;
+  leadSource: string | null;
+  pageSource: string | null;
+  utmSource: string | null;
+  utmMedium: string | null;
+  utmCampaign: string | null;
+  linkedinReferral: boolean;
+  eventReferral: boolean;
+  partnerReferral: boolean;
+  leadCategory: string | null;
+  state: string | null;
   zip: string | null;
   productInterest: string | null;
+  consentTimestamp: string | null;
 };
 
 function parseJsonArray(value: unknown): string[] {
@@ -34,12 +52,30 @@ function toCsv(records: LeadAuditRecord[]): string {
     "timestamp",
     "lead_request_id",
     "lead_transfer_disclosure_ack",
+    "permission_to_contact",
+    "permission_to_contact_method",
+    "permission_to_contact_text",
+    "permission_to_contact_version",
+    "automated_contact_consent",
+    "automated_contact_consent_text",
+    "automated_contact_consent_version",
     "data_sharing_consent",
     "data_sharing_entities",
     "beneficiary_initiated",
     "source_route",
+    "lead_source",
+    "page_source",
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "linkedin_referral",
+    "event_referral",
+    "partner_referral",
+    "lead_category",
+    "state",
     "zip",
     "product_interest",
+    "consent_timestamp",
   ];
 
   const lines = [headers.join(",")];
@@ -48,12 +84,30 @@ function toCsv(records: LeadAuditRecord[]): string {
       row.timestamp,
       row.leadRequestId,
       String(row.leadTransferDisclosureAck),
+      String(row.permissionToContact),
+      row.permissionToContactMethod || "",
+      row.permissionToContactText || "",
+      row.permissionToContactVersion || "",
+      String(row.automatedContactConsent),
+      row.automatedContactConsentText || "",
+      row.automatedContactConsentVersion || "",
       String(row.dataSharingConsent),
       row.dataSharingEntities.join("|"),
       String(row.beneficiaryInitiated),
       row.sourceRoute,
+      row.leadSource || "",
+      row.pageSource || "",
+      row.utmSource || "",
+      row.utmMedium || "",
+      row.utmCampaign || "",
+      String(row.linkedinReferral),
+      String(row.eventReferral),
+      String(row.partnerReferral),
+      row.leadCategory || "",
+      row.state || "",
       row.zip || "",
       row.productInterest || "",
+      row.consentTimestamp || "",
     ].map((value) => `"${value.replaceAll("\"", "\"\"")}"`);
     lines.push(values.join(","));
   }
@@ -102,12 +156,30 @@ export async function GET(req: Request) {
     timestamp: row.timestamp.toISOString(),
     leadRequestId: row.leadRequestId,
     leadTransferDisclosureAck: row.leadTransferDisclosureAck,
+    permissionToContact: row.permissionToContact,
+    permissionToContactMethod: row.permissionToContactMethod,
+    permissionToContactText: row.permissionToContactText,
+    permissionToContactVersion: row.permissionToContactVersion,
+    automatedContactConsent: row.automatedContactConsent,
+    automatedContactConsentText: row.automatedContactConsentText,
+    automatedContactConsentVersion: row.automatedContactConsentVersion,
     dataSharingConsent: row.dataSharingConsent,
     dataSharingEntities: parseJsonArray(row.dataSharingEntitiesJson),
     beneficiaryInitiated: row.beneficiaryInitiated,
     sourceRoute: row.sourceRoute,
+    leadSource: row.leadSource,
+    pageSource: row.pageSource,
+    utmSource: row.utmSource,
+    utmMedium: row.utmMedium,
+    utmCampaign: row.utmCampaign,
+    linkedinReferral: row.linkedinReferral,
+    eventReferral: row.eventReferral,
+    partnerReferral: row.partnerReferral,
+    leadCategory: row.leadCategory,
+    state: row.state,
     zip: row.zip,
     productInterest: row.productInterest,
+    consentTimestamp: row.consentTimestamp?.toISOString() || null,
   }));
 
   if (format === "csv") {

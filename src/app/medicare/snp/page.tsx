@@ -1,100 +1,105 @@
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
+import {
+  PremiumContentBand,
+  PremiumDisclosure,
+  PremiumFeatureGrid,
+  PremiumInteriorHero,
+} from "@/components/PremiumInteriorPage";
 import { SeoFaq } from "@/components/SeoFaq";
+import { PLANENROLL } from "@/lib/externalLinks";
+import { site } from "@/lib/site";
 
 export default function Page() {
   return (
-    <Container className="py-14">
-      <div className="space-y-10">
-        <div className="max-w-3xl space-y-3 rounded-3xl border border-white/60 bg-white/90 p-6 shadow-lg backdrop-blur">
-          <h1 className="text-2xl font-semibold tracking-tight text-black">C-SNP & D-SNP Education</h1>
-          <p className="text-black/70">
-            Education-first guidance on Special Needs Plans. We explain general eligibility concepts, timelines, and
-            what to prepare before a licensed agent reviews your situation.
-          </p>
-          <div className="flex flex-wrap gap-3 pt-2">
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-green)]"
-            >
-              Request guidance
-            </Link>
-            <Link
-              href="/chat"
-              className="inline-flex items-center justify-center rounded-xl border border-black/10 px-4 py-2 text-sm font-semibold text-black hover:bg-black/5"
-            >
-              Chat with our team
-            </Link>
+    <>
+      <PremiumInteriorHero
+        eyebrow="Medicare Special Needs Plans"
+        title="C-SNP & D-SNP Education"
+        subtitle="Education-first guidance on Special Needs Plan concepts, general eligibility, timing, and what to prepare before a licensed review."
+        actions={[
+          { label: "Start My Review", href: PLANENROLL, kind: "primary", external: true },
+          { label: "D-SNP Education", href: "/medicare/d-snp", kind: "gold" },
+          { label: "C-SNP Education", href: "/medicare/c-snp", kind: "light" },
+        ]}
+      >
+        <PremiumDisclosure>
+          Plan availability, eligibility, benefits, provider networks, pharmacy networks, and enrollment periods vary by
+          county and carrier. Plan-specific Medicare discussions require proper scope and licensed-agent follow-up.
+        </PremiumDisclosure>
+      </PremiumInteriorHero>
+
+      <Container className="py-12">
+        <div className="space-y-10">
+          <PremiumFeatureGrid
+            features={[
+              {
+                title: "C-SNP",
+                body: "Chronic Condition Special Needs Plans are designed for people with certain chronic conditions and specific eligibility rules.",
+              },
+              {
+                title: "D-SNP",
+                body: "Dual Eligible Special Needs Plans generally serve people who have both Medicare and Medicaid.",
+              },
+              {
+                title: "Licensed Review",
+                body: "A licensed agent can confirm plan availability, eligibility, and timing after the required compliant steps.",
+              },
+            ]}
+          />
+
+          <div className="grid gap-5 lg:grid-cols-2">
+            <PremiumContentBand title="What to prepare" tone="teal">
+              <ul className="space-y-2">
+                <li>County of residence and preferred contact method.</li>
+                <li>Current Medicare and Medicaid coverage details if applicable.</li>
+                <li>Recent notices, provider preferences, pharmacy preferences, and prescription list.</li>
+              </ul>
+            </PremiumContentBand>
+            <PremiumContentBand title="Choose the right education path">
+              <div className="grid gap-3">
+                <Link href="/medicare/d-snp" className="font-bold text-[var(--ve-teal)] underline underline-offset-4">
+                  Learn about D-SNP education
+                </Link>
+                <Link href="/medicare/c-snp" className="font-bold text-[var(--ve-teal)] underline underline-offset-4">
+                  Learn about C-SNP education
+                </Link>
+                <Link href="/medicare" className="font-bold text-[var(--ve-teal)] underline underline-offset-4">
+                  Return to Medicare overview
+                </Link>
+              </div>
+            </PremiumContentBand>
           </div>
+
+          <SeoFaq
+            items={[
+              {
+                question: "Am I eligible for a C-SNP or D-SNP?",
+                answer:
+                  "Eligibility depends on factors such as chronic conditions, Medicaid status, service area, and plan rules. A licensed agent can confirm eligibility and timing.",
+              },
+              {
+                question: "Do you recommend a specific SNP plan online?",
+                answer:
+                  "No. We provide general education online and route plan-specific discussions through a licensed agent with proper scope.",
+              },
+              {
+                question: "Can I switch SNP plans right now?",
+                answer:
+                  "Enrollment rules can vary by situation. A licensed agent can review the timing that applies after collecting the required information.",
+              },
+            ]}
+          />
+
+          <LeadCtaSection
+            eyebrow="SNP guidance"
+            title="Get education and next steps for C-SNP and D-SNP."
+            description={`We explain the basics and connect you to a licensed agent for plan-specific guidance. You can also call ${site.phoneDisplay}.`}
+            ctaLabel="Request SNP guidance"
+          />
         </div>
-
-        <div className="grid gap-4 md:grid-cols-3">
-          {[
-            {
-              title: "C-SNP",
-              body: "Chronic Condition Special Needs Plans are designed for people with specific chronic conditions.",
-            },
-            {
-              title: "D-SNP",
-              body: "Dual Eligible Special Needs Plans generally serve people who have Medicare and Medicaid.",
-            },
-            {
-              title: "Timing",
-              body: "Eligibility and enrollment windows can vary; a licensed agent can confirm details.",
-            },
-          ].map((item) => (
-            <div key={item.title} className="rounded-2xl border border-black/10 bg-white p-6">
-              <div className="text-sm font-semibold text-black">{item.title}</div>
-              <p className="mt-2 text-sm leading-6 text-black/70">{item.body}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-2xl border border-black/10 bg-white p-6">
-            <h2 className="text-sm font-semibold text-black">What to prepare</h2>
-            <ul className="mt-3 space-y-2 text-sm text-black/70">
-              <li>Current coverage details and recent notices.</li>
-              <li>Preferred contact method and timing.</li>
-              <li>County of residence.</li>
-            </ul>
-          </div>
-          <div className="rounded-2xl border border-black/10 bg-[var(--muted)] p-6">
-            <h2 className="text-sm font-semibold text-black">Education-first guidance</h2>
-            <p className="mt-3 text-sm leading-6 text-black/70">
-              We provide general education and routing. Eligibility confirmations require a licensed agent.
-            </p>
-          </div>
-        </div>
-
-        <SeoFaq
-          items={[
-            {
-              question: "Am I eligible for a C-SNP or D-SNP?",
-              answer:
-                "Eligibility depends on factors such as chronic conditions or Medicaid status. A licensed agent can confirm eligibility and timing.",
-            },
-            {
-              question: "Do you recommend a specific SNP plan?",
-              answer:
-                "We do not recommend specific plans online. We provide education and route you to a licensed agent for plan-specific guidance.",
-            },
-            {
-              question: "Can I switch SNP plans right now?",
-              answer:
-                "Enrollment rules can vary by situation. A licensed agent can review your options and the timing that applies.",
-            },
-          ]}
-        />
-
-        <LeadCtaSection
-          eyebrow="SNP guidance"
-          title="Get education and next steps for C-SNP and D-SNP."
-          description="We explain the basics and connect you to a licensed agent for plan-specific guidance."
-          ctaLabel="Request SNP guidance"
-        />
-      </div>
-    </Container>
+      </Container>
+    </>
   );
 }

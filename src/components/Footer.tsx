@@ -8,6 +8,7 @@ import {
   GBP_REVIEWS,
   INSTAGRAM,
   LINKEDIN_COMPANY_PUBLIC,
+  LINKEDIN_PERSONAL,
 } from "@/lib/externalLinks";
 
 export function Footer() {
@@ -59,7 +60,8 @@ export function Footer() {
             <div className="mt-4 text-sm font-semibold text-white">Connect</div>
             <div className="mt-3 space-y-2 text-sm">
               <a className="block text-white/80 hover:text-white" href={FACEBOOK} {...linkProps}>Facebook</a>
-              <a className="block text-white/80 hover:text-white" href={LINKEDIN_COMPANY_PUBLIC} {...linkProps}>LinkedIn</a>
+              <a className="block text-white/80 hover:text-white" href={LINKEDIN_PERSONAL} {...linkProps}>Patrick on LinkedIn</a>
+              <a className="block text-white/80 hover:text-white" href={LINKEDIN_COMPANY_PUBLIC} {...linkProps}>Vital Edge on LinkedIn</a>
               <a className="block text-white/80 hover:text-white" href={INSTAGRAM} {...linkProps}>Instagram</a>
               <a className="block text-white/80 hover:text-white" href={GBP_REVIEWS} {...linkProps}>Google Business Profile</a>
             </div>

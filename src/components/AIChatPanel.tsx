@@ -1,12 +1,16 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, type FormEvent } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import Link from "next/link";
 import { site } from "@/lib/site";
 
 const chatTransport = new DefaultChatTransport({ api: "/api/chat" });
+
+type AIChatPanelProps = {
+  onPatrickHandoffNeeded?: () => void;
+};
 
 function isChatUnavailableError(message: string | undefined): boolean {
   if (!message) return false;
@@ -22,8 +26,18 @@ function isChatUnavailableError(message: string | undefined): boolean {
   }
 }
 
-export function AIChatPanel() {
+function needsPatrickHandoff(message: string): boolean {
+  const normalized = message.toLowerCase();
+  const hasMedicareContext =
+    /\b(cms|medicare|medicare advantage|part d|medigap|medicare supplement|d-snp|c-snp|snp|special needs|dual eligible)\b/.test(normalized);
+  const asksForPlanSpecificHelp =
+    /\b(best|recommend|which|compare|choose|provider|doctor|network|drug|premium|cost|copay|benefit|eligib|enroll|diabetes|medicaid)\b/.test(normalized);
+  return hasMedicareContext && asksForPlanSpecificHelp;
+}
+
+export function AIChatPanel({ onPatrickHandoffNeeded }: AIChatPanelProps = {}) {
   const [input, setInput] = useState("");
+  const [handoffNotice, setHandoffNotice] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { messages, sendMessage, status, error } = useChat({
     id: "vital-edge-ai-chat",
@@ -37,11 +51,19 @@ export function AIChatPanel() {
   const isDisabled = status === "streaming" || status === "submitted";
   const chatUnavailable = isChatUnavailableError(error?.message);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const text = input.trim();
+    const formData = new FormData(e.currentTarget);
+    const formText = formData.get("message");
+    const text = (typeof formText === "string" ? formText : input).trim();
     if (!text || isDisabled) return;
     setInput("");
+    if (needsPatrickHandoff(text)) {
+      onPatrickHandoffNeeded?.();
+      setHandoffNotice(
+        "This looks like a question for Patrick Mackin IV. Use Permission to Contact in the guidance form so Patrick can respond.",
+      );
+    }
     sendMessage({ text });
   };
 
@@ -50,10 +72,11 @@ export function AIChatPanel() {
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3">
       <div className="shrink-0">
-        <div className="text-sm font-semibold text-black">AI assistant</div>
-        <p className="mt-0.5 text-xs leading-snug text-black/60">
-          Ask general questions about coverage types or enrollment timing. We do not provide plan-specific guidance in
-          chat. For a licensed agent: call or text {site.phoneDisplay}, request a callback, or{" "}
+        <div className="text-base font-extrabold text-[var(--ve-teal)]">Coverage Atlas</div>
+        <p className="mt-1 text-sm leading-6 text-black/68">
+          Ask general questions about Medicare, ACA, coverage timing, and next steps. Coverage Atlas can point you to
+          resources and help request follow-up. Plan-specific guidance requires Patrick Mackin IV, licensed agent. Call
+          or text {site.phoneDisplay},{" "}
           <Link href="/schedule" className="font-medium text-[var(--brand-blue)] underline hover:no-underline">
             schedule a call
           </Link>
@@ -69,9 +92,15 @@ export function AIChatPanel() {
         </div>
       ) : null}
 
-      <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto rounded-xl border border-black/10 bg-white/80 p-3 scroll-smooth">
+      {handoffNotice ? (
+        <div className="rounded-xl border border-[var(--ve-gold)]/35 bg-[var(--ve-gold)]/10 p-3 text-xs leading-5 text-slate-800">
+          {handoffNotice}
+        </div>
+      ) : null}
+
+      <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto rounded-2xl border border-[var(--ve-teal)]/15 bg-[linear-gradient(180deg,#ffffff_0%,#eef7f7_100%)] p-3 scroll-smooth">
         {messages.length === 0 ? (
-          <p className="py-2 text-xs text-black/50">Ask a question to start.</p>
+          <p className="py-2 text-sm leading-6 text-black/58">Ask a coverage question to start.</p>
         ) : (
           messages.map((m) => {
             const text = (m.parts ?? [])
@@ -81,14 +110,14 @@ export function AIChatPanel() {
             return (
               <div
                 key={m.id}
-                className={`rounded-xl px-3 py-2.5 text-sm shadow-sm ${
+                className={`rounded-2xl px-4 py-3 text-[15px] shadow-sm ${
                   m.role === "user"
                     ? "ml-6 bg-[var(--brand-blue)]/15 text-black"
-                    : "mr-6 bg-slate-100 text-black/90"
+                    : "mr-6 border border-[var(--ve-teal)]/10 bg-white text-black/90"
                 }`}
               >
                 <span className="block text-xs font-semibold uppercase tracking-wide text-black/60">
-                  {m.role === "user" ? "You" : "Vital Edge"}
+                  {m.role === "user" ? "You" : "Coverage Atlas"}
                 </span>
                 <p className="mt-1.5 whitespace-pre-wrap leading-relaxed">{text}</p>
               </div>
@@ -98,7 +127,7 @@ export function AIChatPanel() {
         {status === "streaming" ? (
           <div className="flex items-center gap-2 rounded-xl bg-slate-100 px-3 py-2.5 text-xs text-black/60">
             <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-black/40" />
-            <span>Vital Edge is typing...</span>
+            <span>Coverage Atlas is typing...</span>
           </div>
         ) : null}
         <div ref={messagesEndRef} aria-hidden="true" className="h-0 shrink-0" />
@@ -107,8 +136,9 @@ export function AIChatPanel() {
       <form onSubmit={handleSubmit} className="flex shrink-0 flex-col gap-2">
         <textarea
           value={input}
+          name="message"
           onChange={(e) => setInput(e.target.value)}
-          placeholder="e.g. What is Part D? How do I speak to a licensed agent?"
+          placeholder="e.g. What is Part D? When should I ask Patrick for licensed guidance?"
           rows={2}
           className="w-full resize-none rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-[var(--brand-blue)] focus:outline-none focus:ring-1 focus:ring-[var(--brand-blue)]"
           disabled={isDisabled}
@@ -116,7 +146,7 @@ export function AIChatPanel() {
         <p className="text-[11px] text-black/50">Do not send SSN, Medicare ID, or medical details.</p>
         <button
           type="submit"
-          disabled={isDisabled || !input.trim()}
+          disabled={isDisabled}
           className="btn btn-primary self-end px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50"
         >
           {status === "streaming" || status === "submitted" ? "Thinking…" : "Send"}

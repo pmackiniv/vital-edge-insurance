@@ -4,6 +4,13 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { resourcesForTopic } from "@/lib/knowledgeBase";
+import {
+  AUTOMATED_CONTACT_CONSENT_TEXT,
+  AUTOMATED_CONTACT_CONSENT_VERSION,
+  PERMISSION_TO_CONTACT_TEXT,
+  PERMISSION_TO_CONTACT_VERSION,
+} from "@/lib/leadConsent";
+import { buildClientLeadTracking } from "@/lib/clientLeadTracking";
 import { site } from "@/lib/site";
 import { AIChatPanel } from "@/components/AIChatPanel";
 
@@ -23,15 +30,33 @@ function getStoredMinimized(): boolean {
 type LeadPayload = {
   topic: string;
   county: string;
+  state: string;
+  zip: string;
   contactMethod: string;
   message: string;
   consent: boolean;
+  permissionToContactMethod: string;
+  permissionToContactText: string;
+  permissionToContactVersion: string;
+  automatedContactConsent: boolean;
+  automatedContactConsentText: string;
+  automatedContactConsentVersion: string;
   dataSharingConsent: boolean;
   dataSharingRecipient: string;
   dataSharingEntities: string[];
   leadTransferDisclosureAck: boolean;
   beneficiaryInitiated: boolean;
   productInterest: string;
+  leadSource: string;
+  pageSource: string;
+  utmSource: string;
+  utmMedium: string;
+  utmCampaign: string;
+  linkedinReferral: boolean;
+  eventReferral: boolean;
+  partnerReferral: boolean;
+  leadCategory: string;
+  consentTimestamp: string;
 };
 
 const topics = [
@@ -50,6 +75,21 @@ const topics = [
 ];
 const counties = ["Duval County", "St. Johns County", "Other"];
 const contactMethods = ["Call", "Text", "Email"];
+const stateOptions = ["Florida", "Georgia", "South Carolina", "North Carolina", "Texas", "Tennessee", "Arizona", "Washington", "Pennsylvania", "Ohio", "Michigan", "Louisiana"];
+
+function AtlasBookIcon({ className = "h-10 w-10" }: { className?: string }) {
+  return (
+    <span
+      className={`${className} relative inline-flex shrink-0 items-center justify-center rounded-[0.9rem] bg-[linear-gradient(135deg,#5a321f_0%,#8b5a2b_42%,#2c1711_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_12px_28px_rgba(0,0,0,0.22)] ring-1 ring-white/25`}
+      aria-hidden="true"
+    >
+      <span className="absolute left-[18%] top-[16%] h-[68%] w-[12%] rounded-full bg-[linear-gradient(180deg,#d99d45,#7b431f)] opacity-95" />
+      <span className="absolute right-[18%] top-[18%] h-[64%] w-px bg-white/24" />
+      <span className="absolute bottom-[18%] right-[20%] h-px w-[38%] bg-white/22" />
+      <span className="font-display text-base font-bold leading-none text-[#ffe9b4]">V</span>
+    </span>
+  );
+}
 
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -57,6 +97,7 @@ export function ChatWidget() {
   const [hydrated, setHydrated] = useState(false);
   const [step, setStep] = useState(1);
   const [topic, setTopic] = useState("");
+  const [state, setState] = useState("Florida");
   const [county, setCounty] = useState("");
   const [contactMethod, setContactMethod] = useState("");
   const [contactDetail, setContactDetail] = useState("");
@@ -70,6 +111,7 @@ export function ChatWidget() {
   });
   const [message, setMessage] = useState("");
   const [consent, setConsent] = useState(false);
+  const [automatedContactConsent, setAutomatedContactConsent] = useState(false);
   const [licensedAgentDisclosure, setLicensedAgentDisclosure] = useState(false);
   const [zip, setZip] = useState("");
   const [mode, setMode] = useState<"intake" | "question">("question");
@@ -118,11 +160,13 @@ export function ChatWidget() {
   const resetFlow = () => {
     setStep(1);
     setTopic("");
+    setState("Florida");
     setCounty("");
     setContactMethod("");
     setContactDetail("");
     setMessage("");
     setConsent(false);
+    setAutomatedContactConsent(false);
     setLicensedAgentDisclosure(false);
     setZip("");
     setMode("intake");
@@ -131,6 +175,18 @@ export function ChatWidget() {
     setSubmitMessage("");
     setEmailSent(true);
     setIsSubmitting(false);
+  };
+
+  const startPatrickHandoff = () => {
+    setMode("intake");
+    setStep(2);
+    setTopic("Medicare");
+    setContactMethod("Call");
+    setMessage((current) => current || "I need Patrick Mackin IV to follow up about a Medicare/CMS question from Coverage Atlas.");
+    setError("");
+    setSubmitted(false);
+    setSubmitMessage("");
+    setEmailSent(true);
   };
 
   const closeWidget = () => {
@@ -147,7 +203,7 @@ export function ChatWidget() {
   const goNextDetails = () => {
     setError("");
     if (topic.toLowerCase().includes("medicare") && zip.length !== 5) {
-      setError("Please enter a valid Florida ZIP code for Medicare routing.");
+      setError("Please enter a valid ZIP code for Medicare routing.");
       return;
     }
     if (!contactDetail.trim()) {
@@ -189,20 +245,43 @@ export function ChatWidget() {
     }
 
     const nameLine = `Name: ${firstName} ${lastName}`.trim();
-    const messageWithName = [nameLine, message].filter(Boolean).join("\n");
+    const leadCategory = /medicare/i.test(topic)
+      ? "Medicare consumer review"
+      : /group|employer/i.test(topic)
+        ? "Employer/private options"
+        : "ACA/private health";
+    const tracking = buildClientLeadTracking(window.location.pathname, leadCategory, {
+      linkedinReferral: typeof document !== "undefined" && /linkedin/i.test(document.referrer || ""),
+    });
+    const messageWithName = [
+      nameLine,
+      `State: ${state}`,
+      `County: ${county}`,
+      zip.length === 5 ? `ZIP: ${zip}` : "",
+      message,
+    ].filter(Boolean).join("\n");
 
     const payload: LeadPayload = {
       topic,
       county,
+      state,
+      zip,
       contactMethod: `${contactMethod}: ${contactDetail}`,
-      message: zip.length === 5 ? `${messageWithName}\nZIP: ${zip}` : messageWithName,
+      message: messageWithName,
       consent,
+      permissionToContactMethod: contactMethod,
+      permissionToContactText: PERMISSION_TO_CONTACT_TEXT,
+      permissionToContactVersion: PERMISSION_TO_CONTACT_VERSION,
+      automatedContactConsent,
+      automatedContactConsentText: AUTOMATED_CONTACT_CONSENT_TEXT,
+      automatedContactConsentVersion: AUTOMATED_CONTACT_CONSENT_VERSION,
       dataSharingConsent: licensedAgentDisclosure,
       dataSharingRecipient: "Vital Edge Licensed Agent",
       dataSharingEntities: ["Vital Edge Licensed Agent"],
       leadTransferDisclosureAck: licensedAgentDisclosure,
       beneficiaryInitiated: true,
       productInterest: topic,
+      ...tracking,
     };
 
     setIsSubmitting(true);
@@ -222,7 +301,7 @@ export function ChatWidget() {
       if (!response.ok) {
         throw new Error(data.error || "Unable to submit right now.");
       }
-      setSubmitMessage(data.message ?? "Got it, a licensed agent will follow up.");
+      setSubmitMessage(data.message ?? "Got it. Patrick Mackin IV has been notified and will follow up.");
       setEmailSent(data.notifications?.email?.status === "sent");
       setSubmitted(true);
     } catch (err) {
@@ -244,13 +323,15 @@ export function ChatWidget() {
           initial={false}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="btn btn-primary flex items-center gap-2 rounded-full px-4 py-3 text-left text-sm shadow-lg sm:px-5"
+          className="flex min-h-14 min-w-14 items-center gap-3 rounded-full border border-white/30 bg-[var(--ve-teal)] px-3 py-2.5 text-left text-sm text-white shadow-[0_20px_54px_rgba(0,63,69,0.28)] transition hover:-translate-y-0.5 hover:bg-[var(--ve-teal-2)] sm:px-5 sm:py-3"
           onClick={openPanel}
-          aria-label="Open chat"
+          aria-label="Open Coverage Atlas"
         >
-          <span className="flex flex-col">
-            <span className="text-xs font-semibold uppercase tracking-wide text-white/80">Live help 24/7</span>
-            <span className="text-sm font-semibold">Chat with a licensed agent now</span>
+          <AtlasBookIcon className="h-10 w-10 sm:h-11 sm:w-11" />
+          <span className="text-xs font-bold sm:hidden">Atlas</span>
+          <span className="hidden flex-col sm:flex">
+            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-white/78">Coverage Atlas</span>
+            <span className="text-sm font-extrabold">Ask a coverage question</span>
           </span>
         </motion.button>
       ) : null}
@@ -262,14 +343,17 @@ export function ChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.96 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="flex h-[500px] w-[380px] max-h-[85vh] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-black/10 bg-white shadow-2xl"
+            className="flex h-[620px] w-[430px] max-h-[88vh] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-3xl border border-[var(--ve-teal)]/14 bg-white shadow-[0_30px_90px_rgba(0,63,69,0.22)]"
           >
-            <div className="flex shrink-0 flex-col gap-2 border-b border-black/10 p-3">
+            <div className="flex shrink-0 flex-col gap-2 border-b border-[var(--ve-teal)]/10 bg-[linear-gradient(135deg,#ffffff_0%,#eef7f7_100%)] p-4">
               <div className="flex items-center justify-between gap-2">
-                <div className="min-w-0">
-                  <div className="text-sm font-semibold text-black">Talk with a licensed agent now</div>
-                  <div className="text-xs text-black/60">
-                    Chat here or request a callback. Plan-specific guidance by licensed agent.
+                <div className="flex min-w-0 items-center gap-3">
+                  <AtlasBookIcon className="h-11 w-11" />
+                  <div>
+                    <div className="text-base font-extrabold text-[var(--ve-teal)]">Coverage Atlas</div>
+                    <div className="text-xs leading-5 text-black/64">
+                      A Vital Edge knowledge guide for coverage questions, resources, and compliant follow-up requests.
+                    </div>
                   </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-1">
@@ -297,8 +381,8 @@ export function ChatWidget() {
                   </button>
                 </div>
               </div>
-              <Link href="/chat" className="text-xs font-medium text-[var(--brand-blue)] hover:underline">
-                Open full chat page (like messaging) →
+              <Link href="/chat" className="text-xs font-bold text-[var(--brand-blue)] hover:underline">
+                Open full Coverage Atlas
               </Link>
             </div>
 
@@ -347,7 +431,7 @@ export function ChatWidget() {
 
                 {mode === "question" ? (
                   <div className="flex min-h-0 flex-1 flex-col gap-3">
-                    <AIChatPanel />
+                    <AIChatPanel onPatrickHandoffNeeded={startPatrickHandoff} />
                   </div>
                 ) : null}
 
@@ -443,6 +527,18 @@ export function ChatWidget() {
                       </div>
                     </div>
                     <div>
+                      <label className="text-sm font-semibold text-black">State</label>
+                      <select
+                        value={state}
+                        onChange={(event) => setState(event.target.value)}
+                        className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+                      >
+                        {stateOptions.map((item) => (
+                          <option key={item} value={item}>{item}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
                       <label className="text-sm font-semibold text-black">County</label>
                       <select
                         value={county}
@@ -487,7 +583,7 @@ export function ChatWidget() {
                     ) : null}
                     {topic.toLowerCase().includes("medicare") ? (
                       <div>
-                        <label className="text-sm font-semibold text-black">Florida ZIP code</label>
+                        <label className="text-sm font-semibold text-black">ZIP code</label>
                         <input
                           value={zip}
                           onChange={(event) => setZip(event.target.value.replace(/\D/g, "").slice(0, 5))}
@@ -506,6 +602,12 @@ export function ChatWidget() {
                         placeholder="Share what you need help with"
                       />
                     </div>
+                    {topic.toLowerCase().includes("medicare") ? (
+                      <div className="rounded-xl border border-[var(--ve-gold)]/30 bg-[var(--ve-gold)]/10 p-3 text-xs leading-5 text-slate-800">
+                        Permission to Contact is collected on the next step before Patrick Mackin IV is notified for
+                        Medicare or CMS-related follow-up.
+                      </div>
+                    ) : null}
                     <div className="flex items-center justify-between">
                       <button type="button" onClick={goBack} className="text-sm font-semibold text-black/70 hover:text-black">
                         Back
@@ -513,7 +615,7 @@ export function ChatWidget() {
                       <button
                         type="button"
                         onClick={goNextDetails}
-                        disabled={!firstName || !lastName || !county || !contactMethod || !contactDetail || !message}
+                        disabled={!firstName || !lastName || !state || !county || !contactMethod || !contactDetail || !message}
                         className="btn btn-primary px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         Next
@@ -533,6 +635,7 @@ export function ChatWidget() {
                       </div>
                     ) : null}
                     <div className="rounded-xl border border-black/10 p-4 text-xs text-black/70">
+                      <div className="mb-2 font-semibold text-black">Permission to Contact</div>
                       <label className="flex items-start gap-3 cursor-pointer">
                         <input
                           type="checkbox"
@@ -542,13 +645,29 @@ export function ChatWidget() {
                           aria-describedby="consent-request-callback-hint"
                         />
                         <span>
-                          By checking this box, you agree to be contacted by call, text, and/or email about your request.
-                          Message &amp; data rates may apply. Reply STOP to opt out.
+                          {PERMISSION_TO_CONTACT_TEXT}
                         </span>
                       </label>
                       {!consent ? (
                         <p id="consent-request-callback-hint" className="mt-2 text-black/60">
                           Check the box above to enable &quot;Request Call Back&quot; and submit your request.
+                        </p>
+                      ) : null}
+                    </div>
+                    <div className="rounded-xl border border-black/10 p-4 text-xs text-black/70">
+                      <div className="mb-2 font-semibold text-black">Automated communications consent</div>
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={automatedContactConsent}
+                          onChange={(event) => setAutomatedContactConsent(event.target.checked)}
+                          className="mt-0.5 shrink-0"
+                        />
+                        <span>{AUTOMATED_CONTACT_CONSENT_TEXT}</span>
+                      </label>
+                      {!automatedContactConsent ? (
+                        <p className="mt-2 text-black/60">
+                          Optional. We still collect Permission to Contact above so Patrick can respond manually.
                         </p>
                       ) : null}
                     </div>
@@ -561,8 +680,9 @@ export function ChatWidget() {
                           className="mt-0.5 shrink-0"
                         />
                         <span>
-                          I provide express written consent for my information to be shared with a licensed agent at
-                          Vital Edge Insurance for follow-up, and I understand my request may be transferred for follow-up.
+                          I provide express written consent for my information to be shared with Patrick Mackin IV,
+                          licensed agent at Vital Edge Insurance, for follow-up. I understand my request may be
+                          transferred for follow-up.
                         </span>
                       </label>
                     </div>
@@ -573,7 +693,7 @@ export function ChatWidget() {
                         {suggestedResources.map((item) => (
                           <Link
                             key={item.slug}
-                            href={`/resources#${item.slug}`}
+                            href={item.href || `/resources#${item.slug}`}
                             className="block rounded-xl border border-black/10 px-3 py-2 text-sm text-black hover:bg-black/5"
                           >
                             {item.title}
@@ -585,7 +705,7 @@ export function ChatWidget() {
                     {error ? <p className="text-xs text-red-600">{error}</p> : null}
                     {submitted ? (
                       <div className="space-y-2 rounded-xl border border-green-200 bg-green-50 p-3 text-xs text-green-700">
-                        <p>{submitMessage || "Got it, a licensed agent will follow up."}</p>
+                        <p>{submitMessage || "Got it. Patrick Mackin IV has been notified and will follow up."}</p>
                         {!emailSent ? (
                           <p>
                             If you don&apos;t hear back within an hour, please call us at{" "}
@@ -625,7 +745,7 @@ export function ChatWidget() {
                     </div>
 
                     <div className="rounded-xl border border-black/10 p-3 text-xs text-black/60">
-                      <div className="font-semibold text-black">Talk to a licensed agent now</div>
+                      <div className="font-semibold text-black">Request licensed follow-up</div>
                       <div className="mt-2 flex flex-wrap gap-3">
                         <a className="text-black hover:underline" href={`tel:${site.phoneE164}`}>
                           Call {site.phoneDisplay}

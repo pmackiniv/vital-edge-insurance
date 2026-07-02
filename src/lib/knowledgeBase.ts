@@ -3,9 +3,45 @@ export type ResourceItem = {
   title: string;
   summary: string;
   tags: string[];
+  href?: string;
 };
 
 export const resources: ResourceItem[] = [
+  {
+    slug: "medicare-101",
+    title: "Medicare 101 Education",
+    summary: "Plain-language guide to Original Medicare, Medicare Advantage, Medigap, Part D, networks, prescriptions, and pharmacies.",
+    tags: ["medicare"],
+    href: "/medicare-101",
+  },
+  {
+    slug: "turning-65-medicare",
+    title: "Turning 65 Medicare Timeline",
+    summary: "A practical Medicare timing checklist for people approaching 65.",
+    tags: ["medicare"],
+    href: "/turning-65-medicare",
+  },
+  {
+    slug: "medicare-still-working",
+    title: "Medicare when still working",
+    summary: "Employer coverage, Part B timing, and creditable coverage review for workers past 65.",
+    tags: ["medicare", "group"],
+    href: "/medicare-still-working",
+  },
+  {
+    slug: "medicare-extra-help-lis",
+    title: "Extra Help and LIS",
+    summary: "Consumer-friendly education about Medicare Extra Help without eligibility promises.",
+    tags: ["medicare", "prescriptions"],
+    href: "/medicare-extra-help-lis",
+  },
+  {
+    slug: "medicare-and-medicaid",
+    title: "Medicare and Medicaid",
+    summary: "Education for people who may have both Medicare and Medicaid.",
+    tags: ["medicare"],
+    href: "/medicare-and-medicaid",
+  },
   {
     slug: "new-to-medicare",
     title: "New to Medicare",

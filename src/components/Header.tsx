@@ -4,9 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { site } from "@/lib/site";
 import { Container } from "@/components/Container";
-import { TopBar } from "@/components/TopBar";
+import { site } from "@/lib/site";
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -61,11 +60,10 @@ export function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-[70] border-b border-black/5 bg-white shadow-sm">
-      <TopBar />
-      <div className="border-b border-black/5">
+    <header className="sticky top-0 z-[70] border-b border-white/40 bg-white/82 shadow-[0_10px_40px_rgba(0,63,69,0.08)] backdrop-blur-xl">
+      <div>
         <Container>
-          <div className="flex h-20 items-center justify-between gap-4">
+          <div className="flex min-h-[5.4rem] items-center justify-between gap-4 py-3">
             <Link
               href="/"
               className="flex items-center gap-3"
@@ -74,18 +72,25 @@ export function Header() {
               <Image
                 src="/brand/vital-edge-logo.png"
                 alt="Vital Edge Insurance logo"
-                width={240}
-                height={80}
+                width={200}
+                height={200}
                 priority
-                className="h-14 w-auto sm:h-16"
+                className="h-14 w-14 rounded-2xl object-contain sm:h-16 sm:w-16"
               />
               <div className="leading-tight">
-                <div className="text-sm font-semibold text-black">{site.name}</div>
-                <div className="text-xs text-black/60">Jacksonville, Florida</div>
+                <div className="font-display text-xl font-bold leading-none tracking-normal text-[var(--ve-teal)] sm:text-2xl">
+                  Vital Edge
+                </div>
+                <div className="mt-1 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--ve-gold)]">
+                  Insurance
+                </div>
+                <div className="mt-1 hidden text-[0.64rem] font-bold uppercase tracking-[0.12em] text-[var(--ve-teal)]/80 sm:block">
+                  Guidance you can trust
+                </div>
               </div>
             </Link>
 
-            <nav className="hidden items-center gap-5 lg:flex" data-main-nav>
+            <nav className="hidden items-center gap-6 lg:flex" data-main-nav>
               {site.mainNav.map((item) => {
                 const hasChildren = Array.isArray(item.children) && item.children.length > 0;
                 const isOpen = desktopOpenLabel === item.label;
@@ -94,7 +99,7 @@ export function Header() {
                     <Link
                       key={item.label}
                       href={item.href}
-                      className="text-sm font-semibold text-black/80 transition hover:text-black"
+                      className="text-sm font-bold text-[var(--ve-teal)] transition hover:text-[var(--ve-gold)]"
                       onFocus={() => setDesktopOpenLabel(null)}
                     >
                       {item.label}
@@ -111,7 +116,7 @@ export function Header() {
                   >
                     <button
                       type="button"
-                      className="inline-flex items-center gap-1 text-sm font-semibold text-black/80 transition hover:text-black"
+                      className="inline-flex min-h-11 items-center gap-1 text-sm font-bold text-[var(--ve-teal)] transition hover:text-[var(--ve-gold)]"
                       aria-expanded={isOpen}
                       aria-haspopup={hasChildren ? "menu" : undefined}
                       onClick={() => setDesktopOpenLabel((prev) => (prev === item.label ? null : item.label))}
@@ -122,12 +127,12 @@ export function Header() {
                       </svg>
                     </button>
                     {isOpen && hasChildren ? (
-                      <div className="absolute left-0 top-full z-[120] mt-3 min-w-[16rem] rounded-2xl border border-black/10 bg-white p-2 shadow-xl">
+                      <div className="absolute left-0 top-full z-[120] mt-3 min-w-[17rem] rounded-2xl border border-[var(--ve-teal)]/10 bg-white p-2 shadow-[0_24px_70px_rgba(15,23,42,0.16)]">
                         {item.children?.map((child) => (
                           <Link
                             key={child.href}
                             href={child.href}
-                            className="block rounded-xl px-3 py-2 text-sm text-black/85 hover:bg-black/5 hover:text-black"
+                            className="block rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-800 hover:bg-[var(--ve-bg)] hover:text-[var(--ve-teal)]"
                             onClick={() => setDesktopOpenLabel(null)}
                           >
                             {child.label}
@@ -144,8 +149,11 @@ export function Header() {
               <motion.div whileHover={{ y: -1 }} whileTap={{ y: 0 }}>
                 <Link
                   href="/contact"
-                  className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-blue)] px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[var(--brand-green)] focus:outline-none focus:ring-2 focus:ring-black/20"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[var(--ve-teal)] px-5 py-2.5 text-sm font-extrabold text-white shadow-[0_14px_34px_rgba(0,63,69,0.22)] hover:bg-[var(--ve-teal-2)] focus:outline-none focus:ring-2 focus:ring-[var(--ve-teal)]/30"
                 >
+                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+                    <path d="M7.6 4.2 5.3 6.5c-.8.8-.8 2.1-.2 3.2 2 3.8 5.4 7.2 9.2 9.2 1.1.6 2.4.6 3.2-.2l2.3-2.3-4-3-1.8 1.8c-2.3-1.1-4.1-2.9-5.2-5.2l1.8-1.8-3-4Z" />
+                  </svg>
                   {site.primaryCta.label}
                 </Link>
               </motion.div>
@@ -153,7 +161,7 @@ export function Header() {
 
             <button
               type="button"
-              className="inline-flex items-center justify-center rounded-xl border border-black/10 p-2 text-black md:hidden"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-[var(--ve-teal)]/15 bg-white/70 p-2 text-[var(--ve-teal)] shadow-sm md:hidden"
               aria-expanded={mobileOpen}
               aria-controls="mobile-nav-panel"
               aria-label="Toggle navigation"
@@ -188,10 +196,26 @@ export function Header() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="relative z-[9999] border-b border-black/5 bg-white shadow-lg md:hidden"
+              className="relative z-[9999] border-b border-black/5 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.18)] md:hidden"
             >
               <Container>
                 <div className="space-y-4 py-6">
+                  <div className="flex items-center justify-between gap-3 px-1">
+                    <div className="text-sm font-bold uppercase tracking-[0.14em] text-[var(--ve-teal)]/70">
+                      Menu
+                    </div>
+                    <button
+                      type="button"
+                      aria-label="Close menu"
+                      onClick={closeMobileNav}
+                      className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-[var(--ve-teal)]/15 bg-white text-[var(--ve-teal)] shadow-sm hover:bg-[var(--ve-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--ve-teal)]/25"
+                    >
+                      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+                        <path d="M6 6l12 12" />
+                        <path d="M18 6 6 18" />
+                      </svg>
+                    </button>
+                  </div>
                   <nav className="grid gap-2">
                     {site.mainNav.map((item) => {
                       const hasChildren = Array.isArray(item.children) && item.children.length > 0;
@@ -203,7 +227,7 @@ export function Header() {
                             key={item.label}
                             href={item.href}
                             onClick={closeMobileNav}
-                            className="rounded-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5"
+                            className="rounded-xl px-3 py-3 text-base font-bold text-[var(--ve-teal)] hover:bg-[var(--ve-bg)]"
                           >
                             {item.label}
                           </Link>
@@ -217,18 +241,18 @@ export function Header() {
                               <Link
                                 href={item.href}
                                 onClick={closeMobileNav}
-                                className="flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black hover:bg-black/5"
+                                className="flex-1 rounded-l-xl px-3 py-3 text-base font-bold text-[var(--ve-teal)] hover:bg-[var(--ve-bg)]"
                               >
                                 {item.label}
                               </Link>
                             ) : (
-                              <div className="flex-1 rounded-l-xl px-3 py-3 text-base font-semibold text-black">
+                              <div className="flex-1 rounded-l-xl px-3 py-3 text-base font-bold text-[var(--ve-teal)]">
                                 {item.label}
                               </div>
                             )}
                             <button
                               type="button"
-                              className="inline-flex items-center justify-center rounded-r-xl border-l border-black/10 px-3 py-3 text-black hover:bg-black/5"
+                              className="inline-flex min-w-12 items-center justify-center rounded-r-xl border-l border-black/10 px-3 py-3 text-[var(--ve-teal)] hover:bg-[var(--ve-bg)]"
                               aria-expanded={groupOpen}
                               aria-label={`Toggle ${item.label} submenu`}
                               onClick={() => setMobileOpenGroupLabel((prev) => (prev === item.label ? null : item.label))}
@@ -245,7 +269,7 @@ export function Header() {
                                   key={child.href}
                                   href={child.href}
                                   onClick={closeMobileNav}
-                                  className="rounded-lg px-3 py-2 text-sm text-black/80 hover:bg-black/5 hover:text-black"
+                                  className="rounded-lg px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-[var(--ve-bg)] hover:text-[var(--ve-teal)]"
                                 >
                                   {child.label}
                                 </Link>
@@ -260,14 +284,14 @@ export function Header() {
                     <Link
                       href="/enroll"
                       onClick={closeMobileNav}
-                      className="inline-flex min-h-11 items-center justify-center rounded-xl border border-black/10 px-4 py-2 text-sm font-semibold text-black hover:bg-black/5"
+                      className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--ve-teal)]/15 px-4 py-2 text-sm font-bold text-[var(--ve-teal)] hover:bg-[var(--ve-bg)]"
                     >
                       Secure enrollment links
                     </Link>
                     <Link
                       href="/contact"
                       onClick={closeMobileNav}
-                      className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-green)]"
+                      className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--ve-teal)] px-4 py-2 text-sm font-bold text-white hover:bg-[var(--ve-teal-2)]"
                     >
                       {site.primaryCta.label}
                     </Link>

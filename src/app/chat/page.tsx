@@ -2,50 +2,51 @@ import Link from "next/link";
 import { Container } from "@/components/Container";
 import { site } from "@/lib/site";
 import { AIChatPanel } from "@/components/AIChatPanel";
+import { PremiumCard, PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
 
 export default function ChatPage() {
   return (
-    <Container className="py-14">
-      <div className="max-w-3xl space-y-4">
-        <h1 className="text-3xl font-semibold tracking-tight text-black">Talk with a licensed agent now</h1>
-        <p className="text-sm leading-6 text-black/70">
-          Chat here for general questions and next step help. We do not provide plan-specific guidance via chat. We will
-          connect you with a licensed agent for your convenience, call or text {site.phoneDisplay}, request a callback, or
-          schedule an appointment that works best for you.
-        </p>
-      </div>
+    <>
+      <PremiumInteriorHero
+        eyebrow="Coverage Atlas"
+        title="Ask Coverage Atlas"
+        subtitle={`Coverage Atlas is the Vital Edge Insurance helper for general coverage questions, resources, and next-step support. For licensed guidance, call or text ${site.phoneDisplay}.`}
+        actions={[
+          { label: "Contact Form", href: "/contact", kind: "primary" },
+          { label: "Schedule a Call", href: "/schedule", kind: "gold" },
+          { label: `Call ${site.phoneDisplay}`, href: `tel:${site.phoneE164}`, kind: "light" },
+        ]}
+      >
+        <PremiumDisclosure>
+          We do not provide plan-specific guidance via chat. Do not send SSN, Medicare ID, or medical details.
+        </PremiumDisclosure>
+      </PremiumInteriorHero>
 
-      <div className="mt-6 max-w-3xl rounded-2xl border border-black/10 bg-white p-6">
-        <AIChatPanel />
-      </div>
+      <Container className="py-12">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)]">
+          <div className="min-h-[560px] rounded-3xl border border-[var(--ve-teal)]/10 bg-white p-6 shadow-[0_22px_70px_rgba(15,23,42,0.08)]">
+            <AIChatPanel />
+          </div>
 
-      <div className="mt-6 max-w-3xl rounded-2xl border border-black/10 bg-[var(--muted)] p-5 text-sm text-black/70">
-        <div className="text-xs font-semibold uppercase tracking-wide text-black/60">Need a callback</div>
-        <p className="mt-2">
-          If you want licensed help, use the contact form or schedule a call. We respond as quickly as possible during business
-          hours.
-        </p>
-        <div className="mt-4 flex flex-wrap gap-3">
-          <Link
-            href="/contact"
-            className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
-          >
-            Contact form
-          </Link>
-          <Link
-            href="/schedule"
-            className="inline-flex items-center justify-center rounded-xl border border-black/10 px-4 py-2 text-sm font-semibold text-black hover:bg-black/5"
-          >
-            Schedule a call
-          </Link>
-          <a
-            href={`tel:${site.phoneE164}`}
-            className="inline-flex items-center justify-center rounded-xl border border-black/10 px-4 py-2 text-sm font-semibold text-black hover:bg-black/5"
-          >
-            Call {site.phoneDisplay}
-          </a>
+          <PremiumCard title="Need a callback" tone="soft">
+            <p>
+              If you want licensed help, use the contact form or schedule a call. We respond as quickly as possible
+              during business hours.
+            </p>
+            <div className="mt-5 flex flex-col gap-3">
+              <Link href="/contact" className="premium-small-button premium-small-button-primary">
+                Contact form
+              </Link>
+              <Link href="/schedule" className="premium-small-button premium-small-button-light">
+                Schedule a call
+              </Link>
+              <a href={`tel:${site.phoneE164}`} className="premium-small-button premium-small-button-light">
+                Call {site.phoneDisplay}
+              </a>
+            </div>
+          </PremiumCard>
         </div>
-      </div>
-    </Container>
+      </Container>
+    </>
   );
 }

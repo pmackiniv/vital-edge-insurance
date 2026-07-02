@@ -21,22 +21,23 @@ export function LeadCtaSection({
   const [open, setOpen] = useState(false);
 
   return (
-    <section className="rounded-2xl bg-[var(--brand-blue)]/80 p-8 text-white md:p-10 backdrop-blur">
-      <div className="text-sm font-semibold text-white/85">{eyebrow}</div>
-      <h2 className="mt-2 text-[clamp(1.6rem,2.4vw,2.4rem)] font-semibold tracking-tight">{title}</h2>
+    <section className="relative overflow-hidden rounded-3xl bg-[var(--ve-teal)] p-8 text-white shadow-[0_28px_80px_rgba(0,63,69,0.22)] md:p-10">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,0.18),transparent_34%),linear-gradient(135deg,rgba(197,138,43,0.28),transparent_42%)]" />
+      <div className="relative">
+      <div className="text-sm font-extrabold uppercase tracking-[0.14em] text-white/78">{eyebrow}</div>
+      <h2 className="mt-2 font-display text-[clamp(2rem,3vw,3rem)] font-bold leading-tight tracking-normal">{title}</h2>
       <p className="mt-3 max-w-2xl text-sm leading-7 text-white/92">{description}</p>
       <div className="mt-6 flex flex-wrap gap-3">
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="btn px-5 py-3 text-sm text-white"
-          style={{ backgroundColor: "var(--brand-orange)" }}
+          className="premium-small-button premium-small-button-gold"
         >
           {ctaLabel}
         </button>
         <Link
           href={`tel:${site.phoneE164}`}
-          className="btn btn-outline-on-dark px-5 py-3 text-sm"
+          className="premium-small-button border border-white/25 bg-white/10 text-white backdrop-blur hover:bg-white/15"
         >
           Call {site.phoneDisplay}
         </Link>
@@ -44,6 +45,7 @@ export function LeadCtaSection({
       <p className="mt-4 text-xs text-white/75">
         Education only. Plan-specific guidance requires a licensed agent and proper scope.
       </p>
+      </div>
       <LeadModal isOpen={open} onClose={() => setOpen(false)} />
     </section>
   );

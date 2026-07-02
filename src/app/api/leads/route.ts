@@ -5,7 +5,14 @@ import { sendLeadEmail } from "@/lib/notify";
 import { syncLeadToNotion } from "@/lib/notionLead";
 import { site } from "@/lib/site";
 import { appendAgentEvent } from "@/lib/agentEvents";
-import { DATA_SHARING_RECIPIENT, validateLeadConsent } from "@/lib/leadConsent";
+import {
+  AUTOMATED_CONTACT_CONSENT_TEXT,
+  AUTOMATED_CONTACT_CONSENT_VERSION,
+  DATA_SHARING_RECIPIENT,
+  PERMISSION_TO_CONTACT_TEXT,
+  PERMISSION_TO_CONTACT_VERSION,
+  validateLeadConsent,
+} from "@/lib/leadConsent";
 import { ensureComplianceTables } from "@/lib/compliance/db";
 import { getPrismaClient } from "@/lib/prisma";
 
@@ -16,16 +23,34 @@ const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 type LeadPayload = {
   topic?: string;
   county?: string;
+  state?: string;
+  zip?: string;
   productInterest?: string;
   contactMethod?: string;
   message?: string;
   consent?: boolean;
+  permissionToContactMethod?: string;
+  permissionToContactText?: string;
+  permissionToContactVersion?: string;
+  automatedContactConsent?: boolean;
+  automatedContactConsentText?: string;
+  automatedContactConsentVersion?: string;
   dataSharingConsent?: boolean;
   dataSharingRecipient?: string;
   dataSharingEntities?: string[];
   leadTransferDisclosureAck?: boolean;
   beneficiaryInitiated?: boolean;
   intent?: boolean;
+  leadSource?: string;
+  pageSource?: string;
+  utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
+  linkedinReferral?: boolean;
+  eventReferral?: boolean;
+  partnerReferral?: boolean;
+  leadCategory?: string;
+  consentTimestamp?: string;
 };
 
 function getClientIp(req: Request): string {
@@ -54,6 +79,24 @@ function checkRateLimit(ip: string): { ok: boolean; retryAfter?: number } {
 function extractZipFromMessage(message: string): string {
   const match = message.match(/\b\d{5}\b/);
   return match?.[0] || "";
+}
+
+function normalizeZip(value: string): string {
+  return value.replace(/\D/g, "").slice(0, 5);
+}
+
+function parseOptionalDate(value: string): Date | null {
+  if (!value) return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function findSensitiveLeadText(fields: Record<string, string>): string | null {
+  for (const [field, value] of Object.entries(fields)) {
+    const error = findSensitiveIdentifier(value);
+    if (error) return `${error} Field: ${field}.`;
+  }
+  return null;
 }
 
 export async function POST(req: Request) {
@@ -104,15 +147,44 @@ export async function POST(req: Request) {
 
     const topic = body.topic?.trim() || "General inquiry";
     const county = body.county?.trim() || "";
+    const state = body.state?.trim() || "";
     const productInterest = body.productInterest?.trim() || "";
     const message = body.message?.trim() || "";
-    const zip = extractZipFromMessage(message);
+    const zip = normalizeZip(body.zip?.trim() || "") || extractZipFromMessage(message);
     const intent = body.intent !== false;
     const beneficiaryInitiated = body.beneficiaryInitiated !== false;
     const dataSharingConsentAt = new Date().toISOString();
+    const consentTimestamp = body.consentTimestamp?.trim() || dataSharingConsentAt;
     const dataSharingRecipient = DATA_SHARING_RECIPIENT;
+    const leadSource = body.leadSource?.trim() || "Website";
+    const pageSource = body.pageSource?.trim() || "";
+    const utmSource = body.utmSource?.trim() || "";
+    const utmMedium = body.utmMedium?.trim() || "";
+    const utmCampaign = body.utmCampaign?.trim() || "";
+    const linkedinReferral = body.linkedinReferral === true;
+    const eventReferral = body.eventReferral === true;
+    const partnerReferral = body.partnerReferral === true;
+    const leadCategory = body.leadCategory?.trim() || "";
+    const permissionToContactText = body.permissionToContactText?.trim() || PERMISSION_TO_CONTACT_TEXT;
+    const permissionToContactVersion = body.permissionToContactVersion?.trim() || PERMISSION_TO_CONTACT_VERSION;
+    const permissionToContactMethod = body.permissionToContactMethod?.trim() || contactMethod;
+    const automatedContactConsent = body.automatedContactConsent === true;
+    const automatedContactConsentText = body.automatedContactConsentText?.trim() || AUTOMATED_CONTACT_CONSENT_TEXT;
+    const automatedContactConsentVersion = body.automatedContactConsentVersion?.trim() || AUTOMATED_CONTACT_CONSENT_VERSION;
 
-    const sensitiveError = findSensitiveIdentifier(message);
+    const sensitiveError = findSensitiveLeadText({
+      topic,
+      county,
+      state,
+      productInterest,
+      message,
+      leadSource,
+      pageSource,
+      utmSource,
+      utmMedium,
+      utmCampaign,
+      leadCategory,
+    });
     if (sensitiveError) {
       await appendAgentEvent({
         event_type: "lead_received",
@@ -123,7 +195,18 @@ export async function POST(req: Request) {
         meta: {
           topic,
           county,
+          state,
           zip,
+          leadSource,
+          pageSource,
+          utmSource,
+          utmMedium,
+          utmCampaign,
+          linkedinReferral,
+          eventReferral,
+          partnerReferral,
+          leadCategory,
+          consentTimestamp,
         },
       });
       return NextResponse.json({ ok: false, error: sensitiveError }, { status: 400 });
@@ -134,12 +217,31 @@ export async function POST(req: Request) {
       leadRequestId,
       topic,
       county,
+      state,
+      zip,
       productInterest,
       contactMethod,
       message,
       receivedAtIso,
       dataSharingConsentAt,
+      leadSource,
+      pageSource,
+      utmSource,
+      utmMedium,
+      utmCampaign,
+      linkedinReferral,
+      eventReferral,
+      partnerReferral,
+      leadCategory,
+      consentTimestamp,
       dataSharingRecipient,
+      permissionToContact: true,
+      permissionToContactMethod,
+      permissionToContactText,
+      permissionToContactVersion,
+      automatedContactConsent,
+      automatedContactConsentText,
+      automatedContactConsentVersion,
     };
 
     await appendAgentEvent({
@@ -151,9 +253,27 @@ export async function POST(req: Request) {
       meta: {
         topic,
         county,
+        state,
         zip,
         intent,
         beneficiaryInitiated,
+        leadSource,
+        pageSource,
+        utmSource,
+        utmMedium,
+        utmCampaign,
+        linkedinReferral,
+        eventReferral,
+        partnerReferral,
+        leadCategory,
+        consentTimestamp,
+        permissionToContact: true,
+        permissionToContactMethod,
+        permissionToContactText,
+        permissionToContactVersion,
+        automatedContactConsent,
+        automatedContactConsentText,
+        automatedContactConsentVersion,
         dataSharingConsent: true,
         dataSharingRecipient,
         leadTransferDisclosureAck: body.leadTransferDisclosureAck === true,
@@ -168,12 +288,30 @@ export async function POST(req: Request) {
         data: {
           leadRequestId,
           leadTransferDisclosureAck: body.leadTransferDisclosureAck === true,
+          permissionToContact: true,
+          permissionToContactMethod,
+          permissionToContactText,
+          permissionToContactVersion,
+          automatedContactConsent,
+          automatedContactConsentText,
+          automatedContactConsentVersion,
           dataSharingConsent: body.dataSharingConsent === true,
           dataSharingEntitiesJson: JSON.parse(JSON.stringify(dataSharingEntities)) as Prisma.InputJsonValue,
           beneficiaryInitiated,
           sourceRoute: "/api/leads",
+          leadSource: leadSource || null,
+          pageSource: pageSource || null,
+          utmSource: utmSource || null,
+          utmMedium: utmMedium || null,
+          utmCampaign: utmCampaign || null,
+          linkedinReferral,
+          eventReferral,
+          partnerReferral,
+          leadCategory: leadCategory || null,
+          state: state || null,
           zip: zip || null,
           productInterest: productInterest || null,
+          consentTimestamp: parseOptionalDate(consentTimestamp),
         },
       });
     }
@@ -246,7 +384,7 @@ export async function POST(req: Request) {
 
     const responseMessage =
       emailSuccess
-        ? "Got it, a licensed agent will follow up."
+        ? "Got it. Patrick Mackin IV has been notified and will follow up."
         : `We received your request. If you don't hear back within an hour, please call us at ${site.phoneDisplay}.`;
 
     return NextResponse.json({

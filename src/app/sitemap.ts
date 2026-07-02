@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { blogPosts } from "@/lib/blogPosts";
+import { resourcePageSlugs } from "@/lib/resourcePages";
 import { site } from "@/lib/site";
 
 const routes = [
@@ -7,18 +8,24 @@ const routes = [
   "about",
   "aca",
   "aca/sep",
+  "ancillary",
   "blog",
   "chat",
   "contact",
   "duval-county",
   "enroll",
+  "family-help",
   "ichra",
+  "licensed-states",
   "medicare",
+  "medicare/c-snp",
+  "medicare/d-snp",
   "medicare/medigap",
   "medicare/snp",
   "miami",
   "off-exchange",
   "privacy",
+  "referrals",
   "resources",
   "services",
   "small-group",
@@ -33,6 +40,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...routes.map((route) => ({
       url: `${base}/${route}`.replace(/\/$/, ""),
+      lastModified: now,
+    })),
+    ...resourcePageSlugs.map((slug) => ({
+      url: `${base}/${slug}`,
       lastModified: now,
     })),
     ...blogPosts.map((post) => ({
