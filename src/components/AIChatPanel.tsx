@@ -9,7 +9,8 @@ import { site } from "@/lib/site";
 const chatTransport = new DefaultChatTransport({ api: "/api/chat" });
 
 type AIChatPanelProps = {
-  onPatrickHandoffNeeded?: () => void;
+  onPatrickHandoffNeeded?: (question?: string) => void;
+  displayMode?: "page" | "widget";
 };
 
 function isChatUnavailableError(message: string | undefined): boolean {
@@ -29,15 +30,95 @@ function isChatUnavailableError(message: string | undefined): boolean {
 function needsPatrickHandoff(message: string): boolean {
   const normalized = message.toLowerCase();
   const hasMedicareContext =
-    /\b(cms|medicare|medicare advantage|part d|medigap|medicare supplement|d-snp|c-snp|snp|special needs|dual eligible)\b/.test(normalized);
+    /\b(cms|medicare|medicare advantage|part d|medigap|medicare supplement|d-snp|c-snp|dsnp|csnp|snp|special needs|dual eligible)\b/.test(normalized);
   const asksForPlanSpecificHelp =
-    /\b(best|recommend|which|compare|choose|provider|doctor|network|drug|premium|cost|copay|benefit|eligib|enroll|diabetes|medicaid)\b/.test(normalized);
+    /\b(best|recommend|which|compare|carrier|choose|provider|doctor|network|drug|formulary|premium|cost|copay|benefit|available|availability|zip|county|eligib|qualif|enroll|diabetes|condition|medicaid)\b/.test(normalized);
   return hasMedicareContext && asksForPlanSpecificHelp;
 }
 
-export function AIChatPanel({ onPatrickHandoffNeeded }: AIChatPanelProps = {}) {
+function cleanInlineText(text: string) {
+  return text
+    .replace(/\*\*/g, "")
+    .replace(/^#{1,6}\s*/, "")
+    .trim();
+}
+
+function parseBullet(line: string) {
+  const match = line.match(/^((?:[-*])|(?:\d+[.)]))\s+(.+)$/);
+  return match ? cleanInlineText(match[2]) : null;
+}
+
+function looksLikeHeading(line: string) {
+  const cleaned = cleanInlineText(line).replace(/:$/, "");
+  return cleaned.length > 0 && cleaned.length <= 56 && !/[.!?]$/.test(cleaned);
+}
+
+function FormattedMessageText({ text }: { text: string }) {
+  const blocks = text
+    .trim()
+    .split(/\n{2,}/)
+    .map((block) => block.trim())
+    .filter(Boolean);
+
+  if (blocks.length === 0) return null;
+
+  return (
+    <div className="space-y-3">
+      {blocks.map((block, blockIndex) => {
+        const lines = block
+          .split("\n")
+          .map((line) => line.trim())
+          .filter(Boolean);
+        const bulletItems = lines.map(parseBullet);
+        const allBullets = bulletItems.length > 0 && bulletItems.every(Boolean);
+        const heading = lines.length > 1 && looksLikeHeading(lines[0]) ? cleanInlineText(lines[0]) : "";
+        const bulletsAfterHeading = heading ? lines.slice(1).map(parseBullet) : [];
+
+        if (allBullets) {
+          return (
+            <ul key={`${block}-${blockIndex}`} className="list-disc space-y-1.5 pl-5">
+              {bulletItems.map((item, itemIndex) => (
+                <li key={`${item}-${itemIndex}`}>{item}</li>
+              ))}
+            </ul>
+          );
+        }
+
+        if (heading && bulletsAfterHeading.length > 0 && bulletsAfterHeading.every(Boolean)) {
+          return (
+            <div key={`${block}-${blockIndex}`} className="space-y-1.5">
+              <p className="font-extrabold text-[var(--ve-teal)]">{heading}</p>
+              <ul className="list-disc space-y-1.5 pl-5">
+                {bulletsAfterHeading.map((item, itemIndex) => (
+                  <li key={`${item}-${itemIndex}`}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          );
+        }
+
+        if (lines.length === 1 && looksLikeHeading(lines[0])) {
+          return (
+            <p key={`${block}-${blockIndex}`} className="font-extrabold text-[var(--ve-teal)]">
+              {cleanInlineText(lines[0])}
+            </p>
+          );
+        }
+
+        return (
+          <p key={`${block}-${blockIndex}`} className="whitespace-pre-line">
+            {lines.map(cleanInlineText).join("\n")}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
+export function AIChatPanel({ onPatrickHandoffNeeded, displayMode = "page" }: AIChatPanelProps = {}) {
   const [input, setInput] = useState("");
   const [handoffNotice, setHandoffNotice] = useState("");
+  const [clientReady, setClientReady] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { messages, sendMessage, status, error } = useChat({
     id: "vital-edge-ai-chat",
@@ -45,44 +126,60 @@ export function AIChatPanel({ onPatrickHandoffNeeded }: AIChatPanelProps = {}) {
   });
 
   useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      setClientReady(true);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
+  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, status]);
 
-  const isDisabled = status === "streaming" || status === "submitted";
+  const isDisabled = !clientReady || status === "streaming" || status === "submitted";
   const chatUnavailable = isChatUnavailableError(error?.message);
+  const isWidget = displayMode === "widget";
+
+  const submitText = (value: string) => {
+    const text = value.trim();
+    if (!text || isDisabled) return;
+    setInput("");
+    if (needsPatrickHandoff(text)) {
+      onPatrickHandoffNeeded?.(text);
+      setHandoffNotice(
+        "This question needs licensed-agent follow-up after required disclosures and scope steps. Vital Guide is opening the callback form so Patrick Mackin IV can respond.",
+      );
+      return;
+    }
+    sendMessage({ text });
+  };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const formText = formData.get("message");
-    const text = (typeof formText === "string" ? formText : input).trim();
-    if (!text || isDisabled) return;
-    setInput("");
-    if (needsPatrickHandoff(text)) {
-      onPatrickHandoffNeeded?.();
-      setHandoffNotice(
-        "This looks like a question for Patrick Mackin IV. Use Permission to Contact in the guidance form so Patrick can respond.",
-      );
-    }
-    sendMessage({ text });
+    submitText(typeof formText === "string" ? formText : input);
   };
 
   const showError = Boolean(error) || status === "error";
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3">
-      <div className="shrink-0">
-        <div className="text-base font-extrabold text-[var(--ve-teal)]">Coverage Atlas</div>
-        <p className="mt-1 text-sm leading-6 text-black/68">
-          Ask general questions about Medicare, ACA, coverage timing, and next steps. Coverage Atlas can point you to
-          resources and help request follow-up. Plan-specific guidance requires Patrick Mackin IV, licensed agent. Call
-          or text {site.phoneDisplay},{" "}
-          <Link href="/schedule" className="font-medium text-[var(--brand-blue)] underline hover:no-underline">
-            schedule a call
-          </Link>
-          . Secure enrollment: <Link href="/enroll" className="font-medium text-[var(--brand-blue)] underline hover:no-underline">/enroll</Link>.
-        </p>
-      </div>
+      {!isWidget ? (
+        <div className="shrink-0">
+          <div className="text-base font-extrabold text-[var(--ve-teal)]">Vital Guide</div>
+          <p className="mt-1 text-sm leading-6 text-black/68">
+            Ask general education questions about Medicare, ACA, coverage timing, and next steps. For Medicare
+            plan-specific questions, carrier comparisons, provider or drug checks, enrollment recommendations, SNP
+            eligibility decisions, or plan availability, request a call with Patrick Mackin IV after required disclosures
+            and scope steps. Call or text {site.phoneDisplay},{" "}
+            <Link href="/schedule" className="font-medium text-[var(--brand-blue)] underline hover:no-underline">
+              schedule a call
+            </Link>
+            .
+          </p>
+        </div>
+      ) : null}
 
       {showError ? (
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800">
@@ -98,9 +195,19 @@ export function AIChatPanel({ onPatrickHandoffNeeded }: AIChatPanelProps = {}) {
         </div>
       ) : null}
 
-      <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto rounded-2xl border border-[var(--ve-teal)]/15 bg-[linear-gradient(180deg,#ffffff_0%,#eef7f7_100%)] p-3 scroll-smooth">
+      <div className={`flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto rounded-2xl border border-[var(--ve-teal)]/12 scroll-smooth ${
+        isWidget
+          ? "bg-white/78 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] sm:p-5"
+          : "bg-[linear-gradient(180deg,#ffffff_0%,#eef7f7_100%)] p-3"
+      }`}
+      >
         {messages.length === 0 ? (
-          <p className="py-2 text-sm leading-6 text-black/58">Ask a coverage question to start.</p>
+          <div className="rounded-2xl border border-[var(--ve-teal)]/10 bg-white/86 p-4 text-sm leading-6 text-slate-700">
+            <p className="font-bold text-[var(--ve-teal)]">Ask a coverage question.</p>
+            <p className="mt-1">
+              Vital Guide can explain general Medicare, ACA, coverage timing, and preparation steps.
+            </p>
+          </div>
         ) : (
           messages.map((m) => {
             const text = (m.parts ?? [])
@@ -110,60 +217,87 @@ export function AIChatPanel({ onPatrickHandoffNeeded }: AIChatPanelProps = {}) {
             return (
               <div
                 key={m.id}
-                className={`rounded-2xl px-4 py-3 text-[15px] shadow-sm ${
-                  m.role === "user"
-                    ? "ml-6 bg-[var(--brand-blue)]/15 text-black"
-                    : "mr-6 border border-[var(--ve-teal)]/10 bg-white text-black/90"
-                }`}
+                className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
               >
-                <span className="block text-xs font-semibold uppercase tracking-wide text-black/60">
-                  {m.role === "user" ? "You" : "Coverage Atlas"}
-                </span>
-                <p className="mt-1.5 whitespace-pre-wrap leading-relaxed">{text}</p>
+                <div
+                  className={`rounded-2xl px-4 py-3.5 text-[15px] leading-6 shadow-sm sm:leading-7 ${
+                  m.role === "user"
+                    ? "max-w-[86%] bg-[var(--brand-blue)]/12 text-slate-950"
+                    : "w-full border border-[var(--ve-teal)]/10 bg-white/95 text-slate-900"
+                }`}
+                >
+                  <span className="block text-[0.68rem] font-extrabold uppercase tracking-[0.13em] text-slate-500">
+                    {m.role === "user" ? "You" : "Vital Guide"}
+                  </span>
+                  <div className="mt-2">
+                    {m.role === "user" ? (
+                      <p className="whitespace-pre-wrap">{text}</p>
+                    ) : (
+                      <FormattedMessageText text={text} />
+                    )}
+                  </div>
+                </div>
               </div>
             );
           })
         )}
         {status === "streaming" ? (
-          <div className="flex items-center gap-2 rounded-xl bg-slate-100 px-3 py-2.5 text-xs text-black/60">
+          <div className="flex w-fit items-center gap-2 rounded-xl border border-[var(--ve-teal)]/10 bg-white/85 px-3 py-2.5 text-xs text-slate-600">
             <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-black/40" />
-            <span>Coverage Atlas is typing...</span>
+            <span>Vital Guide is typing...</span>
           </div>
         ) : null}
         <div ref={messagesEndRef} aria-hidden="true" className="h-0 shrink-0" />
       </div>
 
-      <form onSubmit={handleSubmit} className="flex shrink-0 flex-col gap-2">
-        <textarea
-          value={input}
-          name="message"
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="e.g. What is Part D? When should I ask Patrick for licensed guidance?"
-          rows={2}
-          className="w-full resize-none rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-[var(--brand-blue)] focus:outline-none focus:ring-1 focus:ring-[var(--brand-blue)]"
-          disabled={isDisabled}
-        />
-        <p className="text-[11px] text-black/50">Do not send SSN, Medicare ID, or medical details.</p>
-        <button
-          type="submit"
-          disabled={isDisabled}
-          className="btn btn-primary self-end px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {status === "streaming" || status === "submitted" ? "Thinking…" : "Send"}
-        </button>
+      <form
+        onSubmit={handleSubmit}
+        className={`flex shrink-0 flex-col gap-2 rounded-2xl border border-[var(--ve-teal)]/10 ${
+          isWidget ? "bg-white/78 p-3 shadow-sm" : "bg-white/70 p-3"
+        }`}
+      >
+        <div className="flex items-end gap-2">
+          <textarea
+            value={input}
+            name="message"
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Ask a coverage question"
+            rows={2}
+            className={`w-full resize-none rounded-xl border border-black/10 bg-white px-3 text-[15px] leading-6 text-slate-900 placeholder:text-slate-400 focus:border-[var(--brand-blue)] focus:outline-none focus:ring-2 focus:ring-[var(--brand-blue)]/20 ${
+              isWidget ? "min-h-[3.25rem] py-2" : "min-h-[4.4rem] py-2.5"
+            }`}
+            disabled={isDisabled}
+            aria-busy={!clientReady}
+          />
+          <button
+            type="button"
+            disabled={isDisabled}
+            onClick={() => submitText(input)}
+            className={`btn btn-primary shrink-0 px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50 ${
+              isWidget ? "min-h-[3.25rem] min-w-[4.65rem]" : "min-h-11"
+            }`}
+          >
+            {status === "streaming" || status === "submitted" ? "Thinking…" : "Send"}
+          </button>
+        </div>
+        <p className="text-[11px] leading-4 text-black/52">
+          Do not send SSN, Medicare ID, bank information, or sensitive identifiers.
+        </p>
       </form>
 
-      <div className="flex shrink-0 flex-wrap gap-x-3 gap-y-1 border-t border-black/5 pt-2 text-xs text-black/60">
-        <a href={`tel:${site.phoneE164}`} className="hover:text-black hover:underline">
-          Call {site.phoneDisplay}
-        </a>
-        <Link href="/contact" className="hover:text-black hover:underline">
-          Contact form
-        </Link>
-        <Link href="/schedule" className="hover:text-black hover:underline">
-          Schedule a call
-        </Link>
-      </div>
+      {!isWidget ? (
+        <div className="flex shrink-0 flex-wrap gap-x-3 gap-y-1 border-t border-black/5 pt-2 text-xs text-black/60">
+          <a href={`tel:${site.phoneE164}`} className="hover:text-black hover:underline">
+            Call {site.phoneDisplay}
+          </a>
+          <Link href="/contact" className="hover:text-black hover:underline">
+            Contact form
+          </Link>
+          <Link href="/schedule" className="hover:text-black hover:underline">
+            Schedule a call
+          </Link>
+        </div>
+      ) : null}
     </div>
   );
 }

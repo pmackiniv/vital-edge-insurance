@@ -8,19 +8,19 @@ import {
   PremiumLinkGrid,
 } from "@/components/PremiumInteriorPage";
 import { LINKEDIN_PERSONAL } from "@/lib/externalLinks";
-import { absoluteUrl, site } from "@/lib/site";
+import { absoluteUrl, serviceAreaStatement, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About Vital Edge Insurance",
   description:
-    "Vital Edge Insurance is a licensed Florida health insurance agency serving Jacksonville, Duval County, St. Johns County, and Miami-Dade County with independent guidance for ACA, Medicare, and small business health insurance.",
+    `Vital Edge Insurance is headquartered in Florida and serves clients across 12 states and growing with independent guidance for ACA, Medicare, ancillary, and small business health insurance.`,
   alternates: {
     canonical: absoluteUrl("/about"),
   },
   openGraph: {
     title: "About Vital Edge Insurance",
     description:
-      "Licensed Florida health insurance agent providing independent, education-first guidance in Jacksonville and surrounding counties.",
+      "Licensed health insurance guidance with Florida headquarters and a 12-state approved service footprint.",
     url: absoluteUrl("/about"),
   },
 };
@@ -32,7 +32,7 @@ export default function Page() {
     name: "About Vital Edge Insurance",
     url: absoluteUrl("/about"),
     description:
-      "Learn about Vital Edge Insurance, an independent insurance agency providing guidance in Jacksonville, Florida.",
+      `Learn about Vital Edge Insurance. ${serviceAreaStatement}`,
   };
 
   return (
@@ -60,7 +60,7 @@ export default function Page() {
             <div className="space-y-3">
               <p>
                 Vital Edge Insurance provides independent insurance guidance for individuals, families, and small
-                businesses across Jacksonville and nearby counties.
+                businesses. {serviceAreaStatement}
               </p>
               <p>
                 We focus on education, compliant routing, and practical next steps. We are not a medical clinic or
@@ -91,8 +91,8 @@ export default function Page() {
 
           <PremiumCard title="Serving">
             <p>
-              {site.address.addressLocality}, {site.address.addressRegion} and additional licensed states where
-              appointments and product availability allow.
+              {serviceAreaStatement} Product availability, carrier appointment, county, ZIP code, eligibility, and
+              enrollment timing still need to be confirmed before plan-specific guidance.
             </p>
           </PremiumCard>
         </div>

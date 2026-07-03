@@ -69,7 +69,7 @@ const strategicPages: ResourcePage[] = [
     slug: "medicare-101",
     eyebrow: "Medicare 101",
     title: "Medicare 101 Education",
-    metaTitle: "Medicare 101 Education in Jacksonville, FL | Vital Edge Insurance",
+    metaTitle: "Medicare 101 Education Across 12 States | Vital Edge Insurance",
     description:
       "Plain-language Medicare 101 education from Vital Edge Insurance covering Original Medicare, Medicare Advantage, Medigap, Part D, enrollment timing, networks, prescriptions, and pharmacies.",
     heroSubtitle:
@@ -81,7 +81,7 @@ const strategicPages: ResourcePage[] = [
     secondaryCtaLabel: "Turning 65 Timeline",
     secondaryCtaHref: "/turning-65-medicare",
     serviceType: "Medicare education",
-    areaServed: "Florida and additional licensed states",
+    areaServed: "Florida headquarters and 12-state approved service footprint",
     cards: [
       {
         title: "Original Medicare",
@@ -521,7 +521,7 @@ const localPages: ResourcePage[] = [
   ["jacksonville", "Jacksonville", "Jacksonville Medicare Help", "Local Medicare guidance based in Jacksonville with attention to doctors, hospitals, pharmacies, prescriptions, and appointment-based reviews."],
   ["duval-county", "Duval County", "Duval County Medicare Help", "Duval County Medicare education for provider network review, pharmacy access, prescriptions, and coverage timing."],
   ["st-johns-county", "St. Johns County", "St. Johns County Medicare Help", "St. Johns County Medicare guidance for families reviewing doctors, pharmacies, prescriptions, and county-specific availability."],
-  ["mandarin", "Mandarin", "Mandarin Medicare Help", "Mandarin-area Medicare education from a Jacksonville-based licensed agent with a local, appointment-based approach."],
+  ["mandarin", "Mandarin", "Mandarin Medicare Help", "Mandarin-area Medicare education from a Florida-headquartered licensed agent serving clients across 12 states and growing."],
   ["ponte-vedra", "Ponte Vedra", "Ponte Vedra Medicare Help", "Ponte Vedra Medicare education for provider access, prescription review, pharmacy preferences, and timing questions."],
   ["nocatee", "Nocatee", "Nocatee Medicare Help", "Nocatee Medicare guidance for people approaching 65, still working, or helping a family member compare coverage paths."],
 ].map(([slugBase, areaName, title, subtitle]) => ({

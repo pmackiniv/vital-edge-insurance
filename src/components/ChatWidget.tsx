@@ -73,20 +73,21 @@ const topics = [
   "Prescription Drug Savings",
   "Other",
 ];
-const counties = ["Duval County", "St. Johns County", "Other"];
+const counties = ["Duval County", "St. Johns County", "Other / not listed"];
 const contactMethods = ["Call", "Text", "Email"];
 const stateOptions = ["Florida", "Georgia", "South Carolina", "North Carolina", "Texas", "Tennessee", "Arizona", "Washington", "Pennsylvania", "Ohio", "Michigan", "Louisiana"];
 
-function AtlasBookIcon({ className = "h-10 w-10" }: { className?: string }) {
+function VitalGuideIcon({ className = "h-10 w-10" }: { className?: string }) {
   return (
     <span
-      className={`${className} relative inline-flex shrink-0 items-center justify-center rounded-[0.9rem] bg-[linear-gradient(135deg,#5a321f_0%,#8b5a2b_42%,#2c1711_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_12px_28px_rgba(0,0,0,0.22)] ring-1 ring-white/25`}
+      className={`${className} relative inline-flex shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#ffffff_0%,#e8f6f5_54%,#d3eee9_100%)] text-[var(--ve-teal)] shadow-[inset_0_1px_0_rgba(255,255,255,0.85),0_10px_26px_rgba(0,63,69,0.22)] ring-1 ring-[var(--ve-teal)]/15`}
       aria-hidden="true"
     >
-      <span className="absolute left-[18%] top-[16%] h-[68%] w-[12%] rounded-full bg-[linear-gradient(180deg,#d99d45,#7b431f)] opacity-95" />
-      <span className="absolute right-[18%] top-[18%] h-[64%] w-px bg-white/24" />
-      <span className="absolute bottom-[18%] right-[20%] h-px w-[38%] bg-white/22" />
-      <span className="font-display text-base font-bold leading-none text-[#ffe9b4]">V</span>
+      <svg viewBox="0 0 24 24" className="h-[58%] w-[58%]" fill="none" stroke="currentColor" strokeWidth="1.7">
+        <path d="M6 5.5h6.2c1.5 0 2.8.6 3.8 1.6.7.7 1.1 1.7 1.1 2.8v8.6H10c-1.2 0-2.3.4-3.1 1.2L6 20.5v-15Z" />
+        <path d="M9 8.5h4.6M9 11.5h5.8M9 14.5h4.1" />
+        <path d="M17.6 4.2l.5 1.4 1.4.5-1.4.5-.5 1.4-.5-1.4-1.4-.5 1.4-.5.5-1.4Z" />
+      </svg>
     </span>
   );
 }
@@ -177,12 +178,12 @@ export function ChatWidget() {
     setIsSubmitting(false);
   };
 
-  const startPatrickHandoff = () => {
+  const startPatrickHandoff = (question?: string) => {
     setMode("intake");
     setStep(2);
     setTopic("Medicare");
     setContactMethod("Call");
-    setMessage((current) => current || "I need Patrick Mackin IV to follow up about a Medicare/CMS question from Coverage Atlas.");
+    setMessage((current) => current || `I need Patrick Mackin IV to follow up about a Medicare/CMS question from Vital Guide.${question ? `\n\nVisitor question: ${question}` : ""}`);
     setError("");
     setSubmitted(false);
     setSubmitMessage("");
@@ -315,23 +316,36 @@ export function ChatWidget() {
   const showPanel = hydrated && open && !minimized;
   const showBubble = !showPanel;
 
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (showPanel) {
+      document.body.dataset.chatWidgetOpen = "true";
+    } else {
+      delete document.body.dataset.chatWidgetOpen;
+    }
+    return () => {
+      delete document.body.dataset.chatWidgetOpen;
+    };
+  }, [showPanel]);
+
   return (
-    <div className="chat-widget-root fixed bottom-4 right-4 z-[120] flex flex-col items-end gap-0 sm:bottom-6 sm:right-6">
+    <div className="chat-widget-root fixed bottom-4 right-3 z-[120] flex flex-col items-end gap-0 sm:bottom-5 sm:right-5">
       {showBubble ? (
         <motion.button
           type="button"
           initial={false}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="flex min-h-14 min-w-14 items-center gap-3 rounded-full border border-white/30 bg-[var(--ve-teal)] px-3 py-2.5 text-left text-sm text-white shadow-[0_20px_54px_rgba(0,63,69,0.28)] transition hover:-translate-y-0.5 hover:bg-[var(--ve-teal-2)] sm:px-5 sm:py-3"
+          className="group flex h-11 w-11 items-center justify-center rounded-full border border-white/70 bg-white/92 text-left text-sm text-[var(--ve-teal)] shadow-[0_14px_34px_rgba(0,63,69,0.18)] backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[var(--ve-teal)]/25 hover:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--ve-gold)]/55 sm:h-11 sm:w-auto sm:min-w-[11.75rem] sm:gap-2.5 sm:px-3"
           onClick={openPanel}
-          aria-label="Open Coverage Atlas"
+          aria-label="Open 24/7 Coverage Guide"
+          aria-controls="vital-guide-panel"
+          aria-expanded={showPanel}
         >
-          <AtlasBookIcon className="h-10 w-10 sm:h-11 sm:w-11" />
-          <span className="text-xs font-bold sm:hidden">Atlas</span>
+          <VitalGuideIcon className="h-8 w-8" />
           <span className="hidden flex-col sm:flex">
-            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-white/78">Coverage Atlas</span>
-            <span className="text-sm font-extrabold">Ask a coverage question</span>
+            <span className="text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-[var(--ve-teal)]/65">24/7 Coverage Guide</span>
+            <span className="text-sm font-extrabold leading-4 text-[var(--ve-teal)]">Vital Guide</span>
           </span>
         </motion.button>
       ) : null}
@@ -343,16 +357,20 @@ export function ChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.96 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="flex h-[620px] w-[430px] max-h-[88vh] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-3xl border border-[var(--ve-teal)]/14 bg-white shadow-[0_30px_90px_rgba(0,63,69,0.22)]"
+            id="vital-guide-panel"
+            role="dialog"
+            aria-modal="false"
+            aria-labelledby="vital-guide-title"
+            className="flex h-[min(78dvh,680px)] w-[calc(100vw-1rem)] max-w-[31.5rem] flex-col overflow-hidden rounded-[1.35rem] border border-white/70 bg-[#fffaf0]/95 shadow-[0_30px_90px_rgba(0,63,69,0.22)] backdrop-blur-xl sm:h-[min(76vh,720px)] sm:w-[min(500px,calc(100vw-2.5rem))]"
           >
-            <div className="flex shrink-0 flex-col gap-2 border-b border-[var(--ve-teal)]/10 bg-[linear-gradient(135deg,#ffffff_0%,#eef7f7_100%)] p-4">
+            <div className="flex shrink-0 flex-col gap-2 border-b border-[var(--ve-teal)]/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.96)_0%,rgba(239,248,246,0.92)_58%,rgba(255,249,238,0.96)_100%)] p-3 sm:p-5">
               <div className="flex items-center justify-between gap-2">
                 <div className="flex min-w-0 items-center gap-3">
-                  <AtlasBookIcon className="h-11 w-11" />
+                  <VitalGuideIcon className="h-9 w-9 sm:h-10 sm:w-10" />
                   <div>
-                    <div className="text-base font-extrabold text-[var(--ve-teal)]">Coverage Atlas</div>
+                    <div id="vital-guide-title" className="text-base font-extrabold text-[var(--ve-teal)]">Vital Guide</div>
                     <div className="text-xs leading-5 text-black/64">
-                      A Vital Edge knowledge guide for coverage questions, resources, and compliant follow-up requests.
+                      General education, resource routing, and licensed-agent callback requests.
                     </div>
                   </div>
                 </div>
@@ -382,37 +400,38 @@ export function ChatWidget() {
                 </div>
               </div>
               <Link href="/chat" className="text-xs font-bold text-[var(--brand-blue)] hover:underline">
-                Open full Coverage Atlas
+                Open full Vital Guide
               </Link>
             </div>
 
-            <div className="shrink-0 border-b border-black/10 bg-white/70 p-3">
-              <div className="text-xs font-semibold uppercase tracking-wide text-black/60">Self-service enrollment</div>
-              <div className="mt-2 flex flex-wrap gap-2">
-                  <Link
-                    href="/enroll"
-                    className="btn btn-primary px-3 py-2 text-xs"
-                  >
-                    View enrollment links
+            <div className="shrink-0 border-b border-[var(--ve-teal)]/10 bg-white/70 px-4 py-2.5 sm:py-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="min-w-0">
+                  <div className="text-[0.68rem] font-extrabold uppercase tracking-[0.14em] text-[var(--ve-teal)]/70">
+                    Licensed help when needed
+                  </div>
+                  <p className="mt-1 text-xs leading-5 text-slate-700">
+                    General education only. Do not enter SSN, Medicare ID, bank information, or sensitive identifiers.
+                  </p>
+                </div>
+                <div className="flex shrink-0 flex-wrap gap-2">
+                  <Link href="/contact" className="btn btn-primary px-3 py-1.5 text-xs sm:py-2">
+                    Request a call
                   </Link>
-                  <a
-                    className="btn btn-secondary px-3 py-2 text-xs"
-                    href={`tel:${site.phoneE164}`}
-                  >
-                    Call {site.phoneDisplay}
+                  <a className="btn btn-secondary px-3 py-1.5 text-xs sm:py-2" href={`tel:${site.phoneE164}`}>
+                    Call
                   </a>
                 </div>
-                <p className="mt-2 text-xs text-black/60">
-                  Third-party enrollment partners. If you’d rather enroll with a licensed agent, we can help.
-                </p>
               </div>
+            </div>
 
-            <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-3">
+            <div className={`flex min-h-0 flex-1 flex-col gap-2.5 ${mode === "question" ? "overflow-hidden p-2.5 sm:p-4" : "overflow-y-auto p-3 sm:p-4"}`}>
                 <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
                     onClick={() => setMode("intake")}
-                    className={`btn px-3 py-1 text-xs ${
+                    aria-pressed={mode === "intake"}
+                    className={`btn px-3 py-1.5 text-xs ${
                       mode === "intake" ? "btn-primary" : "btn-secondary"
                     }`}
                   >
@@ -421,7 +440,8 @@ export function ChatWidget() {
                   <button
                     type="button"
                     onClick={() => setMode("question")}
-                    className={`btn px-3 py-1 text-xs ${
+                    aria-pressed={mode === "question"}
+                    className={`btn px-3 py-1.5 text-xs ${
                       mode === "question" ? "btn-primary" : "btn-secondary"
                     }`}
                   >
@@ -431,7 +451,7 @@ export function ChatWidget() {
 
                 {mode === "question" ? (
                   <div className="flex min-h-0 flex-1 flex-col gap-3">
-                    <AIChatPanel onPatrickHandoffNeeded={startPatrickHandoff} />
+                    <AIChatPanel displayMode="widget" onPatrickHandoffNeeded={startPatrickHandoff} />
                   </div>
                 ) : null}
 

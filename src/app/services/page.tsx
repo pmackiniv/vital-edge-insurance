@@ -5,12 +5,12 @@ import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
 import { PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
 import { SeoFaq } from "@/components/SeoFaq";
-import { absoluteUrl, site } from "@/lib/site";
+import { absoluteUrl, serviceAreaStatement, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Education-first insurance guidance for Duval County and Miami-Dade County, including ACA Marketplace support, Medicare education, ICHRA, and small group coverage.",
+    "Education-first insurance guidance for Medicare, ACA Marketplace, ancillary coverage, ICHRA, and small group coverage across Vital Edge's approved service footprint.",
   alternates: {
     canonical: absoluteUrl("/services"),
   },
@@ -41,7 +41,7 @@ export default function Page() {
             <div className="text-xs font-extrabold uppercase tracking-[0.14em] text-[var(--ve-teal)]">Answer</div>
             <p className="mt-3 leading-7">
               Vital Edge Insurance provides education-first guidance across ACA Marketplace, Medicare education, ICHRA,
-              and small group coverage in Florida. We outline next steps and connect you with a licensed agent for
+              ancillary coverage, and small group coverage. {serviceAreaStatement} We outline next steps and connect you with a licensed agent for
               plan-specific decisions. Call or text {site.phoneDisplay} or use chat for a quick next step.
             </p>
             <div className="mt-4 flex flex-wrap gap-3">
@@ -60,18 +60,18 @@ export default function Page() {
           <div className="grid gap-4 md:grid-cols-2">
             {[
               {
-                title: "Duval County (Jacksonville)",
-                description: "Local guidance with clear timelines and intake support.",
+                title: "Florida headquarters",
+                description: "Local roots with a privacy-safe intake process and licensed follow-up.",
                 href: "/duval-county",
-                image: "/images/cities/jacksonville.png",
-                alt: "Jacksonville skyline at sunset",
+                image: "/images/hero/hero-beach-16x9-1920x1080.webp",
+                alt: "Warm beach horizon used in the Vital Edge visual system",
               },
               {
-                title: "Miami-Dade County",
-                description: "Regional support for Miami-area coverage questions.",
-                href: "/miami",
-                image: "/images/cities/miami.png",
-                alt: "Miami skyline at dusk",
+                title: "12 states and growing",
+                description: "Guidance starts with education, then state, county, ZIP, and eligibility checks.",
+                href: "/licensed-states",
+                image: "/images/hero/hero-beach-16x9-1920x1080.webp",
+                alt: "Calm beach water and sky from the Vital Edge visual system",
               },
             ].map((item) => (
               <Link key={item.title} href={item.href} className="group rounded-3xl border border-[var(--ve-teal)]/10 bg-white p-3 shadow-[0_18px_48px_rgba(15,23,42,0.08)]">
@@ -119,7 +119,7 @@ export default function Page() {
               },
               {
                 title: "Local area guidance",
-                body: "County-level support for Jacksonville and nearby communities.",
+                body: "State, county, and ZIP-level preparation for clients across the approved service footprint.",
               },
             ].map((item) => (
               <div key={item.title} className="rounded-2xl border border-[var(--ve-teal)]/10 bg-white p-6 shadow-[0_18px_48px_rgba(15,23,42,0.08)]">
@@ -213,7 +213,7 @@ export default function Page() {
               <li>What should I bring to a first coverage call?</li>
               <li>How do I know which enrollment window applies?</li>
               <li>Can you explain coverage options without recommending a plan?</li>
-              <li>Do you support Florida‑only counties or statewide?</li>
+              <li>Which of the 12 approved service states can Vital Edge help with?</li>
             </ul>
             <p className="mt-3 text-sm text-slate-700">
               We provide education-first guidance and route plan-specific decisions to a licensed agent.

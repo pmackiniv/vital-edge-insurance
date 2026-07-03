@@ -9,19 +9,19 @@ import {
   PremiumInteriorHero,
 } from "@/components/PremiumInteriorPage";
 import { StructuredData } from "@/components/StructuredData";
-import { absoluteUrl, site } from "@/lib/site";
+import { absoluteUrl, serviceAreaStatement, site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "ACA Marketplace Help in Jacksonville, FL | Vital Edge Insurance",
+  title: "ACA Marketplace Guidance Across 12 States | Vital Edge Insurance",
   description:
-    "Vital Edge Insurance provides ACA Marketplace enrollment guidance in Jacksonville, Florida. Get clear education on HealthCare.gov timing, subsidy basics, and next steps for Duval, St. Johns, and nearby counties.",
+    "Vital Edge Insurance provides ACA Marketplace education on HealthCare.gov timing, subsidy basics, household income estimates, Special Enrollment Periods, and next steps across its approved service footprint.",
   alternates: {
     canonical: absoluteUrl("/aca"),
   },
   openGraph: {
-    title: "ACA Marketplace Help in Jacksonville, FL | Vital Edge Insurance",
+    title: "ACA Marketplace Guidance Across 12 States | Vital Edge Insurance",
     description:
-      "Education-first ACA Marketplace guidance for Jacksonville residents, including enrollment timing, subsidy basics, and follow-up options.",
+      "Education-first ACA Marketplace guidance, including enrollment timing, subsidy basics, household preparation, and licensed follow-up options.",
     url: absoluteUrl("/aca"),
   },
 };
@@ -72,7 +72,7 @@ export default function Page() {
     url: absoluteUrl("/aca"),
     telephone: site.phoneDisplay,
     email: site.email,
-    areaServed: "Florida",
+    areaServed: site.serviceAreas,
   };
 
   const serviceJsonLd = {
@@ -84,7 +84,7 @@ export default function Page() {
       "@type": "InsuranceAgency",
       name: site.legalName,
     },
-    areaServed: "Florida",
+    areaServed: site.serviceAreas,
     url: absoluteUrl("/aca"),
     description:
       "Education-first guidance for ACA Marketplace enrollment, eligibility questions, and timeline planning.",
@@ -117,7 +117,7 @@ export default function Page() {
       <PremiumInteriorHero
         eyebrow="Under 65 Health Insurance"
         title="ACA Marketplace Guidance"
-        subtitle="Clear, education-first help for HealthCare.gov timing, subsidy basics, document prep, and next steps before you apply."
+        subtitle={`Clear, education-first help for HealthCare.gov timing, subsidy basics, document prep, and next steps before you apply. ${serviceAreaStatement}`}
         actions={[
           { label: "Request ACA Guidance", href: "/contact?topic=aca", kind: "primary" },
           { label: "ACA SEP Overview", href: "/aca/sep", kind: "gold" },
@@ -136,14 +136,34 @@ export default function Page() {
           <PremiumContentBand title="ACA coverage with a calm, documented process">
             <div className="space-y-3">
               <p>
-                ACA Marketplace coverage gives Florida residents a way to compare qualified individual and family health
-                plans through HealthCare.gov. Plans are offered by private carriers and vary by county, provider network,
-                and cost-sharing structure.
+                ACA Marketplace coverage gives eligible individuals and families a way to compare qualified health plans
+                through HealthCare.gov. Plans are offered by private carriers and vary by state, county, provider
+                network, and cost-sharing structure.
               </p>
               <p>
-                Vital Edge keeps ACA visible but secondary to Medicare and ancillary coverage on the homepage. On this
-                page, the focus is simple preparation: timing, household details, income estimates, current coverage,
-                and provider checks before any plan-specific decision.
+                Subsidy estimates depend on the Marketplace application, including expected household income for the
+                coverage year, household size, location, and access to other coverage. If income or household details
+                change during the year, HealthCare.gov says to update the application as soon as possible because savings
+                can change.
+              </p>
+              <p>
+                Vital Edge starts with preparation: timing, household details, income estimates, current coverage, and
+                provider checks before any plan-specific decision.
+              </p>
+              <p className="text-xs leading-6 text-slate-600">
+                Sources:{" "}
+                <a className="underline" href="https://www.healthcare.gov/lower-costs/">
+                  HealthCare.gov savings overview
+                </a>
+                ,{" "}
+                <a className="underline" href="https://www.healthcare.gov/income-and-household-information/">
+                  HealthCare.gov income and household guide
+                </a>
+                , and{" "}
+                <a className="underline" href="https://www.healthcare.gov/reporting-changes/">
+                  HealthCare.gov reporting changes
+                </a>
+                .
               </p>
             </div>
           </PremiumContentBand>

@@ -8,9 +8,9 @@ export default function ChatPage() {
   return (
     <>
       <PremiumInteriorHero
-        eyebrow="Coverage Atlas"
-        title="Ask Coverage Atlas"
-        subtitle={`Coverage Atlas is the Vital Edge Insurance helper for general coverage questions, resources, and next-step support. For licensed guidance, call or text ${site.phoneDisplay}.`}
+        eyebrow="Vital Guide"
+        title="Ask Vital Guide"
+        subtitle={`Vital Guide is the Vital Edge Insurance helper for general coverage education, resources, and next-step support. For licensed guidance, call or text ${site.phoneDisplay}.`}
         actions={[
           { label: "Contact Form", href: "/contact", kind: "primary" },
           { label: "Schedule a Call", href: "/schedule", kind: "gold" },
@@ -18,7 +18,8 @@ export default function ChatPage() {
         ]}
       >
         <PremiumDisclosure>
-          We do not provide plan-specific guidance via chat. Do not send SSN, Medicare ID, or medical details.
+          We do not provide plan-specific guidance via chat. Do not send SSN, Medicare ID, bank information, medical
+          details, or sensitive identifiers.
         </PremiumDisclosure>
       </PremiumInteriorHero>
 

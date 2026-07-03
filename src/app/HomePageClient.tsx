@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { Container } from "@/components/Container";
 import { LeadModal } from "@/components/LeadModal";
 import { externalLinkProps, PLANENROLL, UHONE_ANCILLARY } from "@/lib/externalLinks";
-import { absoluteUrl } from "@/lib/site";
+import { absoluteUrl, serviceAreaStatement } from "@/lib/site";
 
 const sectionReveal = {
   hidden: { opacity: 0, y: 18 },
@@ -190,7 +190,7 @@ export default function HomePageClient() {
   };
 
   return (
-    <div className="bg-white text-[var(--ve-text)]">
+    <div className="bg-transparent text-[var(--ve-text)]">
       <section className="premium-hero relative isolate overflow-hidden">
         <div className="absolute inset-0 -z-10">
           <picture className="block h-full w-full">
@@ -224,7 +224,7 @@ export default function HomePageClient() {
               </p>
               <p className="mt-5 max-w-[38rem] font-sans text-[1.08rem] font-semibold leading-7 text-slate-950 md:text-lg md:font-normal">
                 We help individuals and families find health insurance solutions that fit their needs and their budget.
-                Proudly serving Florida and 11 additional states.
+                {` ${serviceAreaStatement}`}
               </p>
 
               <div className="mt-7 grid gap-3 md:grid-cols-[15rem_15rem_12rem]">
@@ -289,7 +289,7 @@ export default function HomePageClient() {
         </Container>
       </section>
 
-      <section className="relative z-10 bg-white pb-8">
+      <section className="relative z-10 bg-white/72 pb-8 backdrop-blur-sm">
         <Container>
           <motion.div
             initial="hidden"
@@ -322,7 +322,7 @@ export default function HomePageClient() {
         </Container>
       </section>
 
-      <section className="bg-white py-5">
+      <section className="bg-transparent py-5">
         <Container>
           <div className="premium-states-strip">
             <div className="flex items-center gap-4 lg:row-span-2">
@@ -331,10 +331,10 @@ export default function HomePageClient() {
               </div>
               <div>
                 <h2 className="font-sans text-lg font-extrabold leading-tight text-[var(--ve-teal)]">
-                  Serving Florida &amp; 11 Additional States
+                  Headquartered in Florida. Serving clients across 12 states and growing.
                 </h2>
                 <p className="mt-1 text-sm leading-5 text-slate-700">
-                  Local roots. Wide reach. Personalized support wherever you are.
+                  Local roots, broader licensed reach, and personalized support wherever guidance is available.
                 </p>
               </div>
             </div>
@@ -355,7 +355,7 @@ export default function HomePageClient() {
         </Container>
       </section>
 
-      <section className="bg-white py-5">
+      <section className="bg-transparent py-5">
         <Container>
           <div className="grid items-center gap-5 rounded-3xl border border-[var(--ve-teal)]/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(238,247,247,0.86))] p-5 shadow-[0_18px_52px_rgba(15,23,42,0.07)] md:grid-cols-[auto_1fr_auto] md:p-6">
             <Image
@@ -384,7 +384,7 @@ export default function HomePageClient() {
         </Container>
       </section>
 
-      <section className="bg-white py-10">
+      <section className="bg-white/64 py-10 backdrop-blur-sm">
         <Container>
           <div className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
             <div className="overflow-hidden rounded-3xl bg-[var(--ve-teal)] text-white shadow-[0_30px_80px_rgba(0,63,69,0.22)]">
@@ -430,7 +430,7 @@ export default function HomePageClient() {
         </Container>
       </section>
 
-      <section className="bg-[linear-gradient(180deg,#ffffff_0%,#eef7f7_100%)] py-12">
+      <section className="bg-white/62 py-12 backdrop-blur-sm">
         <Container>
           <div className="rounded-3xl border border-[var(--ve-teal)]/10 bg-white p-7 shadow-[0_22px_70px_rgba(15,23,42,0.08)] md:flex md:items-center md:justify-between md:gap-8 md:p-9">
             <div>

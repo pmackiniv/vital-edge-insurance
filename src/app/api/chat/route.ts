@@ -34,20 +34,18 @@ export async function POST(req: Request) {
   const gitCommit = process.env.VERCEL_GIT_COMMIT_SHA || "unknown";
   const vercelEnv = process.env.VERCEL_ENV || "unknown";
   if (!process.env.OPENAI_API_KEY) {
+    const payload = makeChatUnavailablePayload(requestId, "CONFIG");
     console.warn("chat_request", {
       request_id: requestId,
       status: 503,
-      reason: "openai_not_configured",
+      reason: payload.reason,
       vercel_env: vercelEnv,
       git_commit: gitCommit,
     });
-    return new Response(
-      JSON.stringify({
-        error: "Chat is temporarily unavailable. Add OPENAI_API_KEY in Vercel.",
-        requestId,
-      }),
-      { status: 503, headers: { "Content-Type": "application/json" } },
-    );
+    return new Response(JSON.stringify(payload), {
+      status: 503,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   try {

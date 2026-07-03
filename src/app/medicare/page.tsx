@@ -4,20 +4,20 @@ import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
 import { PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
 import { PLANENROLL } from "@/lib/externalLinks";
-import { absoluteUrl, site } from "@/lib/site";
+import { absoluteUrl, serviceAreaStatement, site } from "@/lib/site";
 import { StructuredData } from "@/components/StructuredData";
 
 export const metadata: Metadata = {
-  title: "Medicare Help in Jacksonville, FL | Medicare Supplement & Medigap Guidance",
+  title: "Medicare Guidance Across 12 States | Vital Edge Insurance",
   description:
-    "Vital Edge Insurance provides Medicare education, Medicare Supplement (Medigap), and Medicare Advantage guidance in Jacksonville, Duval County, and St. Johns County.",
+    "Vital Edge Insurance provides Medicare education on Original Medicare, Medicare Advantage, Medigap, Part D, and SNP pathways. Headquartered in Florida and serving clients across 12 states and growing.",
   alternates: {
     canonical: absoluteUrl("/medicare"),
   },
   openGraph: {
-    title: "Medicare Help in Jacksonville, FL | Vital Edge Insurance",
+    title: "Medicare Guidance Across 12 States | Vital Edge Insurance",
     description:
-      "Licensed Medicare guidance for Jacksonville residents. Education on Medicare Supplement, Medigap, Part D, and enrollment timing.",
+      "Licensed Medicare education on coverage pathways, provider access, prescriptions, cost exposure, and appointment-based plan-specific next steps.",
     url: absoluteUrl("/medicare"),
   },
 };
@@ -66,7 +66,7 @@ const medicareFaqItems = [
     learnMoreLabel: "Learn more in the new-to-Medicare primer",
   },
   {
-    question: "What happens if I move to another county in Florida?",
+    question: "What happens if I move to another county or state?",
     answer:
       "A move can change available plans, networks, and enrollment options. You may qualify for a Special Enrollment opportunity depending on your current coverage and timing. Updating your address and reviewing plan availability quickly helps maintain continuity.",
     learnMoreHref: "/contact",
@@ -89,7 +89,7 @@ export default function Page() {
     url: absoluteUrl("/medicare"),
     telephone: site.phoneDisplay,
     email: site.email,
-    areaServed: "Florida",
+    areaServed: site.serviceAreas,
   };
 
   const serviceJsonLd = {
@@ -101,7 +101,7 @@ export default function Page() {
       "@type": "InsuranceAgency",
       name: site.legalName,
     },
-    areaServed: "Florida",
+    areaServed: site.serviceAreas,
     url: absoluteUrl("/medicare"),
     description:
       "Education-first Medicare guidance for timing, coverage basics, and next steps. Plan-specific discussions require a Scope of Appointment.",
@@ -143,7 +143,7 @@ export default function Page() {
       <PremiumInteriorHero
         eyebrow="Medicare"
         title="Medicare Guidance"
-        subtitle="Clear, neutral Medicare education for timing, coverage basics, and next steps. Plan-specific discussions require a Scope of Appointment."
+        subtitle={`Clear, neutral Medicare education for timing, coverage basics, and next steps. ${serviceAreaStatement} Plan-specific discussions require required disclosures and scope steps.`}
         actions={[
           { label: "Start My Review", href: PLANENROLL, kind: "primary", external: true },
           { label: "D-SNP Education", href: "/medicare/d-snp", kind: "gold" },
@@ -159,19 +159,23 @@ export default function Page() {
     <Container className="py-12">
       <div className="space-y-10">
         <section className="rounded-3xl border border-[var(--ve-teal)]/10 bg-white p-6 shadow-[0_22px_70px_rgba(15,23,42,0.08)] md:p-8">
-          <h2 className="font-display text-3xl font-bold tracking-normal text-[var(--ve-teal)]">Medicare in Florida: your options</h2>
+          <h2 className="font-display text-3xl font-bold tracking-normal text-[var(--ve-teal)]">Medicare in Florida and the States We Serve</h2>
           <div className="mt-4 space-y-3 font-sans text-sm leading-7 text-slate-700">
             <p>
-              Medicare generally starts with Part A and Part B, known as Original Medicare. Original Medicare helps with hospital and medical services, and many people add separate coverage to reduce out-of-pocket exposure.
-              Medicare Advantage plans are an alternative way to receive Medicare benefits through private carriers, while Medigap works alongside Original Medicare rather than replacing it.
+              Vital Edge is headquartered in Florida and serves clients across 12 states and growing. Medicare generally
+              starts with Part A and Part B, known as Original Medicare. Medicare.gov explains that Original Medicare
+              lets you use any doctor or hospital that takes Medicare, anywhere in the United States.
             </p>
             <p>
-              Part D prescription drug coverage can be added to help with medication costs, and timing decisions are important to avoid future enrollment issues.
-              Network access, referral rules, and prior authorization can vary by plan design, so comparing options should include provider and pharmacy checks.
+              Medicare Advantage plans are an alternative way to receive Medicare benefits through Medicare-approved
+              private plans, often with provider networks and local service-area rules. Medigap works alongside Original
+              Medicare to help with certain out-of-pocket costs; it is not the same thing as Medicare Advantage.
+              Part D prescription drug coverage can be separate or included in many Medicare Advantage plans.
             </p>
             <p>
-              If you are still working or recently changed coverage, enrollment windows may differ from standard age-based timelines.
-              For next steps, you can{" "}
+              A practical review should include state, county, ZIP code, doctors, hospitals, prescriptions, pharmacy
+              preference, current coverage, cost exposure, and timing. Plan availability, provider networks, formularies,
+              and benefits can vary by county and plan year. For next steps, you can{" "}
               <Link className="underline" href="/contact">
                 request a callback
               </Link>
@@ -185,6 +189,21 @@ export default function Page() {
               </Link>
               .
             </p>
+            <p className="text-xs leading-6 text-slate-600">
+              Sources:{" "}
+              <a className="underline" href="https://www.medicare.gov/basics/get-started-with-medicare/medicare-basics/how-does-medicare-work">
+                Medicare.gov how Medicare works
+              </a>
+              ,{" "}
+              <a className="underline" href="https://www.medicare.gov/health-drug-plans/health-plans/your-health-plan-options">
+                Medicare.gov coverage options
+              </a>
+              , and{" "}
+              <a className="underline" href="https://www.medicare.gov/health-drug-plans/part-d/basics">
+                Medicare.gov Part D basics
+              </a>
+              .
+            </p>
           </div>
         </section>
 
@@ -196,11 +215,11 @@ export default function Page() {
             },
             {
               title: "Coverage basics",
-              body: "Learn how Original Medicare works and how supplemental coverage can fit in.",
+              body: "Learn how Original Medicare, Medicare Advantage, Medigap, and Part D work differently.",
             },
             {
               title: "Prescription coverage",
-              body: "General education on prescription coverage timing and preparation.",
+              body: "Prepare exact drug names, dosages, pharmacies, and refill patterns before plan-specific review.",
             },
           ].map((item) => (
             <div key={item.title} className="rounded-2xl border border-[var(--ve-teal)]/10 bg-white p-6 shadow-[0_18px_48px_rgba(15,23,42,0.08)]">
@@ -215,7 +234,7 @@ export default function Page() {
             <h2 className="text-sm font-extrabold text-[var(--ve-teal)]">What to prepare</h2>
             <ul className="mt-3 space-y-2 text-sm text-slate-700">
               <li>Preferred contact method and timing.</li>
-              <li>List of doctors and medications for general guidance.</li>
+              <li>Doctors, hospitals, prescriptions, pharmacies, county, ZIP code, and current coverage.</li>
               <li>Any recent Medicare or coverage notices.</li>
             </ul>
           </div>

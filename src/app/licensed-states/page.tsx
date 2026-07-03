@@ -7,7 +7,7 @@ import {
   PremiumFeatureGrid,
   PremiumInteriorHero,
 } from "@/components/PremiumInteriorPage";
-import { absoluteUrl } from "@/lib/site";
+import { absoluteUrl, licensedStateNames, serviceAreaStatement } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Licensed Health Insurance States | Vital Edge Insurance",
@@ -18,20 +18,7 @@ export const metadata: Metadata = {
   },
 };
 
-const states = [
-  "Florida",
-  "Georgia",
-  "South Carolina",
-  "North Carolina",
-  "Texas",
-  "Tennessee",
-  "Arizona",
-  "Washington",
-  "Pennsylvania",
-  "Ohio",
-  "Michigan",
-  "Louisiana",
-];
+const states = [...licensedStateNames];
 
 const stateSearchIntents = states.map((state) => ({
   title: `Health insurance guidance in ${state}`,
@@ -42,7 +29,7 @@ const faqs = [
   {
     question: "Can Vital Edge Insurance help me if I live outside Florida?",
     answer:
-      "Yes, Vital Edge Insurance has a licensed-service footprint that includes Florida and 11 additional states. Availability still depends on your state, county, ZIP code, carrier appointment, eligibility, and enrollment timing.",
+      "Yes. Vital Edge Insurance is headquartered in Florida and serves clients across 12 states and growing. Availability still depends on your state, county, ZIP code, carrier appointment, eligibility, and enrollment timing.",
   },
   {
     question: "Can I get Medicare plan-specific guidance online?",
@@ -79,8 +66,8 @@ export default function Page() {
     <>
       <PremiumInteriorHero
         eyebrow="Licensed State Footprint"
-        title="Serving Florida & 11 Additional States"
-        subtitle="Local roots in Florida with a broader licensed-service footprint for clients and families who need practical, compliant coverage guidance."
+        title="Headquartered in Florida. Serving clients across 12 states and growing."
+        subtitle={`${serviceAreaStatement} Every plan-specific review still starts with state, county, ZIP code, eligibility, and carrier-appointment checks.`}
         actions={[
           { label: "Request a Call", href: "/contact?topic=licensed-states", kind: "primary" },
           { label: "Medicare Guidance", href: "/medicare", kind: "gold" },
@@ -111,7 +98,7 @@ export default function Page() {
             features={[
               {
                 title: "Local Roots",
-                body: "Florida is the core service area, with a practical focus on Jacksonville, Duval, and St. Johns.",
+                body: "Vital Edge is headquartered in Florida, with client-first guidance built for both local and out-of-state referrals.",
               },
               {
                 title: "Wide Reach",

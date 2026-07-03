@@ -4,21 +4,20 @@ import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
 import { PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
 import { SeoFaq } from "@/components/SeoFaq";
-import { site } from "@/lib/site";
-import { absoluteUrl } from "@/lib/site";
+import { absoluteUrl, serviceAreaStatement, site } from "@/lib/site";
 import { StructuredData } from "@/components/StructuredData";
 
 export const metadata: Metadata = {
-  title: "Small Business Health Insurance | Florida Group Coverage | Jacksonville",
+  title: "Small Business Health Insurance | Group Coverage Guidance",
   description:
-    "Vital Edge Insurance helps Florida small businesses with group health insurance, renewals, and employee benefits in Jacksonville and nearby counties.",
+    "Vital Edge Insurance helps small businesses with group health insurance education, renewals, and employee benefits guidance across its approved service footprint.",
   alternates: {
     canonical: absoluteUrl("/small-group"),
   },
   openGraph: {
-    title: "Small Business Health Insurance in Florida | Vital Edge Insurance",
+    title: "Small Business Health Insurance | Vital Edge Insurance",
     description:
-      "Licensed agent support for small group health insurance, renewals, and employee benefits in Florida.",
+      "Licensed agent support for small group health insurance, renewals, and employee benefits across Vital Edge's approved service footprint.",
     url: absoluteUrl("/small-group"),
   },
 };
@@ -31,7 +30,7 @@ export default function Page() {
     url: absoluteUrl("/small-group"),
     telephone: site.phoneDisplay,
     email: site.email,
-    areaServed: "Florida",
+    areaServed: site.serviceAreas,
   };
 
   const serviceJsonLd = {
@@ -43,7 +42,7 @@ export default function Page() {
       "@type": "InsuranceAgency",
       name: site.legalName,
     },
-    areaServed: "Florida",
+    areaServed: site.serviceAreas,
     url: absoluteUrl("/small-group"),
     description:
       "Education-first guidance for small employers exploring group benefits, renewals, and employee communication planning.",
@@ -73,7 +72,7 @@ export default function Page() {
       <PremiumInteriorHero
         eyebrow="Small Group"
         title="Small Group Benefits"
-        subtitle="Education-first guidance for small employers exploring group benefits, renewals, and employee communication planning."
+        subtitle={`Education-first guidance for small employers exploring group benefits, renewals, and employee communication planning. ${serviceAreaStatement}`}
         actions={[
           { label: "Request Guidance", href: "/contact", kind: "primary" },
           { label: "Schedule a Call", href: "/schedule", kind: "gold" },

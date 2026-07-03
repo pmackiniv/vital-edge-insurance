@@ -4,20 +4,20 @@ import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
 import { PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
 import { SeoFaq } from "@/components/SeoFaq";
-import { absoluteUrl, site } from "@/lib/site";
+import { absoluteUrl, serviceAreaStatement, site } from "@/lib/site";
 import { StructuredData } from "@/components/StructuredData";
 
 export const metadata: Metadata = {
-  title: "Off-Exchange Health Insurance | Florida Non-Marketplace Plans",
+  title: "Off-Exchange Health Insurance | Vital Edge Insurance",
   description:
-    "Vital Edge Insurance provides guidance on off-exchange health insurance options in Florida when ACA Marketplace coverage is not the right fit.",
+    "Vital Edge Insurance provides guidance on off-exchange health insurance options when ACA Marketplace coverage is not the right fit.",
   alternates: {
     canonical: absoluteUrl("/off-exchange"),
   },
   openGraph: {
-    title: "Off-Exchange Health Insurance in Florida | Vital Edge Insurance",
+    title: "Off-Exchange Health Insurance | Vital Edge Insurance",
     description:
-      "Licensed agent guidance for non-Marketplace health insurance options in Florida.",
+      "Licensed agent guidance for non-Marketplace health insurance options across Vital Edge's approved service footprint.",
     url: absoluteUrl("/off-exchange"),
   },
 };
@@ -30,7 +30,7 @@ export default function Page() {
     url: absoluteUrl("/off-exchange"),
     telephone: site.phoneDisplay,
     email: site.email,
-    areaServed: "Florida",
+    areaServed: site.serviceAreas,
   };
 
   const serviceJsonLd = {
@@ -42,7 +42,7 @@ export default function Page() {
       "@type": "InsuranceAgency",
       name: site.legalName,
     },
-    areaServed: "Florida",
+    areaServed: site.serviceAreas,
     url: absoluteUrl("/off-exchange"),
     description:
       "Education-first guidance on individual coverage purchased outside the Marketplace.",
@@ -72,7 +72,7 @@ export default function Page() {
       <PremiumInteriorHero
         eyebrow="Health Insurance"
         title="Off-Exchange Coverage"
-        subtitle="Education-first guidance on individual coverage purchased outside the Marketplace."
+        subtitle={`Education-first guidance on individual coverage purchased outside the Marketplace. ${serviceAreaStatement}`}
         actions={[
           { label: "Request Guidance", href: "/contact", kind: "primary" },
           { label: "ACA Marketplace", href: "/aca", kind: "gold" },

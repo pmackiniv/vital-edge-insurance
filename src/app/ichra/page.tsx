@@ -4,21 +4,20 @@ import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
 import { PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
 import { SeoFaq } from "@/components/SeoFaq";
-import { site } from "@/lib/site";
-import { absoluteUrl } from "@/lib/site";
+import { absoluteUrl, serviceAreaStatement, site } from "@/lib/site";
 import { StructuredData } from "@/components/StructuredData";
 
 export const metadata: Metadata = {
-  title: "ICHRA Health Insurance | Individual Coverage HRA | Florida Employer Guide",
+  title: "ICHRA Health Insurance | Individual Coverage HRA Guide",
   description:
-    "Vital Edge Insurance helps Florida employers and employees navigate ICHRA (Individual Coverage Health Reimbursement Arrangement) with licensed guidance for defined contribution health benefits.",
+    "Vital Edge Insurance helps employers and employees navigate ICHRA (Individual Coverage Health Reimbursement Arrangement) with licensed guidance for defined contribution health benefits.",
   alternates: {
     canonical: absoluteUrl("/ichra"),
   },
   openGraph: {
-    title: "ICHRA Guidance in Florida | Vital Edge Insurance",
+    title: "ICHRA Guidance | Vital Edge Insurance",
     description:
-      "Licensed agent support for ICHRA setup, employee guidance, and compliance in Florida.",
+      "Licensed agent support for ICHRA setup, employee guidance, and compliance across Vital Edge's approved service footprint.",
     url: absoluteUrl("/ichra"),
   },
 };
@@ -31,7 +30,7 @@ export default function Page() {
     url: absoluteUrl("/ichra"),
     telephone: site.phoneDisplay,
     email: site.email,
-    areaServed: "Florida",
+    areaServed: site.serviceAreas,
   };
 
   const serviceJsonLd = {
@@ -43,7 +42,7 @@ export default function Page() {
       "@type": "InsuranceAgency",
       name: site.legalName,
     },
-    areaServed: "Florida",
+    areaServed: site.serviceAreas,
     url: absoluteUrl("/ichra"),
     description:
       "Independent education for employers and employees exploring Individual Coverage HRAs.",
@@ -73,7 +72,7 @@ export default function Page() {
       <PremiumInteriorHero
         eyebrow="Employer Benefits"
         title="ICHRA Guidance"
-        subtitle="Independent education for employers and employees exploring Individual Coverage HRAs."
+        subtitle={`Independent education for employers and employees exploring Individual Coverage HRAs. ${serviceAreaStatement}`}
         actions={[
           { label: "Request ICHRA Guidance", href: "/contact?topic=ichra", kind: "primary" },
           { label: "Small Group", href: "/small-group", kind: "gold" },

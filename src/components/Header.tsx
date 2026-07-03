@@ -11,9 +11,13 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktopOpenLabel, setDesktopOpenLabel] = useState<string | null>(null);
   const [mobileOpenGroupLabel, setMobileOpenGroupLabel] = useState<string | null>(null);
+  const [clientReady, setClientReady] = useState(false);
   const closeMobileNav = () => {
     setMobileOpen(false);
     setMobileOpenGroupLabel(null);
+  };
+  const deferCloseMobileNav = () => {
+    setTimeout(closeMobileNav, 0);
   };
   const toggleMobileNav = () => {
     if (mobileOpen) {
@@ -22,6 +26,13 @@ export function Header() {
     }
     setMobileOpen(true);
   };
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      setClientReady(true);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
 
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -111,26 +122,45 @@ export function Header() {
                   <div
                     key={item.label}
                     className="relative"
+                    onFocusCapture={() => setDesktopOpenLabel(item.label)}
+                    onBlurCapture={(event) => {
+                      const nextFocus = event.relatedTarget;
+                      if (nextFocus instanceof Node && event.currentTarget.contains(nextFocus)) return;
+                      setDesktopOpenLabel((prev) => (prev === item.label ? null : prev));
+                    }}
                     onMouseEnter={() => setDesktopOpenLabel(item.label)}
                     onMouseLeave={() => setDesktopOpenLabel((prev) => (prev === item.label ? null : prev))}
                   >
-                    <button
-                      type="button"
-                      className="inline-flex min-h-11 items-center gap-1 text-sm font-bold text-[var(--ve-teal)] transition hover:text-[var(--ve-gold)]"
-                      aria-expanded={isOpen}
-                      aria-haspopup={hasChildren ? "menu" : undefined}
-                      onClick={() => setDesktopOpenLabel((prev) => (prev === item.label ? null : item.label))}
-                    >
-                      {item.href ? <span>{item.label}</span> : item.label}
-                      <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8">
-                        <path d="m5 7 5 5 5-5" />
-                      </svg>
-                    </button>
+                    <div className="inline-flex min-h-11 items-center gap-0.5">
+                      {item.href ? (
+                        <Link
+                          href={item.href}
+                          className="py-3 pr-1 text-sm font-bold text-[var(--ve-teal)] transition hover:text-[var(--ve-gold)] focus:outline-none focus:ring-2 focus:ring-[var(--ve-teal)]/20"
+                          onClick={() => setDesktopOpenLabel(null)}
+                        >
+                          {item.label}
+                        </Link>
+                      ) : (
+                        <span className="py-3 pr-1 text-sm font-bold text-[var(--ve-teal)]">{item.label}</span>
+                      )}
+                      <button
+                        type="button"
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-full text-[var(--ve-teal)] transition hover:bg-[var(--ve-bg)] hover:text-[var(--ve-gold)] focus:outline-none focus:ring-2 focus:ring-[var(--ve-teal)]/20"
+                        aria-expanded={isOpen}
+                        aria-haspopup={hasChildren ? "menu" : undefined}
+                        aria-label={`${isOpen ? "Close" : "Open"} ${item.label} menu`}
+                        onClick={() => setDesktopOpenLabel((prev) => (prev === item.label ? null : item.label))}
+                      >
+                        <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                          <path d="m5 7 5 5 5-5" />
+                        </svg>
+                      </button>
+                    </div>
                     {isOpen && hasChildren ? (
-                      <div className="absolute left-0 top-full z-[120] mt-3 min-w-[17rem] rounded-2xl border border-[var(--ve-teal)]/10 bg-white p-2 shadow-[0_24px_70px_rgba(15,23,42,0.16)]">
+                      <div className="absolute left-0 top-full z-[120] mt-2 min-w-[19rem] rounded-2xl border border-[var(--ve-teal)]/10 bg-white p-2 shadow-[0_24px_70px_rgba(15,23,42,0.16)]">
                         {item.children?.map((child) => (
                           <Link
-                            key={child.href}
+                            key={`${item.label}-${child.label}-${child.href}`}
                             href={child.href}
                             className="block rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-800 hover:bg-[var(--ve-bg)] hover:text-[var(--ve-teal)]"
                             onClick={() => setDesktopOpenLabel(null)}
@@ -161,10 +191,11 @@ export function Header() {
 
             <button
               type="button"
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-[var(--ve-teal)]/15 bg-white/70 p-2 text-[var(--ve-teal)] shadow-sm md:hidden"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-[var(--ve-teal)]/15 bg-white/70 p-2 text-[var(--ve-teal)] shadow-sm disabled:cursor-wait disabled:opacity-60 md:hidden"
               aria-expanded={mobileOpen}
               aria-controls="mobile-nav-panel"
               aria-label="Toggle navigation"
+              disabled={!clientReady}
               onClick={toggleMobileNav}
             >
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -196,7 +227,7 @@ export function Header() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="relative z-[9999] border-b border-black/5 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.18)] md:hidden"
+              className="fixed inset-x-0 top-[5.35rem] z-[9999] max-h-[calc(100dvh-5.35rem)] overflow-y-auto border-b border-black/5 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.18)] md:hidden"
             >
               <Container>
                 <div className="space-y-4 py-6">
@@ -226,7 +257,7 @@ export function Header() {
                           <Link
                             key={item.label}
                             href={item.href}
-                            onClick={closeMobileNav}
+                            onClick={deferCloseMobileNav}
                             className="rounded-xl px-3 py-3 text-base font-bold text-[var(--ve-teal)] hover:bg-[var(--ve-bg)]"
                           >
                             {item.label}
@@ -235,40 +266,34 @@ export function Header() {
                       }
 
                       return (
-                        <div key={item.label} className="rounded-xl border border-black/10">
-                          <div className="flex items-stretch">
-                            {item.href ? (
-                              <Link
-                                href={item.href}
-                                onClick={closeMobileNav}
-                                className="flex-1 rounded-l-xl px-3 py-3 text-base font-bold text-[var(--ve-teal)] hover:bg-[var(--ve-bg)]"
-                              >
-                                {item.label}
-                              </Link>
-                            ) : (
-                              <div className="flex-1 rounded-l-xl px-3 py-3 text-base font-bold text-[var(--ve-teal)]">
-                                {item.label}
-                              </div>
-                            )}
-                            <button
-                              type="button"
-                              className="inline-flex min-w-12 items-center justify-center rounded-r-xl border-l border-black/10 px-3 py-3 text-[var(--ve-teal)] hover:bg-[var(--ve-bg)]"
-                              aria-expanded={groupOpen}
-                              aria-label={`Toggle ${item.label} submenu`}
-                              onClick={() => setMobileOpenGroupLabel((prev) => (prev === item.label ? null : item.label))}
+                        <div key={item.label} className="overflow-hidden rounded-xl border border-black/10 bg-white">
+                          <button
+                            type="button"
+                            className="flex min-h-14 w-full items-center justify-between gap-3 px-3 py-3 text-left text-base font-bold text-[var(--ve-teal)] hover:bg-[var(--ve-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--ve-teal)]/25"
+                            aria-expanded={groupOpen}
+                            aria-controls={`mobile-nav-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                            onClick={() => setMobileOpenGroupLabel((prev) => (prev === item.label ? null : item.label))}
+                          >
+                            <span>{item.label}</span>
+                            <span
+                              className="pointer-events-none inline-flex h-8 w-8 items-center justify-center rounded-full bg-[var(--ve-bg)] text-[var(--ve-teal)]"
+                              aria-hidden="true"
                             >
                               <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
                                 <path d={groupOpen ? "m5 12 5-5 5 5" : "m5 7 5 5 5-5"} />
                               </svg>
-                            </button>
-                          </div>
+                            </span>
+                          </button>
                           {groupOpen ? (
-                            <div className="grid gap-1 px-2 pb-3">
+                            <div
+                              id={`mobile-nav-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                              className="grid gap-1 border-t border-black/10 px-2 py-3"
+                            >
                               {item.children?.map((child) => (
                                 <Link
-                                  key={child.href}
+                                  key={`${item.label}-${child.label}-${child.href}`}
                                   href={child.href}
-                                  onClick={closeMobileNav}
+                                  onClick={deferCloseMobileNav}
                                   className="rounded-lg px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-[var(--ve-bg)] hover:text-[var(--ve-teal)]"
                                 >
                                   {child.label}
@@ -282,19 +307,19 @@ export function Header() {
                   </nav>
                   <div className="flex flex-col gap-3">
                     <Link
-                      href="/enroll"
-                      onClick={closeMobileNav}
-                      className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--ve-teal)]/15 px-4 py-2 text-sm font-bold text-[var(--ve-teal)] hover:bg-[var(--ve-bg)]"
-                    >
-                      Secure enrollment links
-                    </Link>
-                    <Link
                       href="/contact"
-                      onClick={closeMobileNav}
+                      onClick={deferCloseMobileNav}
                       className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--ve-teal)] px-4 py-2 text-sm font-bold text-white hover:bg-[var(--ve-teal-2)]"
                     >
                       {site.primaryCta.label}
                     </Link>
+                    <a
+                      href={`tel:${site.phoneE164}`}
+                      onClick={deferCloseMobileNav}
+                      className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--ve-teal)]/15 px-4 py-2 text-sm font-bold text-[var(--ve-teal)] hover:bg-[var(--ve-bg)]"
+                    >
+                      Call {site.phoneDisplay}
+                    </a>
                   </div>
                 </div>
               </Container>

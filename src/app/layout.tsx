@@ -8,7 +8,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
 import TimedLeadPopup from "@/components/TimedLeadPopup";
-import { insuranceAgencyJsonLd, localBusinessJsonLd, organizationJsonLd, personJsonLd, webSiteJsonLd } from "@/lib/site";
+import { insuranceAgencyJsonLd, localBusinessJsonLd, organizationJsonLd, personJsonLd, serviceAreaStatement, webSiteJsonLd } from "@/lib/site";
 
 const PRODUCTION_SITE_URL = "https://www.vital-edge-insurance.com";
 const METADATA_BASE_URL =
@@ -21,24 +21,24 @@ const METADATA_BASE_URL =
 export const metadata: Metadata = {
   metadataBase: new URL(METADATA_BASE_URL),
   title: {
-    default: "Vital Edge Insurance | Licensed Health Insurance Agency in Jacksonville, FL",
+    default: "Vital Edge Insurance | Health Insurance Guidance Across 12 States",
     template: "%s | Vital Edge Insurance",
   },
   description:
-    "Licensed health insurance guidance for Medicare, ACA Marketplace, ancillary coverage, and small group questions across Florida and 11 additional states. Call (352) 214-8879 or request a callback.",
+    `Licensed health insurance guidance for Medicare, ACA Marketplace, ancillary coverage, and small group questions. ${serviceAreaStatement} Call (352) 214-8879 or request a callback.`,
   openGraph: {
     type: "website",
     url: "/",
-    title: "Vital Edge Insurance | Licensed Health Insurance Agency in Jacksonville, FL",
+    title: "Vital Edge Insurance | Health Insurance Guidance Across 12 States",
     description:
-      "Licensed health insurance guidance for Medicare, ACA Marketplace, ancillary coverage, and small group questions across Florida and 11 additional states. Call (352) 214-8879 or request a callback.",
+      `Licensed health insurance guidance for Medicare, ACA Marketplace, ancillary coverage, and small group questions. ${serviceAreaStatement} Call (352) 214-8879 or request a callback.`,
     siteName: "Vital Edge Insurance",
     images: [
       {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Vital Edge Insurance - Licensed Florida Health Insurance Guidance",
+        alt: "Vital Edge Insurance - licensed health insurance guidance across 12 states",
       },
     ],
   },
@@ -48,9 +48,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vital Edge Insurance | Licensed Health Insurance Agency in Jacksonville, FL",
+    title: "Vital Edge Insurance | Health Insurance Guidance Across 12 States",
     description:
-      "Licensed health insurance guidance for Medicare, ACA Marketplace, ancillary coverage, and small group questions across Florida and 11 additional states. Call (352) 214-8879 or request a callback.",
+      `Licensed health insurance guidance for Medicare, ACA Marketplace, ancillary coverage, and small group questions. ${serviceAreaStatement} Call (352) 214-8879 or request a callback.`,
     images: ["/og.png"],
   },
   robots: {

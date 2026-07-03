@@ -98,7 +98,7 @@ export function PremiumFeatureGrid({ features }: { features: PremiumFeature[] })
       {features.map((item) => (
         <article
           key={item.title}
-          className="rounded-2xl border border-[var(--ve-teal)]/10 bg-white p-6 shadow-[0_18px_48px_rgba(15,23,42,0.08)]"
+          className="rounded-2xl border border-[var(--ve-teal)]/10 bg-white/88 p-6 shadow-[0_18px_48px_rgba(15,23,42,0.08)] backdrop-blur-md"
         >
           <h2 className="font-sans text-base font-extrabold text-[var(--ve-teal)]">{item.title}</h2>
           <p className="mt-3 font-sans text-sm leading-6 text-slate-700">{item.body}</p>
@@ -121,8 +121,8 @@ export function PremiumCard({
     tone === "teal"
       ? "bg-[var(--ve-teal)] text-white"
       : tone === "soft"
-        ? "border border-[var(--ve-teal)]/10 bg-[linear-gradient(135deg,rgba(228,246,247,0.92),rgba(255,255,255,0.94))] text-slate-900"
-        : "border border-[var(--ve-teal)]/10 bg-white text-slate-900";
+        ? "border border-[var(--ve-teal)]/10 bg-[linear-gradient(135deg,rgba(228,246,247,0.82),rgba(255,255,255,0.88))] text-slate-900 backdrop-blur-md"
+        : "border border-[var(--ve-teal)]/10 bg-white/88 text-slate-900 backdrop-blur-md";
 
   return (
     <section className={`rounded-3xl p-6 shadow-[0_18px_52px_rgba(15,23,42,0.08)] ${toneClasses}`}>
@@ -164,7 +164,7 @@ export function PremiumContentBand({
   const toneClasses =
     tone === "teal"
       ? "bg-[var(--ve-teal)] text-white"
-      : "border border-[var(--ve-teal)]/10 bg-white text-slate-900";
+      : "border border-[var(--ve-teal)]/10 bg-white/88 text-slate-900 backdrop-blur-md";
 
   return (
     <section className={`rounded-3xl p-6 shadow-[0_22px_70px_rgba(15,23,42,0.08)] md:p-8 ${toneClasses}`}>

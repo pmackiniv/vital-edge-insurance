@@ -13,6 +13,23 @@ export type SiteMainNavItem = {
 
 const PRODUCTION_SITE_URL = "https://www.vital-edge-insurance.com";
 const LEGACY_SITE_URLS = new Set(["https://vital-edge-insurance.vercel.app"]);
+export const licensedStateNames = [
+  "Florida",
+  "Georgia",
+  "South Carolina",
+  "North Carolina",
+  "Texas",
+  "Tennessee",
+  "Arizona",
+  "Washington",
+  "Pennsylvania",
+  "Ohio",
+  "Michigan",
+  "Louisiana",
+] as const;
+
+export const serviceAreaStatement =
+  "Headquartered in Florida. Serving clients across 12 states and growing.";
 
 function normalizePublicSiteUrl(value?: string) {
   if (!value || !value.startsWith("http")) return "";
@@ -41,18 +58,7 @@ export const site = {
     addressCountry: "US",
   },
   serviceAreas: [
-    "Florida",
-    "Georgia",
-    "South Carolina",
-    "North Carolina",
-    "Texas",
-    "Tennessee",
-    "Arizona",
-    "Washington",
-    "Pennsylvania",
-    "Ohio",
-    "Michigan",
-    "Louisiana",
+    ...licensedStateNames,
     "Jacksonville, FL",
     "Duval County, FL",
     "St. Johns County, FL",
@@ -86,53 +92,45 @@ export const site = {
       href: "/medicare",
       children: [
         { label: "Medicare Overview", href: "/medicare" },
-        { label: "Medicare 101", href: "/medicare-101" },
-        { label: "Turning 65", href: "/turning-65-medicare" },
-        { label: "Still Working Past 65", href: "/medicare-still-working" },
-        { label: "Extra Help / LIS", href: "/medicare-extra-help-lis" },
-        { label: "Medicare and Medicaid", href: "/medicare-and-medicaid" },
-        { label: "D-SNP Education", href: "/medicare/d-snp" },
-        { label: "C-SNP Education", href: "/medicare/c-snp" },
-        { label: "C-SNP & D-SNP", href: "/medicare/snp" },
-        { label: "Medicare Advantage Request", href: "/medicare/medicare-advantage-request" },
-        { label: "Medigap Request", href: "/medicare/medigap-request" },
-        { label: "Enrollment Links", href: "/enroll" },
+        { label: "New to Medicare", href: "/resources#new-to-medicare" },
+        { label: "Medicare Advantage", href: "/medicare/medicare-advantage-request" },
+        { label: "Medigap", href: "/medicare/medigap" },
+        { label: "Part D", href: "/resources#part-d-basics" },
+        { label: "Special Needs Plans", href: "/medicare/snp" },
+        { label: "D-SNP", href: "/medicare/d-snp" },
+        { label: "C-SNP", href: "/medicare/c-snp" },
       ],
     },
     {
-      label: "Health Insurance (ACA)",
+      label: "ACA",
       href: "/aca",
       children: [
         { label: "ACA Marketplace", href: "/aca" },
-        { label: "Special Enrollment", href: "/aca/sep" },
+        { label: "ACA Subsidies", href: "/resources#aca-subsidies-overview" },
+        { label: "Special Enrollment Periods", href: "/aca/sep" },
         { label: "ICHRA", href: "/ichra" },
         { label: "Off-Exchange", href: "/off-exchange" },
-        { label: "Small Group", href: "/small-group" },
       ],
     },
     {
-      label: "Ancillary Coverage",
+      label: "Ancillary",
       href: "/ancillary",
       children: [
         { label: "Ancillary Overview", href: "/ancillary" },
-        { label: "Dental, Vision & Hearing", href: "/ancillary" },
+        { label: "Dental/Vision/Hearing", href: "/ancillary#dental-vision-hearing" },
         { label: "Hospital Indemnity", href: "/ancillary" },
-        { label: "Life Insurance", href: "/contact?topic=life-insurance" },
-        { label: "Final Expense", href: "/contact?topic=final-expense" },
+        { label: "Request Help Comparing Options", href: "/contact?topic=ancillary" },
       ],
     },
     {
       label: "Resources",
       href: "/resources",
       children: [
-        { label: "Resources", href: "/resources" },
-        { label: "LinkedIn Medicare Resources", href: "/linkedin-medicare-resources" },
-        { label: "Educational Events", href: "/medicare-educational-events" },
-        { label: "Resource Tables", href: "/medicare-resource-tables" },
-        { label: "Partner With Vital Edge", href: "/partner-with-vital-edge" },
-        { label: "Blog", href: "/blog" },
-        { label: "Referrals", href: "/referrals" },
-        { label: "Licensed States", href: "/licensed-states" },
+        { label: "Resource Hub", href: "/resources" },
+        { label: "Medicare Coverage Pathways", href: "/resources#medicare-coverage-pathways" },
+        { label: "What to Bring", href: "/resources#what-to-bring" },
+        { label: "Prescription Savings", href: "/resources#prescription-savings-basics" },
+        { label: "Referral Information", href: "/referrals" },
       ],
     },
     {
@@ -140,14 +138,11 @@ export const site = {
       href: "/about",
       children: [
         { label: "About Vital Edge", href: "/about" },
-        { label: "Helping a Family Member", href: "/family-help" },
-        { label: "Duval County", href: "/duval-county" },
-        { label: "St. Johns County", href: "/st-johns-county" },
-        { label: "Miami-Dade", href: "/miami" },
-        { label: "Schedule a Call", href: "/schedule" },
+        { label: "Licensed States", href: "/licensed-states" },
+        { label: "Contact", href: "/contact" },
+        { label: "Request a Call", href: "/contact" },
       ],
     },
-    { label: "Contact", href: "/contact" },
   ] as SiteMainNavItem[],
 } as const;
 

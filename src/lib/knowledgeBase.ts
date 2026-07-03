@@ -51,7 +51,7 @@ export const resources: ResourceItem[] = [
   {
     slug: "medicare-coverage-pathways",
     title: "Medicare coverage pathways",
-    summary: "High-level overview of Original Medicare and supplemental coverage choices.",
+    summary: "Client-friendly overview of Original Medicare, Medicare Advantage, Medigap, Part D, provider access, prescriptions, cost exposure, and county-specific availability.",
     tags: ["medicare", "medigap"],
   },
   {
@@ -63,7 +63,7 @@ export const resources: ResourceItem[] = [
   {
     slug: "aca-subsidies-overview",
     title: "ACA subsidies overview",
-    summary: "How premium tax credits are determined and what to expect.",
+    summary: "Education on premium tax credits, income estimates, household size, reporting changes, Special Enrollment Periods, and Marketplace source links.",
     tags: ["aca"],
   },
   {

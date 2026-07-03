@@ -7,9 +7,10 @@ const MBI_PATTERN = new RegExp(
 
 const SSN_PATTERN = /\b\d{3}[- ]?\d{2}[- ]?\d{4}\b/;
 const MEDICARE_IDENTIFIER_CONTEXT = /\b(medicare number|medicare id|medicare identifier|mbi|member id)\b/i;
+const BANK_IDENTIFIER_CONTEXT = /\b(bank account|account number|routing number|debit card|credit card|card number)\b/i;
 
 export const SENSITIVE_IDENTIFIER_CHAT_RESPONSE =
-  "For your privacy, please do not share Medicare numbers, Social Security numbers, or sensitive medical information here. Coverage Atlas cannot process those identifiers. For plan-specific Medicare, Part D, or CMS guidance, request licensed follow-up so Patrick Mackin IV can respond through the proper process.";
+  "For your privacy, please do not share Medicare numbers, Social Security numbers, bank information, or sensitive identifiers here. Vital Guide cannot process those identifiers. For plan-specific Medicare, Part D, or CMS guidance, request licensed follow-up so Patrick Mackin IV can respond through the proper process.";
 
 function textFromModelMessage(message: ModelMessage): string {
   if (typeof message.content === "string") return message.content;
@@ -29,6 +30,7 @@ function textFromModelMessage(message: ModelMessage): string {
 
 export function containsSensitiveInsuranceIdentifier(text: string): boolean {
   if (SSN_PATTERN.test(text)) return true;
+  if (BANK_IDENTIFIER_CONTEXT.test(text) && /\d[\d -]{5,}\d/.test(text)) return true;
 
   const normalized = text.toUpperCase();
   if (MEDICARE_IDENTIFIER_CONTEXT.test(normalized) && /[A-Z0-9][A-Z0-9 -]{8,20}[A-Z0-9]/.test(normalized)) {

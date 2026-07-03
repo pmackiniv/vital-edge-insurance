@@ -2,7 +2,7 @@ import { generateText } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { getChatModelId } from "@/lib/chatModelConfig";
 
-export type ChatUnavailableReason = "BILLING" | "AUTH";
+export type ChatUnavailableReason = "BILLING" | "AUTH" | "CONFIG";
 
 type ProviderProbeState = {
   checkedAtMs: number;
@@ -112,4 +112,3 @@ export async function ensureChatProviderAvailable(): Promise<{ ok: true } | { ok
     return { ok: false, reason };
   }
 }
-

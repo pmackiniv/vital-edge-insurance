@@ -13,6 +13,10 @@ test("containsSensitiveInsuranceIdentifier detects Medicare MBI-like values", ()
   assert.equal(containsSensitiveInsuranceIdentifier("My Medicare number is 1EG4-TE5-MK73."), true);
 });
 
+test("containsSensitiveInsuranceIdentifier detects bank account context", () => {
+  assert.equal(containsSensitiveInsuranceIdentifier("My bank account number is 1234567890."), true);
+});
+
 test("containsSensitiveInsuranceIdentifier ignores ordinary Medicare education text", () => {
   assert.equal(containsSensitiveInsuranceIdentifier("What is Part D and when should I review plan fit?"), false);
 });

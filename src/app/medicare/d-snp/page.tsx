@@ -45,15 +45,15 @@ export default function Page() {
             features={[
               {
                 title: "Medicare + Medicaid",
-                body: "D-SNPs generally serve people who have Medicare and Medicaid. Exact eligibility must be confirmed.",
+                body: "D-SNPs generally serve people who have Medicare and Medicaid. Medicaid level, state program rules, and plan requirements must be verified.",
               },
               {
                 title: "County-Specific Options",
-                body: "Plan availability can change by ZIP code, county, carrier, network, and appointment status.",
+                body: "Plan availability can change by state, ZIP code, county, carrier, provider network, pharmacy network, and appointment status.",
               },
               {
                 title: "Human Review",
-                body: "A licensed agent can review timing, documents, and next steps after compliant intake.",
+                body: "A licensed agent can review eligibility factors, provider fit, prescriptions, timing, and next steps after compliant intake.",
               },
             ]}
           />
@@ -61,10 +61,11 @@ export default function Page() {
           <div className="grid gap-5 lg:grid-cols-2">
             <PremiumContentBand title="What to prepare" tone="teal">
               <ul className="space-y-2">
-                <li>County of residence and preferred contact method.</li>
+                <li>State, county, ZIP code, and preferred contact method.</li>
                 <li>Current Medicare coverage information.</li>
-                <li>Medicaid status or recent eligibility notice if available.</li>
-                <li>Preferred doctors, pharmacies, and prescriptions for later licensed review.</li>
+                <li>Medicaid status, Medicaid level, or recent eligibility notice if available.</li>
+                <li>Preferred doctors, specialists, pharmacies, and prescriptions for later licensed review.</li>
+                <li>Any notices about Extra Help, LIS, Medicare Savings Program, or Medicaid renewal status.</li>
               </ul>
             </PremiumContentBand>
             <PremiumContentBand title="Privacy-safe next step">
@@ -80,6 +81,36 @@ export default function Page() {
                   C-SNP &amp; D-SNP Overview
                 </Link>
               </div>
+            </PremiumContentBand>
+          </div>
+
+          <div className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
+            <PremiumContentBand title="Eligibility and suitability checks">
+              <div className="space-y-3">
+                <p>
+                  A D-SNP conversation should not assume eligibility from a phrase like “Medicaid” alone. The review
+                  should confirm Medicare status, Medicaid level, state rules, ZIP/county service area, enrollment
+                  period, and whether the available plan type matches the client&apos;s access needs.
+                </p>
+                <p>
+                  Provider and prescription fit still matters. Doctors, specialists, hospitals, pharmacy preferences,
+                  and formularies should be checked before any plan-specific recommendation.
+                </p>
+              </div>
+            </PremiumContentBand>
+            <PremiumContentBand title="Official source">
+              <p>
+                Medicare.gov describes Special Needs Plans as Medicare Advantage plan types that serve people with
+                specific diseases or characteristics, certain health care needs, or Medicaid. You can only remain
+                enrolled if you continue to meet the plan&apos;s special conditions.
+              </p>
+              <p className="mt-3">
+                Source:{" "}
+                <a className="font-bold underline underline-offset-4" href="https://www.medicare.gov/health-drug-plans/health-plans/your-health-plan-options/SNP">
+                  Medicare.gov Special Needs Plans
+                </a>
+                .
+              </p>
             </PremiumContentBand>
           </div>
 

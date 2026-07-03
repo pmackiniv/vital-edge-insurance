@@ -5,18 +5,18 @@ import { LeadCtaSection } from "@/components/LeadCtaSection";
 import { PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
 import { SeoFaq } from "@/components/SeoFaq";
 import { StructuredData } from "@/components/StructuredData";
-import { absoluteUrl, site } from "@/lib/site";
+import { absoluteUrl, serviceAreaStatement, site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Medigap (Medicare Supplement) Guidance | Florida",
+  title: "Medigap (Medicare Supplement) Guidance",
   description:
-    "Vital Edge Insurance provides Medigap (Medicare Supplement) guidance in Florida, including enrollment timing, preparation, and licensed follow-up options.",
+    "Vital Edge Insurance provides Medigap (Medicare Supplement) education, including enrollment timing, preparation, and licensed follow-up options across its approved service footprint.",
   alternates: {
     canonical: absoluteUrl("/medicare/medigap"),
   },
   openGraph: {
-    title: "Medigap Guidance in Florida | Vital Edge Insurance",
-    description: "General Medigap education and licensed follow-up guidance for Florida beneficiaries.",
+    title: "Medigap Guidance | Vital Edge Insurance",
+    description: "General Medigap education and licensed follow-up guidance across Vital Edge's approved service footprint.",
     url: absoluteUrl("/medicare/medigap"),
   },
 };
@@ -29,7 +29,7 @@ export default function Page() {
     url: absoluteUrl("/medicare/medigap"),
     telephone: site.phoneDisplay,
     email: site.email,
-    areaServed: "Florida",
+    areaServed: site.serviceAreas,
   };
 
   const serviceJsonLd = {
@@ -41,7 +41,7 @@ export default function Page() {
       "@type": "InsuranceAgency",
       name: site.legalName,
     },
-    areaServed: "Florida",
+    areaServed: site.serviceAreas,
     url: absoluteUrl("/medicare/medigap"),
     description:
       "General Medigap education for enrollment timing, preparation, and licensed follow-up scheduling.",
@@ -77,7 +77,7 @@ export default function Page() {
       <PremiumInteriorHero
         eyebrow="Medicare"
         title="Medigap Basics"
-        subtitle="General education on how Medigap works alongside Original Medicare, timing considerations, and what to prepare before speaking with a licensed agent."
+        subtitle={`General education on how Medigap works alongside Original Medicare, timing considerations, and what to prepare before speaking with a licensed agent. ${serviceAreaStatement}`}
         actions={[
           { label: "Request Medigap Guidance", href: "/medicare/medigap-request", kind: "primary" },
           { label: "Medicare Overview", href: "/medicare", kind: "gold" },

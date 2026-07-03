@@ -36,11 +36,11 @@ export default function Page() {
             features={[
               {
                 title: "C-SNP",
-                body: "Chronic Condition Special Needs Plans are designed for people with certain chronic conditions and specific eligibility rules.",
+                body: "Chronic Condition Special Needs Plans are designed for certain severe or disabling chronic conditions, with plan-specific eligibility rules.",
               },
               {
                 title: "D-SNP",
-                body: "Dual Eligible Special Needs Plans generally serve people who have both Medicare and Medicaid.",
+                body: "Dual Eligible Special Needs Plans generally serve people who have Medicare and Medicaid, but Medicaid level and plan rules still need verification.",
               },
               {
                 title: "Licensed Review",
@@ -52,9 +52,9 @@ export default function Page() {
           <div className="grid gap-5 lg:grid-cols-2">
             <PremiumContentBand title="What to prepare" tone="teal">
               <ul className="space-y-2">
-                <li>County of residence and preferred contact method.</li>
-                <li>Current Medicare and Medicaid coverage details if applicable.</li>
-                <li>Recent notices, provider preferences, pharmacy preferences, and prescription list.</li>
+                <li>State, county, ZIP code, and preferred contact method.</li>
+                <li>Current Medicare and Medicaid coverage details, including Medicaid level if applicable.</li>
+                <li>Recent notices, doctors, specialists, hospitals, pharmacies, and prescription list.</li>
               </ul>
             </PremiumContentBand>
             <PremiumContentBand title="Choose the right education path">
@@ -98,6 +98,21 @@ export default function Page() {
             description={`We explain the basics and connect you to a licensed agent for plan-specific guidance. You can also call ${site.phoneDisplay}.`}
             ctaLabel="Request SNP guidance"
           />
+
+          <PremiumContentBand title="Official source">
+            <p>
+              Medicare.gov explains that SNPs are Medicare Advantage plan types for people with specific diseases or
+              characteristics, certain health care needs, or Medicaid, and that enrollment depends on continuing to meet
+              plan conditions.
+            </p>
+            <p className="mt-3">
+              Source:{" "}
+              <a className="font-bold underline underline-offset-4" href="https://www.medicare.gov/health-drug-plans/health-plans/your-health-plan-options/SNP">
+                Medicare.gov Special Needs Plans
+              </a>
+              .
+            </p>
+          </PremiumContentBand>
         </div>
       </Container>
     </>

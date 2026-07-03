@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Container } from "@/components/Container";
 import { PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
 import { SeoFaq } from "@/components/SeoFaq";
+import { serviceAreaStatement } from "@/lib/site";
 
 type ResourceDoc = {
   slug: string;
@@ -104,18 +105,15 @@ async function loadResources(): Promise<ResourceDoc[]> {
       const slug = file.replace(/\.md$/, "");
       const raw = await readFile(path.join(contentDir, file), "utf8");
       const lines = raw.split("\n");
-      const titleLine = lines.find((line) => line.trim().startsWith("# "));
+      const headingIndex = lines.findIndex((line) => line.trim().startsWith("# "));
+      const titleLine = headingIndex === -1 ? undefined : lines[headingIndex];
       const title = titleLine ? titleLine.replace(/^#\s+/, "").trim() : slug.replace(/-/g, " ");
-      const summaryLine = lines.find((line) => {
+      const summaryIndex = lines.findIndex((line) => {
         const trimmed = line.trim();
         return trimmed && !trimmed.startsWith("#") && !trimmed.startsWith("-") && !trimmed.startsWith("*");
       });
-      const summary = summaryLine ? summaryLine.trim() : "Education-first overview.";
-      const contentLines = [...lines];
-      const headingIndex = contentLines.findIndex((line) => line.trim().startsWith("# "));
-      if (headingIndex !== -1) {
-        contentLines.splice(headingIndex, 1);
-      }
+      const summary = summaryIndex === -1 ? "Education-first overview." : lines[summaryIndex].trim();
+      const contentLines = lines.filter((_line, index) => index !== headingIndex && index !== summaryIndex);
       const html = markdownToHtml(contentLines.join("\n"));
 
       return { slug, title, summary, html };
@@ -132,7 +130,7 @@ export default async function ResourcesPage() {
       <PremiumInteriorHero
         eyebrow="Resources"
         title="Client Education Hub"
-        subtitle="Clear primers, checklists, and step-by-step guidance for Florida residents seeking neutral explanations and next steps."
+        subtitle={`Clear primers, checklists, and step-by-step guidance for clients seeking neutral explanations and next steps. ${serviceAreaStatement}`}
         actions={[
           { label: "Medicare Guidance", href: "/medicare", kind: "primary" },
           { label: "ACA Marketplace", href: "/aca", kind: "gold" },
@@ -156,7 +154,7 @@ export default async function ResourcesPage() {
 
       <div className="mt-10 grid gap-8">
         {resources.map((item) => (
-          <section key={item.slug} id={item.slug} className="rounded-3xl border border-[var(--ve-teal)]/10 bg-white p-6 shadow-[0_18px_52px_rgba(15,23,42,0.08)]">
+          <section key={item.slug} id={item.slug} className="scroll-mt-28 rounded-3xl border border-[var(--ve-teal)]/10 bg-white/88 p-6 shadow-[0_18px_52px_rgba(15,23,42,0.08)] backdrop-blur-md">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2 className="font-display text-2xl font-bold tracking-normal text-[var(--ve-teal)]">{item.title}</h2>
@@ -166,7 +164,7 @@ export default async function ResourcesPage() {
                 href={`/resources#${item.slug}`}
                 className="text-xs font-bold text-[var(--ve-teal)] underline underline-offset-4"
               >
-                Link
+                Section link
               </a>
             </div>
             <div

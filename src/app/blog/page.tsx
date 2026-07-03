@@ -31,7 +31,7 @@ export default function Page() {
             },
             {
               title: "Local coverage notes",
-              body: "County-level reminders and resources for Jacksonville and nearby communities.",
+              body: "State and county reminders for clients across the licensed service footprint.",
             },
             {
               title: "Coverage concepts",

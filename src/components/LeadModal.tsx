@@ -42,7 +42,7 @@ const offerings = [
   "Other",
 ];
 
-const counties = ["Duval County", "St. Johns County", "Other"];
+const counties = ["Duval County", "St. Johns County", "Other / not listed"];
 const states = ["Florida", "Georgia", "South Carolina", "North Carolina", "Texas", "Tennessee", "Arizona", "Washington", "Pennsylvania", "Ohio", "Michigan", "Louisiana"];
 const preferredContactMethods = ["Call", "Text", "Email"];
 
