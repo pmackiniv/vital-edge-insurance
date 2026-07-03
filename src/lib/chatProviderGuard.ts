@@ -1,5 +1,6 @@
 import { generateText } from "ai";
 import { openai } from "@ai-sdk/openai";
+import { getChatModelId } from "@/lib/chatModelConfig";
 
 export type ChatUnavailableReason = "BILLING" | "AUTH";
 
@@ -11,7 +12,6 @@ type ProviderProbeState = {
 
 const PROBE_OK_TTL_MS = 60_000;
 const PROBE_BLOCK_TTL_MS = 20_000;
-const MODEL_ID = "gpt-4o-mini";
 
 let probeState: ProviderProbeState = {
   checkedAtMs: 0,
@@ -82,7 +82,7 @@ export async function ensureChatProviderAvailable(): Promise<{ ok: true } | { ok
 
   try {
     await generateText({
-      model: openai(MODEL_ID),
+      model: openai(getChatModelId()),
       prompt: "Reply with OK.",
       maxOutputTokens: 1,
       temperature: 0,

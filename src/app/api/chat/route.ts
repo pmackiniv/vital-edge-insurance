@@ -2,6 +2,7 @@ import { createUIMessageStream, createUIMessageStreamResponse, streamText } from
 import { openai } from "@ai-sdk/openai";
 import { buildChatSystemPrompt } from "@/lib/chatSystemPrompt";
 import { normalizeChatMessages } from "@/lib/chatMessages";
+import { getChatModelId } from "@/lib/chatModelConfig";
 import {
   chatMessagesContainSensitiveIdentifier,
   SENSITIVE_IDENTIFIER_CHAT_RESPONSE,
@@ -89,7 +90,7 @@ export async function POST(req: Request) {
     }
 
     const result = streamText({
-      model: openai("gpt-4o-mini"),
+      model: openai(getChatModelId()),
       system: buildChatSystemPrompt(),
       messages,
       maxOutputTokens: 800,
