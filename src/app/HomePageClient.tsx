@@ -6,7 +6,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Container } from "@/components/Container";
 import { LeadModal } from "@/components/LeadModal";
-import { externalLinkProps, PLANENROLL, UHONE_ANCILLARY } from "@/lib/externalLinks";
+import { externalLinkProps, PLANENROLL } from "@/lib/externalLinks";
 import { absoluteUrl, serviceAreaStatement } from "@/lib/site";
 
 const sectionReveal = {
@@ -241,14 +241,14 @@ export default function HomePageClient() {
                   </span>
                   <span className="premium-arrow">&#8594;</span>
                 </a>
-                <a href={UHONE_ANCILLARY} {...externalLinkProps()} className="premium-cta premium-cta-gold group">
+                <Link href="/ancillary" className="premium-cta premium-cta-gold group">
                   <span className="premium-cta-icon"><Icon name="tooth" /></span>
                   <span>
                     <span className="block text-base">Dental, Vision &amp; Hospital Coverage</span>
                     <span className="block text-xs font-semibold opacity-90">UHC / Golden Rule Ancillary</span>
                   </span>
                   <span className="premium-arrow">&#8594;</span>
-                </a>
+                </Link>
                 <button
                   type="button"
                   onClick={() => setLeadModalOpen(true)}
@@ -359,7 +359,7 @@ export default function HomePageClient() {
         <Container>
           <div className="grid items-center gap-5 rounded-3xl border border-[var(--ve-teal)]/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(238,247,247,0.86))] p-5 shadow-[0_18px_52px_rgba(15,23,42,0.07)] md:grid-cols-[auto_1fr_auto] md:p-6">
             <Image
-              src="/images/team/patrick-mackin-iv.jpg"
+              src="/images/team/patrick-professional-headshot-320.jpg"
               alt="Patrick Mackin IV, licensed health insurance agent"
               width={96}
               height={96}
@@ -444,9 +444,9 @@ export default function HomePageClient() {
               <a href={PLANENROLL} {...externalLinkProps()} className="premium-small-button premium-small-button-primary">
                 Start My Review
               </a>
-              <a href={UHONE_ANCILLARY} {...externalLinkProps()} className="premium-small-button premium-small-button-gold">
+              <Link href="/ancillary" className="premium-small-button premium-small-button-gold">
                 Dental, Vision &amp; Hospital Coverage
-              </a>
+              </Link>
               <button type="button" onClick={() => setLeadModalOpen(true)} className="premium-small-button premium-small-button-light">
                 Request a Call
               </button>

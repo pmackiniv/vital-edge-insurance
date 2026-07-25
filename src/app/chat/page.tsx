@@ -25,7 +25,7 @@ export default function ChatPage() {
 
       <Container className="py-12">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)]">
-          <div className="min-h-[560px] rounded-3xl border border-[var(--ve-teal)]/10 bg-white p-6 shadow-[0_22px_70px_rgba(15,23,42,0.08)]">
+          <div className="flex min-h-[560px] flex-col rounded-3xl border border-[var(--ve-teal)]/10 bg-white p-6 shadow-[0_22px_70px_rgba(15,23,42,0.08)]">
             <AIChatPanel />
           </div>
 

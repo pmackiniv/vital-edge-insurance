@@ -41,3 +41,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .env*.local
+
+# generated local QA artifacts
+/outputs/triage/
+/outputs/public-exposure/
+/outputs/lighthouse-*.json
+/playwright-report/
+/test-results/
+/agent_tracker_browser.html

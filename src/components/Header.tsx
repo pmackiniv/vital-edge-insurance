@@ -122,14 +122,11 @@ export function Header() {
                   <div
                     key={item.label}
                     className="relative"
-                    onFocusCapture={() => setDesktopOpenLabel(item.label)}
                     onBlurCapture={(event) => {
                       const nextFocus = event.relatedTarget;
                       if (nextFocus instanceof Node && event.currentTarget.contains(nextFocus)) return;
                       setDesktopOpenLabel((prev) => (prev === item.label ? null : prev));
                     }}
-                    onMouseEnter={() => setDesktopOpenLabel(item.label)}
-                    onMouseLeave={() => setDesktopOpenLabel((prev) => (prev === item.label ? null : prev))}
                   >
                     <div className="inline-flex min-h-11 items-center gap-0.5">
                       {item.href ? (
@@ -175,7 +172,7 @@ export function Header() {
               })}
             </nav>
 
-            <div className="hidden items-center gap-3 md:flex">
+            <div className="hidden items-center gap-3 lg:flex">
               <motion.div whileHover={{ y: -1 }} whileTap={{ y: 0 }}>
                 <Link
                   href="/contact"
@@ -191,7 +188,7 @@ export function Header() {
 
             <button
               type="button"
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-[var(--ve-teal)]/15 bg-white/70 p-2 text-[var(--ve-teal)] shadow-sm disabled:cursor-wait disabled:opacity-60 md:hidden"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-[var(--ve-teal)]/15 bg-white/70 p-2 text-[var(--ve-teal)] shadow-sm disabled:cursor-wait disabled:opacity-60 lg:hidden"
               aria-expanded={mobileOpen}
               aria-controls="mobile-nav-panel"
               aria-label="Toggle navigation"
@@ -218,7 +215,7 @@ export function Header() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="fixed inset-0 z-[9998] bg-black/35 md:hidden"
+              className="fixed inset-0 z-[9998] bg-black/35 lg:hidden"
               onClick={closeMobileNav}
             />
             <motion.div
@@ -227,7 +224,7 @@ export function Header() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="fixed inset-x-0 top-[5.35rem] z-[9999] max-h-[calc(100dvh-5.35rem)] overflow-y-auto border-b border-black/5 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.18)] md:hidden"
+              className="fixed inset-x-0 top-[5.35rem] z-[9999] max-h-[calc(100dvh-5.35rem)] overflow-y-auto border-b border-black/5 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.18)] lg:hidden"
             >
               <Container>
                 <div className="space-y-4 py-6">
@@ -267,23 +264,38 @@ export function Header() {
 
                       return (
                         <div key={item.label} className="overflow-hidden rounded-xl border border-black/10 bg-white">
-                          <button
-                            type="button"
-                            className="flex min-h-14 w-full items-center justify-between gap-3 px-3 py-3 text-left text-base font-bold text-[var(--ve-teal)] hover:bg-[var(--ve-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--ve-teal)]/25"
-                            aria-expanded={groupOpen}
-                            aria-controls={`mobile-nav-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-                            onClick={() => setMobileOpenGroupLabel((prev) => (prev === item.label ? null : item.label))}
-                          >
-                            <span>{item.label}</span>
-                            <span
-                              className="pointer-events-none inline-flex h-8 w-8 items-center justify-center rounded-full bg-[var(--ve-bg)] text-[var(--ve-teal)]"
-                              aria-hidden="true"
+                          <div className="flex min-h-14 items-stretch">
+                            {item.href ? (
+                              <Link
+                                href={item.href}
+                                onClick={deferCloseMobileNav}
+                                className="flex flex-1 items-center px-3 py-3 text-base font-bold text-[var(--ve-teal)] hover:bg-[var(--ve-bg)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--ve-teal)]/25"
+                              >
+                                {item.label}
+                              </Link>
+                            ) : (
+                              <span className="flex flex-1 items-center px-3 py-3 text-base font-bold text-[var(--ve-teal)]">
+                                {item.label}
+                              </span>
+                            )}
+                            <button
+                              type="button"
+                              className="inline-flex min-w-14 items-center justify-center border-l border-black/10 text-[var(--ve-teal)] hover:bg-[var(--ve-bg)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--ve-teal)]/25"
+                              aria-expanded={groupOpen}
+                              aria-controls={`mobile-nav-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                              aria-label={`${groupOpen ? "Close" : "Open"} ${item.label} menu`}
+                              onClick={() => setMobileOpenGroupLabel((prev) => (prev === item.label ? null : item.label))}
                             >
-                              <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
-                                <path d={groupOpen ? "m5 12 5-5 5 5" : "m5 7 5 5 5-5"} />
-                              </svg>
-                            </span>
-                          </button>
+                              <span
+                                className="pointer-events-none inline-flex h-8 w-8 items-center justify-center rounded-full bg-[var(--ve-bg)]"
+                                aria-hidden="true"
+                              >
+                                <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+                                  <path d={groupOpen ? "m5 12 5-5 5 5" : "m5 7 5 5 5-5"} />
+                                </svg>
+                              </span>
+                            </button>
+                          </div>
                           {groupOpen ? (
                             <div
                               id={`mobile-nav-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}

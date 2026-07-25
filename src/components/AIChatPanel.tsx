@@ -119,7 +119,7 @@ export function AIChatPanel({ onPatrickHandoffNeeded, displayMode = "page" }: AI
   const [input, setInput] = useState("");
   const [handoffNotice, setHandoffNotice] = useState("");
   const [clientReady, setClientReady] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const transcriptRef = useRef<HTMLDivElement>(null);
   const { messages, sendMessage, status, error } = useChat({
     id: "vital-edge-ai-chat",
     transport: chatTransport,
@@ -133,7 +133,13 @@ export function AIChatPanel({ onPatrickHandoffNeeded, displayMode = "page" }: AI
   }, []);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const transcript = transcriptRef.current;
+    if (!transcript) return;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    transcript.scrollTo({
+      top: transcript.scrollHeight,
+      behavior: reduceMotion || status === "streaming" ? "auto" : "smooth",
+    });
   }, [messages, status]);
 
   const isDisabled = !clientReady || status === "streaming" || status === "submitted";
@@ -195,7 +201,13 @@ export function AIChatPanel({ onPatrickHandoffNeeded, displayMode = "page" }: AI
         </div>
       ) : null}
 
-      <div className={`flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto rounded-2xl border border-[var(--ve-teal)]/12 scroll-smooth ${
+      <div
+        ref={transcriptRef}
+        role="log"
+        aria-live="polite"
+        aria-relevant="additions text"
+        aria-label="Vital Guide conversation"
+        className={`flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overscroll-contain rounded-2xl border border-[var(--ve-teal)]/12 [scrollbar-gutter:stable] ${
         isWidget
           ? "bg-white/78 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] sm:p-5"
           : "bg-[linear-gradient(180deg,#ffffff_0%,#eef7f7_100%)] p-3"
@@ -220,7 +232,7 @@ export function AIChatPanel({ onPatrickHandoffNeeded, displayMode = "page" }: AI
                 className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`rounded-2xl px-4 py-3.5 text-[15px] leading-6 shadow-sm sm:leading-7 ${
+                  className={`rounded-2xl px-4 py-3.5 text-base leading-6 shadow-sm sm:leading-7 ${
                   m.role === "user"
                     ? "max-w-[86%] bg-[var(--brand-blue)]/12 text-slate-950"
                     : "w-full border border-[var(--ve-teal)]/10 bg-white/95 text-slate-900"
@@ -247,7 +259,6 @@ export function AIChatPanel({ onPatrickHandoffNeeded, displayMode = "page" }: AI
             <span>Vital Guide is typing...</span>
           </div>
         ) : null}
-        <div ref={messagesEndRef} aria-hidden="true" className="h-0 shrink-0" />
       </div>
 
       <form
@@ -263,16 +274,15 @@ export function AIChatPanel({ onPatrickHandoffNeeded, displayMode = "page" }: AI
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask a coverage question"
             rows={2}
-            className={`w-full resize-none rounded-xl border border-black/10 bg-white px-3 text-[15px] leading-6 text-slate-900 placeholder:text-slate-400 focus:border-[var(--brand-blue)] focus:outline-none focus:ring-2 focus:ring-[var(--brand-blue)]/20 ${
+            className={`w-full resize-none rounded-xl border border-black/10 bg-white px-3 text-base leading-6 text-slate-900 placeholder:text-slate-500 focus:border-[var(--brand-blue)] focus:outline-none focus:ring-2 focus:ring-[var(--brand-blue)]/20 ${
               isWidget ? "min-h-[3.25rem] py-2" : "min-h-[4.4rem] py-2.5"
             }`}
             disabled={isDisabled}
             aria-busy={!clientReady}
           />
           <button
-            type="button"
-            disabled={isDisabled}
-            onClick={() => submitText(input)}
+            type="submit"
+            disabled={isDisabled || !input.trim()}
             className={`btn btn-primary shrink-0 px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50 ${
               isWidget ? "min-h-[3.25rem] min-w-[4.65rem]" : "min-h-11"
             }`}
@@ -280,7 +290,7 @@ export function AIChatPanel({ onPatrickHandoffNeeded, displayMode = "page" }: AI
             {status === "streaming" || status === "submitted" ? "Thinking…" : "Send"}
           </button>
         </div>
-        <p className="text-[11px] leading-4 text-black/52">
+        <p className="text-xs leading-4 text-slate-600">
           Do not send SSN, Medicare ID, bank information, or sensitive identifiers.
         </p>
       </form>

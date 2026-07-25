@@ -31,5 +31,19 @@ export default defineConfig({
         ...devices["Pixel 7"],
       },
     },
+    {
+      name: "tablet-chromium",
+      use: {
+        browserName: "chromium",
+        viewport: { width: 834, height: 1112 },
+      },
+    },
+    {
+      name: "desktop-chromium",
+      use: {
+        browserName: "chromium",
+        viewport: { width: 1440, height: 1000 },
+      },
+    },
   ],
 });

@@ -8,7 +8,6 @@ import {
   PremiumFeatureGrid,
   PremiumInteriorHero,
 } from "@/components/PremiumInteriorPage";
-import { UHONE_ANCILLARY } from "@/lib/externalLinks";
 import { absoluteUrl, site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -28,8 +27,8 @@ export default function Page() {
         title="Dental, Vision & Hospital Coverage"
         subtitle="A polished, practical review of supplemental coverage options that can support your broader health insurance strategy."
         actions={[
-          { label: "Dental, Vision & Hospital Coverage", href: UHONE_ANCILLARY, kind: "gold", external: true },
-          { label: "UHC / Golden Rule Ancillary", href: UHONE_ANCILLARY, kind: "primary", external: true },
+          { label: "Explore Coverage Categories", href: "#dental-vision-hearing", kind: "gold" },
+          { label: "Request Ancillary Guidance", href: "/contact?topic=ancillary", kind: "primary" },
           { label: "Request a Call", href: "/contact", kind: "light" },
         ]}
       >
@@ -41,7 +40,8 @@ export default function Page() {
 
       <Container className="py-12">
         <div className="space-y-10">
-          <PremiumFeatureGrid
+          <div id="dental-vision-hearing" className="scroll-mt-28">
+            <PremiumFeatureGrid
             features={[
               {
                 title: "Dental, Vision & Hearing",
@@ -56,7 +56,8 @@ export default function Page() {
                 body: "Vital Edge routes inquiries to a licensed agent for carrier-specific details and next steps.",
               },
             ]}
-          />
+            />
+          </div>
 
           <div className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
             <PremiumContentBand title="Coverage that supports the bigger picture" tone="teal">

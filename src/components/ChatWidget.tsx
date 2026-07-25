@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { resourcesForTopic } from "@/lib/knowledgeBase";
 import {
@@ -93,6 +94,7 @@ function VitalGuideIcon({ className = "h-10 w-10" }: { className?: string }) {
 }
 
 export function ChatWidget() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [minimized, setMinimized] = useState(false);
   const [hydrated, setHydrated] = useState(false);
@@ -119,6 +121,7 @@ export function ChatWidget() {
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
+  const [handoffNotice, setHandoffNotice] = useState("");
   const [emailSent, setEmailSent] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -128,14 +131,10 @@ export function ChatWidget() {
   const contactPlaceholder = contactMethod === "Email" ? "you@email.com" : "(904) 555-1234";
 
   useEffect(() => {
-    setHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated) return;
     setOpen(getStoredOpen());
     setMinimized(getStoredMinimized());
-  }, [hydrated]);
+    setHydrated(true);
+  }, []);
 
   useEffect(() => {
     if (!hydrated || typeof window === "undefined") return;
@@ -174,6 +173,7 @@ export function ChatWidget() {
     setError("");
     setSubmitted(false);
     setSubmitMessage("");
+    setHandoffNotice("");
     setEmailSent(true);
     setIsSubmitting(false);
   };
@@ -184,6 +184,9 @@ export function ChatWidget() {
     setTopic("Medicare");
     setContactMethod("Call");
     setMessage((current) => current || `I need Patrick Mackin IV to follow up about a Medicare/CMS question from Vital Guide.${question ? `\n\nVisitor question: ${question}` : ""}`);
+    setHandoffNotice(
+      "This question needs licensed-agent follow-up. Vital Guide opened the callback form so Patrick Mackin IV can respond after the required disclosures and scope steps.",
+    );
     setError("");
     setSubmitted(false);
     setSubmitMessage("");
@@ -313,8 +316,9 @@ export function ChatWidget() {
     }
   };
 
-  const showPanel = hydrated && open && !minimized;
-  const showBubble = !showPanel;
+  const isStandaloneChatPage = pathname === "/chat";
+  const showPanel = hydrated && !isStandaloneChatPage && open && !minimized;
+  const showBubble = hydrated && !isStandaloneChatPage && !showPanel;
 
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -361,9 +365,9 @@ export function ChatWidget() {
             role="dialog"
             aria-modal="false"
             aria-labelledby="vital-guide-title"
-            className="flex h-[min(78dvh,680px)] w-[calc(100vw-1rem)] max-w-[31.5rem] flex-col overflow-hidden rounded-[1.35rem] border border-white/70 bg-[#fffaf0]/95 shadow-[0_30px_90px_rgba(0,63,69,0.22)] backdrop-blur-xl sm:h-[min(76vh,720px)] sm:w-[min(500px,calc(100vw-2.5rem))]"
+            className="flex h-[min(86dvh,760px)] w-[calc(100vw-1rem)] max-w-[34rem] flex-col overflow-hidden rounded-[1.35rem] border border-white/80 bg-[#fffaf0] shadow-[0_30px_90px_rgba(0,63,69,0.24)] sm:h-[min(84dvh,760px)] sm:w-[min(540px,calc(100vw-2.5rem))]"
           >
-            <div className="flex shrink-0 flex-col gap-2 border-b border-[var(--ve-teal)]/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.96)_0%,rgba(239,248,246,0.92)_58%,rgba(255,249,238,0.96)_100%)] p-3 sm:p-5">
+            <div className="flex shrink-0 flex-col gap-1.5 border-b border-[var(--ve-teal)]/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.98)_0%,rgba(239,248,246,0.96)_58%,rgba(255,249,238,0.98)_100%)] p-3 sm:px-4 sm:py-3.5">
               <div className="flex items-center justify-between gap-2">
                 <div className="flex min-w-0 items-center gap-3">
                   <VitalGuideIcon className="h-9 w-9 sm:h-10 sm:w-10" />
@@ -404,17 +408,17 @@ export function ChatWidget() {
               </Link>
             </div>
 
-            <div className="shrink-0 border-b border-[var(--ve-teal)]/10 bg-white/70 px-4 py-2.5 sm:py-3">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="shrink-0 border-b border-[var(--ve-teal)]/10 bg-white px-4 py-2.5">
+              <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <div className="text-[0.68rem] font-extrabold uppercase tracking-[0.14em] text-[var(--ve-teal)]/70">
                     Licensed help when needed
                   </div>
-                  <p className="mt-1 text-xs leading-5 text-slate-700">
+                  <p className="mt-0.5 hidden text-xs leading-5 text-slate-700 sm:block">
                     General education only. Do not enter SSN, Medicare ID, bank information, or sensitive identifiers.
                   </p>
                 </div>
-                <div className="flex shrink-0 flex-wrap gap-2">
+                <div className="flex shrink-0 gap-2">
                   <Link href="/contact" className="btn btn-primary px-3 py-1.5 text-xs sm:py-2">
                     Request a call
                   </Link>
@@ -425,11 +429,14 @@ export function ChatWidget() {
               </div>
             </div>
 
-            <div className={`flex min-h-0 flex-1 flex-col gap-2.5 ${mode === "question" ? "overflow-hidden p-2.5 sm:p-4" : "overflow-y-auto p-3 sm:p-4"}`}>
+            <div className={`flex min-h-0 flex-1 flex-col gap-2.5 ${mode === "question" ? "overflow-hidden p-2.5 sm:p-3" : "overflow-y-auto p-3 sm:p-4"}`}>
                 <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
-                    onClick={() => setMode("intake")}
+                    onClick={() => {
+                      setMode("intake");
+                      setHandoffNotice("");
+                    }}
                     aria-pressed={mode === "intake"}
                     className={`btn px-3 py-1.5 text-xs ${
                       mode === "intake" ? "btn-primary" : "btn-secondary"
@@ -439,7 +446,10 @@ export function ChatWidget() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setMode("question")}
+                    onClick={() => {
+                      setMode("question");
+                      setHandoffNotice("");
+                    }}
                     aria-pressed={mode === "question"}
                     className={`btn px-3 py-1.5 text-xs ${
                       mode === "question" ? "btn-primary" : "btn-secondary"
@@ -448,6 +458,12 @@ export function ChatWidget() {
                     Ask a question
                   </button>
                 </div>
+
+                {handoffNotice ? (
+                  <div role="status" className="rounded-xl border border-[var(--ve-gold)]/35 bg-[var(--ve-gold)]/10 p-3 text-xs leading-5 text-slate-800">
+                    {handoffNotice}
+                  </div>
+                ) : null}
 
                 {mode === "question" ? (
                   <div className="flex min-h-0 flex-1 flex-col gap-3">
