@@ -48,4 +48,5 @@ next-env.d.ts
 /outputs/lighthouse-*.json
 /playwright-report/
 /test-results/
+/.playwright-cli/
 /agent_tracker_browser.html

@@ -78,3 +78,27 @@ test("ancillary deep link lands on a real section", async ({ page }) => {
   await expect(section).toBeVisible();
   await expect(section).toBeInViewport();
 });
+
+test("ancillary page exposes distinct UnitedHealthcare and Allstate quote paths", async ({ page }) => {
+  await page.goto("/ancillary");
+
+  const unitedHealthcareLink = page
+    .getByRole("link", { name: "Quote UnitedHealthcare Options" })
+    .first();
+  const allstateLink = page
+    .getByRole("link", { name: "Quote Allstate Health Solutions" })
+    .first();
+
+  await expect(unitedHealthcareLink).toBeVisible();
+  await expect(unitedHealthcareLink).toHaveAttribute(
+    "href",
+    "https://shop.uhone.com/en/quote/census?brokerid=AA5620604",
+  );
+  await expect(allstateLink).toBeVisible();
+  await expect(allstateLink).toHaveAttribute(
+    "href",
+    "https://customer.enroll.natgenhealth.com/quick-quote/?agent=CfDJ8FIfQXHyEOZEm91JXGawb_HZSIuV-qXpMQ3xIPcSLZtjt_k9FumEyZoGRRPlQ5KlwyIAA80toXG285u3amEHnPq1Sw&product=all-products",
+  );
+  await expect(unitedHealthcareLink).toHaveAttribute("target", "_blank");
+  await expect(allstateLink).toHaveAttribute("target", "_blank");
+});

@@ -1,6 +1,19 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
+import { absoluteUrl } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "Educational Updates | Vital Edge Insurance",
+  alternates: {
+    canonical: absoluteUrl("/blog"),
+  },
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 export default function Page() {
   return (

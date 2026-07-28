@@ -1,4 +1,5 @@
 import {
+  ALLSTATE_HEALTH_SOLUTIONS,
   externalLinkProps,
   GBP_REVIEWS,
   PLANENROLL,
@@ -10,11 +11,15 @@ export function ExternalLinks() {
 
   return (
     <div className="rounded-3xl border border-[var(--ve-teal)]/10 bg-white/92 p-6 shadow-[0_22px_70px_rgba(15,23,42,0.08)] backdrop-blur">
-      <p className="font-sans text-sm leading-6 text-slate-700">
-        You are leaving Vital Edge Insurance and going to a third-party site.
-      </p>
+      <div className="space-y-2 font-sans text-sm leading-6 text-slate-700">
+        <p>You are leaving Vital Edge Insurance and going to a third-party site.</p>
+        <p>
+          Product availability, eligibility, pricing, benefits, exclusions, limitations, and underwriting requirements
+          vary by carrier, product, state, and applicant.
+        </p>
+      </div>
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
+      <div className="mt-6 grid gap-4 md:grid-cols-3">
         <a
           href={PLANENROLL}
           {...linkProps}
@@ -27,7 +32,14 @@ export function ExternalLinks() {
           {...linkProps}
           className="premium-small-button premium-small-button-gold"
         >
-          Dental, Vision & Hospital Coverage
+          Quote UnitedHealthcare Options
+        </a>
+        <a
+          href={ALLSTATE_HEALTH_SOLUTIONS}
+          {...linkProps}
+          className="premium-small-button premium-small-button-light"
+        >
+          Quote Allstate Health Solutions
         </a>
       </div>
 

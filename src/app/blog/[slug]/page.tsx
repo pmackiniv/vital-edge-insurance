@@ -1,10 +1,37 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/Container";
 import { PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
 import { blogPosts, getBlogPostBySlug } from "@/lib/blogPosts";
+import { absoluteUrl } from "@/lib/site";
 
 export async function generateStaticParams() {
   return blogPosts.map((post) => ({ slug: post.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const post = getBlogPostBySlug(slug);
+
+  if (!post) {
+    return {};
+  }
+
+  return {
+    title: `${post.title} | Vital Edge Insurance`,
+    description: post.summary,
+    alternates: {
+      canonical: absoluteUrl(`/blog/${post.slug}`),
+    },
+    robots: {
+      index: false,
+      follow: true,
+    },
+  };
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {

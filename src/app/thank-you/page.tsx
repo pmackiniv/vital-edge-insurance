@@ -1,6 +1,19 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { PremiumCard, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
+import { absoluteUrl } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "Request Received | Vital Edge Insurance",
+  alternates: {
+    canonical: absoluteUrl("/thank-you"),
+  },
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 export default function ThankYouPage() {
   return (

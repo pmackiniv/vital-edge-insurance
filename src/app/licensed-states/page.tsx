@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
 import {
@@ -19,6 +20,20 @@ export const metadata: Metadata = {
 };
 
 const states = [...licensedStateNames];
+const statePageSlugs: Record<(typeof licensedStateNames)[number], string> = {
+  Florida: "florida-medicare-help",
+  Georgia: "georgia-medicare-help",
+  "South Carolina": "south-carolina-medicare-help",
+  "North Carolina": "north-carolina-medicare-help",
+  Texas: "texas-medicare-help",
+  Tennessee: "tennessee-medicare-help",
+  Arizona: "arizona-medicare-help",
+  Washington: "washington-medicare-help",
+  Pennsylvania: "pennsylvania-medicare-help",
+  Ohio: "ohio-medicare-help",
+  Michigan: "michigan-medicare-help",
+  Louisiana: "louisiana-medicare-help",
+};
 
 const stateSearchIntents = states.map((state) => ({
   title: `Health insurance guidance in ${state}`,
@@ -84,13 +99,18 @@ export default function Page() {
         <div className="space-y-10">
           <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {states.map((state) => (
-              <div
+              <Link
                 key={state}
-                className="rounded-2xl border border-[var(--ve-teal)]/10 bg-white p-5 text-center shadow-[0_14px_36px_rgba(15,23,42,0.07)]"
+                href={`/${statePageSlugs[state]}`}
+                aria-label={`Medicare guidance for ${state}`}
+                className="group rounded-2xl border border-[var(--ve-teal)]/10 bg-white p-5 text-center shadow-[0_14px_36px_rgba(15,23,42,0.07)] transition hover:-translate-y-0.5 hover:border-[var(--ve-gold)]/45 hover:shadow-[0_18px_44px_rgba(15,23,42,0.11)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ve-gold)] focus-visible:ring-offset-2"
               >
-                <div className="mx-auto h-9 w-14 rounded-[50%] bg-gradient-to-br from-[var(--ve-teal)] to-[#7dbac0]" />
+                <div className="mx-auto h-9 w-14 rounded-[50%] bg-gradient-to-br from-[var(--ve-teal)] to-[#7dbac0] transition group-hover:scale-105" />
                 <div className="mt-3 font-sans text-sm font-extrabold text-[var(--ve-teal)]">{state}</div>
-              </div>
+                <div className="mt-1 font-sans text-xs font-bold text-slate-500 group-hover:text-[var(--ve-teal)]">
+                  View state guidance
+                </div>
+              </Link>
             ))}
           </div>
 

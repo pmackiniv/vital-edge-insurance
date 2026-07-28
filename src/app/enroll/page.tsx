@@ -1,6 +1,40 @@
+import type { Metadata } from "next";
 import { Container } from "@/components/Container";
 import { ExternalLinks } from "@/components/ExternalLinks";
 import { PremiumContentBand, PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
+import { absoluteUrl } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "Secure Quote and Enrollment Links | Vital Edge Insurance",
+  description:
+    "Use approved Vital Edge Insurance destinations for Medicare review and UnitedHealthcare or Allstate Health Solutions ancillary quotes.",
+  alternates: {
+    canonical: absoluteUrl("/enroll"),
+  },
+  openGraph: {
+    type: "website",
+    url: absoluteUrl("/enroll"),
+    title: "Secure Quote and Enrollment Links | Vital Edge Insurance",
+    description:
+      "Use approved Vital Edge Insurance destinations for Medicare review and UnitedHealthcare or Allstate Health Solutions ancillary quotes.",
+    siteName: "Vital Edge Insurance",
+    images: [
+      {
+        url: absoluteUrl("/og.png"),
+        width: 1200,
+        height: 630,
+        alt: "Vital Edge Insurance secure quote and enrollment links",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Secure Quote and Enrollment Links | Vital Edge Insurance",
+    description:
+      "Use approved Vital Edge Insurance destinations for Medicare review and UnitedHealthcare or Allstate Health Solutions ancillary quotes.",
+    images: [absoluteUrl("/og.png")],
+  },
+};
 
 export default function EnrollPage() {
   return (

@@ -17,12 +17,14 @@ const METADATA_BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL !== "https://vital-edge-insurance.vercel.app"
     ? process.env.NEXT_PUBLIC_SITE_URL
     : PRODUCTION_SITE_URL;
+const googleSiteVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
+const bingSiteVerification = process.env.BING_SITE_VERIFICATION?.trim();
 
 export const metadata: Metadata = {
   metadataBase: new URL(METADATA_BASE_URL),
   title: {
     default: "Vital Edge Insurance | Health Insurance Guidance Across 12 States",
-    template: "%s | Vital Edge Insurance",
+    template: "%s",
   },
   description:
     `Licensed health insurance guidance for Medicare, ACA Marketplace, ancillary coverage, and small group questions. ${serviceAreaStatement} Call (352) 214-8879 or request a callback.`,
@@ -57,6 +59,15 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  verification:
+    googleSiteVerification || bingSiteVerification
+      ? {
+          ...(googleSiteVerification ? { google: googleSiteVerification } : {}),
+          ...(bingSiteVerification
+            ? { other: { "msvalidate.01": bingSiteVerification } }
+            : {}),
+        }
+      : undefined,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

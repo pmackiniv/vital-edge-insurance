@@ -1,8 +1,22 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/Container";
-import { site } from "@/lib/site";
+import { absoluteUrl, site } from "@/lib/site";
 import { AIChatPanel } from "@/components/AIChatPanel";
 import { PremiumCard, PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
+
+export const metadata: Metadata = {
+  title: "Ask Vital Guide | Vital Edge Insurance",
+  description:
+    "Ask Vital Guide for general health insurance education and next-step support from Vital Edge Insurance.",
+  alternates: {
+    canonical: absoluteUrl("/chat"),
+  },
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 export default function ChatPage() {
   return (
