@@ -467,8 +467,93 @@ const strategicPages: ResourcePage[] = [
   },
 ];
 
+const floridaPage: ResourcePage = {
+  slug: "florida-medicare-help",
+  eyebrow: "Florida Medicare help",
+  title: "Florida Medicare Help",
+  metaTitle: "Florida Medicare Help from a Florida-Licensed Agent | Vital Edge Insurance",
+  description:
+    "Florida Medicare education from Patrick Mackin IV, a Jacksonville-based, Florida-licensed health insurance agent (license G275791, NPN 21729046). Review enrollment timing, county availability, provider networks, prescriptions, and free official Florida resources.",
+  heroSubtitle:
+    "Jacksonville-based and Florida-licensed, with county-by-county Medicare education for households across the state.",
+  leadCategory: "Medicare consumer review",
+  audience: "Florida Medicare consumers and families",
+  primaryCtaLabel: "Request Florida Medicare Guidance",
+  primaryCtaHref: "/contact?topic=medicare&state=Florida",
+  secondaryCtaLabel: "Medicare 101",
+  secondaryCtaHref: "/medicare-101",
+  serviceType: "State Medicare education",
+  areaServed: "Florida",
+  cards: [
+    {
+      title: "Florida-licensed and verifiable",
+      body: "Patrick Mackin IV holds an active Florida life and health insurance license (G275791, NPN 21729046), based in Jacksonville, Duval County. Verify it anytime on the Florida Department of Financial Services licensee search.",
+    },
+    {
+      title: "County matters in Florida",
+      body: "Plan availability, provider networks, benefits, and eligibility vary by Florida county — what is available in Duval County can differ from Miami-Dade, Orange, or the Panhandle. A useful review always starts with your county and ZIP code.",
+    },
+    {
+      title: "Free official help exists",
+      body: "Florida's SHINE program (Serving Health Insurance Needs of Elders), run by the Florida Department of Elder Affairs, offers free, unbiased Medicare counseling. Vital Edge encourages using official resources alongside licensed-agent guidance.",
+    },
+  ],
+  blocks: [
+    {
+      title: "Medicare guidance in Florida",
+      paragraphs: [
+        "Vital Edge Insurance is headquartered in Jacksonville and provides education-first Medicare guidance for Florida residents who want to understand coverage paths before discussing plan-specific options.",
+        "A useful review starts with your county, ZIP code, current coverage, doctors, hospitals, prescriptions, preferred pharmacies, budget, and enrollment timing. Florida's mix of large metro counties and rural counties means plan availability genuinely differs across the state.",
+      ],
+    },
+    {
+      title: "About your licensed agent",
+      paragraphs: [
+        "Patrick Mackin IV is a Florida-resident licensed agent (Florida license G275791, National Producer Number 21729046) based in Jacksonville, Duval County. The license record, including active status and carrier appointments, is publicly verifiable through the Florida Department of Financial Services licensee search linked below.",
+        "Reviewed by Patrick Mackin IV. Last reviewed July 28, 2026.",
+      ],
+    },
+    {
+      title: "Official Florida and federal resources",
+      bullets: [
+        "Medicare.gov and 1-800-MEDICARE for complete plan information for your area.",
+        "SHINE, Florida's State Health Insurance Assistance Program, for free unbiased counseling (find it via the national SHIP locator).",
+        "The Florida Department of Financial Services for license verification and insurance consumer help.",
+      ],
+    },
+    { title: "Compliance note", paragraphs: [medicareDisclosure, tpmoDisclosure] },
+  ],
+  faqs: [
+    {
+      question: "Is Vital Edge Insurance licensed in Florida?",
+      answer:
+        "Yes. Patrick Mackin IV holds an active Florida life and health license (G275791, NPN 21729046), based in Jacksonville. You can verify the license on the Florida Department of Financial Services licensee search at any time.",
+    },
+    {
+      question: "Does Medicare plan availability vary within Florida?",
+      answer:
+        "Yes. Plan availability, provider networks, benefits, and eligibility vary by county and individual circumstances. Your county and ZIP code are the starting point for any accurate review.",
+    },
+    {
+      question: "Is there free official Medicare help in Florida?",
+      answer:
+        "Yes. SHINE (Serving Health Insurance Needs of Elders), a program of the Florida Department of Elder Affairs, provides free, unbiased, confidential Medicare counseling statewide. Medicare.gov and 1-800-MEDICARE list every option in your area.",
+    },
+    {
+      question: "Can I get plan-specific guidance right away?",
+      answer:
+        "General education can start anytime. Plan-specific Medicare Advantage or Part D discussions require appropriate appointment documentation.",
+    },
+  ],
+  links: [
+    { label: "Verify Patrick's Florida license (FL DFS)", href: "https://licenseesearch.fldfs.com/Licensee/2723002" },
+    { label: "Medicare.gov", href: "https://www.medicare.gov" },
+    { label: "Find SHINE via the SHIP locator", href: "https://www.shiphelp.org" },
+    ...coreLinks,
+  ],
+};
+
 const statePages: ResourcePage[] = [
-  ["florida", "Florida", "Jacksonville roots with statewide Medicare education for county-by-county review."],
   ["georgia", "Georgia", "Education for Georgia residents who want to review Medicare timing, networks, prescriptions, and county availability."],
   ["south-carolina", "South Carolina", "Plain-language Medicare guidance for South Carolina residents and families comparing coverage pathways."],
   ["north-carolina", "North Carolina", "Medicare education for North Carolina residents with attention to county, provider access, and prescription review."],
@@ -561,7 +646,7 @@ const localPages: ResourcePage[] = [
   links: coreLinks,
 })) as ResourcePage[];
 
-export const resourcePages: ResourcePage[] = [...strategicPages, ...statePages, ...localPages];
+export const resourcePages: ResourcePage[] = [...strategicPages, floridaPage, ...statePages, ...localPages];
 
 export const resourcePageSlugs = resourcePages.map((page) => page.slug);
 
