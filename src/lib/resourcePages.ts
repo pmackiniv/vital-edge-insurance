@@ -1,4 +1,5 @@
 import { LINKEDIN_PERSONAL } from "./externalLinks";
+import { publishableStateAuthorityPages, publishedStateSlugBases } from "./stateAuthorityPages";
 
 export type ResourceFaq = {
   question: string;
@@ -565,7 +566,11 @@ const statePages: ResourcePage[] = [
   ["ohio", "Ohio", "Ohio Medicare education for people comparing Original Medicare, Medicare Advantage, Medigap, and Part D basics."],
   ["michigan", "Michigan", "Michigan Medicare guidance focused on provider networks, prescriptions, enrollment timing, and county-level variation."],
   ["louisiana", "Louisiana", "Louisiana Medicare education for people who want clear next steps before plan-specific conversations."],
-].map(([slugBase, stateName, stateNote]) => ({
+]
+  // A state with a verified license record publishes a full authority page
+  // instead, so drop its templated twin here to avoid a duplicate slug.
+  .filter(([slugBase]) => !publishedStateSlugBases.includes(slugBase as string))
+  .map(([slugBase, stateName, stateNote]) => ({
   slug: `${slugBase}-medicare-help`,
   eyebrow: `${stateName} Medicare help`,
   title: `${stateName} Medicare Help`,
@@ -646,7 +651,15 @@ const localPages: ResourcePage[] = [
   links: coreLinks,
 })) as ResourcePage[];
 
-export const resourcePages: ResourcePage[] = [...strategicPages, floridaPage, ...statePages, ...localPages];
+const stateAuthorityPages = publishableStateAuthorityPages(coreLinks);
+
+export const resourcePages: ResourcePage[] = [
+  ...strategicPages,
+  floridaPage,
+  ...stateAuthorityPages,
+  ...statePages,
+  ...localPages,
+];
 
 export const resourcePageSlugs = resourcePages.map((page) => page.slug);
 
