@@ -1,9 +1,28 @@
 export type NotionLeadPayload = {
   topic: string;
   county: string;
+  state?: string;
+  zip?: string;
   contactMethod: string;
   message: string;
   receivedAtIso: string;
+  leadSource?: string;
+  pageSource?: string;
+  utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
+  linkedinReferral?: boolean;
+  eventReferral?: boolean;
+  partnerReferral?: boolean;
+  leadCategory?: string;
+  consentTimestamp?: string;
+  permissionToContact?: boolean;
+  permissionToContactMethod?: string;
+  permissionToContactText?: string;
+  permissionToContactVersion?: string;
+  automatedContactConsent?: boolean;
+  automatedContactConsentText?: string;
+  automatedContactConsentVersion?: string;
 };
 
 export type NotionSyncResult = {
@@ -22,6 +41,32 @@ export async function syncLeadToNotion(payload: NotionLeadPayload): Promise<Noti
   }
 
   const titleLabel = `Website – ${payload.topic || "General"} – ${payload.receivedAtIso.slice(0, 10)}`;
+  const messageWithAuditDetails = [
+    payload.message || "",
+    "",
+    "Permission to Contact audit:",
+    `Permission to Contact: ${payload.permissionToContact ? "yes" : "no"}`,
+    `Contact method captured: ${payload.permissionToContactMethod || payload.contactMethod || "N/A"}`,
+    `PTC version: ${payload.permissionToContactVersion || "N/A"}`,
+    payload.permissionToContactText ? `PTC text: ${payload.permissionToContactText}` : "",
+    `Automated contact consent: ${payload.automatedContactConsent ? "yes" : "no"}`,
+    `Automated consent version: ${payload.automatedContactConsentVersion || "N/A"}`,
+    payload.automatedContactConsentText ? `Automated consent text: ${payload.automatedContactConsentText}` : "",
+    "",
+    "Lead source and routing:",
+    `Lead category: ${payload.leadCategory || "N/A"}`,
+    `Lead source: ${payload.leadSource || "Website"}`,
+    `Page source: ${payload.pageSource || "N/A"}`,
+    `State: ${payload.state || "N/A"}`,
+    `ZIP: ${payload.zip || "N/A"}`,
+    `UTM source: ${payload.utmSource || "N/A"}`,
+    `UTM medium: ${payload.utmMedium || "N/A"}`,
+    `UTM campaign: ${payload.utmCampaign || "N/A"}`,
+    `LinkedIn referral: ${payload.linkedinReferral ? "yes" : "no"}`,
+    `Event referral: ${payload.eventReferral ? "yes" : "no"}`,
+    `Partner referral: ${payload.partnerReferral ? "yes" : "no"}`,
+    `Consent timestamp: ${payload.consentTimestamp || payload.receivedAtIso}`,
+  ].filter(Boolean).join("\n");
 
   const body = {
     parent: { database_id: databaseId },
@@ -39,10 +84,10 @@ export async function syncLeadToNotion(payload: NotionLeadPayload): Promise<Noti
         rich_text: [{ text: { content: (payload.contactMethod || "").slice(0, 2000) } }],
       },
       Message: {
-        rich_text: [{ text: { content: (payload.message || "").slice(0, 2000) } }],
+        rich_text: [{ text: { content: messageWithAuditDetails.slice(0, 2000) } }],
       },
       Source: {
-        rich_text: [{ text: { content: "Website" } }],
+        rich_text: [{ text: { content: (payload.leadSource || "Website").slice(0, 2000) } }],
       },
       Received: {
         date: { start: payload.receivedAtIso.slice(0, 19) },

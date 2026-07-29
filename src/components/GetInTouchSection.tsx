@@ -2,6 +2,13 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import {
+  AUTOMATED_CONTACT_CONSENT_TEXT,
+  AUTOMATED_CONTACT_CONSENT_VERSION,
+  PERMISSION_TO_CONTACT_TEXT,
+  PERMISSION_TO_CONTACT_VERSION,
+} from "@/lib/leadConsent";
+import { buildClientLeadTracking } from "@/lib/clientLeadTracking";
 
 const serviceOptions = [
   "Medicare Guidance",
@@ -15,6 +22,9 @@ const serviceOptions = [
   "Cancer / Heart Attack / Stroke",
 ];
 
+const stateOptions = ["Florida", "Georgia", "South Carolina", "North Carolina", "Texas", "Tennessee", "Arizona", "Washington", "Pennsylvania", "Ohio", "Michigan", "Louisiana"];
+const contactMethodOptions = ["Call", "Text", "Email"];
+
 const trustBullets = [
   "Simple guidance in plain English.",
   "Licensed-agent follow-up, no call-center bounce.",
@@ -27,9 +37,14 @@ export function GetInTouchSection() {
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [state, setState] = useState("Florida");
+  const [county, setCounty] = useState("");
+  const [zip, setZip] = useState("");
+  const [preferredContactMethod, setPreferredContactMethod] = useState("Call");
   const [message, setMessage] = useState("");
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [consent, setConsent] = useState(false);
+  const [automatedContactConsent, setAutomatedContactConsent] = useState(false);
   const [licensedAgentDisclosure, setLicensedAgentDisclosure] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -52,7 +67,20 @@ export function GetInTouchSection() {
     }
 
     const topic = selectedServices.length ? selectedServices.join(", ") : "General guidance";
-    const messageText = [message.trim(), `Services selected: ${topic}`].filter(Boolean).join("\n");
+    const leadCategory = /medicare/i.test(topic)
+      ? "Medicare consumer review"
+      : /group|employer|ichra/i.test(topic)
+        ? "Employer/private options"
+        : "ACA/private health";
+    const tracking = buildClientLeadTracking(window.location.pathname, leadCategory);
+    const messageText = [
+      message.trim(),
+      `Services selected: ${topic}`,
+      `State: ${state}`,
+      `County: ${county || "Not provided"}`,
+      `ZIP: ${zip}`,
+      `Preferred contact method: ${preferredContactMethod}`,
+    ].filter(Boolean).join("\n");
 
     setSubmitting(true);
     try {
@@ -61,10 +89,18 @@ export function GetInTouchSection() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           topic,
-          county: "",
-          contactMethod: `Name: ${firstName} ${lastName} | Phone: ${phone}${email ? ` | Email: ${email}` : ""}`,
+          county,
+          state,
+          zip,
+          contactMethod: `Preferred: ${preferredContactMethod} | Name: ${firstName} ${lastName} | Phone: ${phone}${email ? ` | Email: ${email}` : ""}`,
           message: messageText,
           consent: true,
+          permissionToContactMethod: email ? "Phone, Text, Email" : "Phone/Text",
+          permissionToContactText: PERMISSION_TO_CONTACT_TEXT,
+          permissionToContactVersion: PERMISSION_TO_CONTACT_VERSION,
+          automatedContactConsent,
+          automatedContactConsentText: AUTOMATED_CONTACT_CONSENT_TEXT,
+          automatedContactConsentVersion: AUTOMATED_CONTACT_CONSENT_VERSION,
           dataSharingConsent: true,
           dataSharingRecipient: "Vital Edge Licensed Agent",
           dataSharingEntities: ["Vital Edge Licensed Agent"],
@@ -72,6 +108,7 @@ export function GetInTouchSection() {
           beneficiaryInitiated: true,
           productInterest: topic,
           intent: true,
+          ...tracking,
         }),
       });
       const data = (await response.json().catch(() => ({}))) as { ok?: boolean; error?: string; message?: string };
@@ -79,14 +116,19 @@ export function GetInTouchSection() {
         setError(data.error || "We could not submit your request right now.");
         return;
       }
-      setSuccess(data.message || "Thanks. A licensed agent will follow up shortly.");
+      setSuccess(data.message || "Thanks. Patrick Mackin IV will follow up shortly.");
       setFirstName("");
       setLastName("");
       setPhone("");
       setEmail("");
+      setState("Florida");
+      setCounty("");
+      setZip("");
+      setPreferredContactMethod("Call");
       setMessage("");
       setSelectedServices([]);
       setConsent(false);
+      setAutomatedContactConsent(false);
       setLicensedAgentDisclosure(false);
     } catch {
       setError("We could not submit your request right now.");
@@ -101,7 +143,7 @@ export function GetInTouchSection() {
         <div className="space-y-5">
           <h2 className="text-[clamp(1.8rem,2.6vw,2.5rem)] font-semibold tracking-tight text-black">Get in touch</h2>
           <p className="max-w-lg text-sm leading-7 text-black/75">
-            Have a question or need personalized help? Share a few details and a licensed agent will follow up with
+            Have a question or need personalized help? Share a few details and Patrick Mackin IV will follow up with
             clear next steps.
           </p>
           <div className="space-y-3">
@@ -143,6 +185,59 @@ export function GetInTouchSection() {
                   onChange={(event) => setLastName(event.target.value)}
                   className="mt-2 w-full rounded-lg border border-black/15 px-3 py-2 text-sm"
                   autoComplete="family-name"
+                  required
+                />
+              </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <label htmlFor="gti-contact-method" className="text-sm font-semibold text-black">Preferred contact method *</label>
+                <select
+                  id="gti-contact-method"
+                  value={preferredContactMethod}
+                  onChange={(event) => setPreferredContactMethod(event.target.value)}
+                  className="mt-2 h-11 w-full rounded-lg border border-black/15 px-3 text-sm"
+                  required
+                >
+                  {contactMethodOptions.map((item) => (
+                    <option key={item} value={item}>{item}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="gti-state" className="text-sm font-semibold text-black">State *</label>
+                <select
+                  id="gti-state"
+                  value={state}
+                  onChange={(event) => setState(event.target.value)}
+                  className="mt-2 h-11 w-full rounded-lg border border-black/15 px-3 text-sm"
+                  required
+                >
+                  {stateOptions.map((item) => (
+                    <option key={item} value={item}>{item}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <label htmlFor="gti-county" className="text-sm font-semibold text-black">County</label>
+                <input
+                  id="gti-county"
+                  value={county}
+                  onChange={(event) => setCounty(event.target.value)}
+                  className="mt-2 w-full rounded-lg border border-black/15 px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label htmlFor="gti-zip" className="text-sm font-semibold text-black">ZIP code *</label>
+                <input
+                  id="gti-zip"
+                  value={zip}
+                  onChange={(event) => setZip(event.target.value.replace(/\D/g, "").slice(0, 5))}
+                  className="mt-2 w-full rounded-lg border border-black/15 px-3 py-2 text-sm"
+                  autoComplete="postal-code"
+                  inputMode="numeric"
                   required
                 />
               </div>
@@ -197,6 +292,9 @@ export function GetInTouchSection() {
                 className="mt-2 min-h-28 w-full rounded-lg border border-black/15 px-3 py-2 text-sm"
                 placeholder="Tell us what support you need."
               />
+              <p className="mt-2 text-xs text-black/60">
+                Please do not submit Medicare numbers, Social Security numbers, or sensitive medical information through this form.
+              </p>
             </div>
             <label className="flex items-start gap-3 rounded-lg border border-black/10 p-3 text-xs text-black/70">
               <input
@@ -206,10 +304,16 @@ export function GetInTouchSection() {
                 className="mt-0.5 shrink-0"
                 required
               />
-              <span>
-                By checking this box, you agree to be contacted by call, text, and/or email about your request.
-                Message &amp; data rates may apply. Reply STOP to opt out.
-              </span>
+              <span><strong className="text-black">Permission to Contact: </strong>{PERMISSION_TO_CONTACT_TEXT}</span>
+            </label>
+            <label className="flex items-start gap-3 rounded-lg border border-black/10 p-3 text-xs text-black/70">
+              <input
+                type="checkbox"
+                checked={automatedContactConsent}
+                onChange={(event) => setAutomatedContactConsent(event.target.checked)}
+                className="mt-0.5 shrink-0"
+              />
+              <span><strong className="text-black">Automated communications consent: </strong>{AUTOMATED_CONTACT_CONSENT_TEXT}</span>
             </label>
             <label className="flex items-start gap-3 rounded-lg border border-black/10 p-3 text-xs text-black/70">
               <input

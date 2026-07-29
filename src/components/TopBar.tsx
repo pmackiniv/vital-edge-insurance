@@ -1,5 +1,6 @@
 import { site } from "@/lib/site";
 import { Container } from "@/components/Container";
+import Link from "next/link";
 import {
   FACEBOOK,
   GBP_REVIEWS,
@@ -79,9 +80,9 @@ export function TopBar() {
             <a className="hidden font-medium hover:text-black sm:inline" href={`mailto:${site.email}`}>
               Email Us
             </a>
-            <a className="hidden font-medium hover:text-black md:inline" href="/contact">
+            <Link className="hidden font-medium hover:text-black md:inline" href="/contact">
               Client Support
-            </a>
+            </Link>
             <span className="hidden text-black/30 md:inline">•</span>
             <span className="hidden truncate text-black/60 lg:inline">{site.phoneDisplay}</span>
           </div>
@@ -105,24 +106,24 @@ export function TopBar() {
           </div>
         </div>
         <div className="hidden items-center justify-center gap-3 border-t border-black/5 py-2 text-sm font-semibold lg:flex">
-          <a
+          <Link
             href="/resources"
             className="inline-flex min-w-[12rem] items-center justify-center rounded-md bg-[var(--brand-green)] px-4 py-2 text-white hover:brightness-95"
           >
             Explore Resources
-          </a>
-          <a
+          </Link>
+          <Link
             href="/resources#starter-kit"
             className="inline-flex min-w-[12rem] items-center justify-center rounded-md bg-[var(--brand-blue)] px-4 py-2 text-white hover:brightness-95"
           >
-            FREE Starter Kit
-          </a>
-          <a
+            Starter Kit
+          </Link>
+          <Link
             href="/medicare"
             className="inline-flex min-w-[12rem] items-center justify-center rounded-md bg-[#65b4bf] px-4 py-2 text-white hover:brightness-95"
           >
             New to Medicare
-          </a>
+          </Link>
         </div>
       </Container>
     </div>

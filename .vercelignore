@@ -1,0 +1,36 @@
+# Files excluded from Vercel deployment uploads.
+#
+# Vercel CLI deploys (`vercel --prod`) upload the working directory, and do not
+# reliably honor .gitignore. Without this file, local QA artifacts get bundled
+# into the deployment: the 2026-07-28 production deploy shipped 510 stray files
+# (~504 of them under outputs/) that .gitignore already excluded.
+#
+# Keep this in sync with the "generated local QA artifacts" section of .gitignore.
+
+# dependencies
+/node_modules
+
+# build output (Vercel builds from source)
+/.next/
+/out/
+/build
+/coverage
+
+# generated local QA artifacts
+/outputs/
+/playwright-report/
+/test-results/
+/.playwright-cli/
+/agent_tracker_browser.html
+
+# local env and secrets
+.env*
+!.env.example
+*.pem
+
+# editor / OS noise
+.DS_Store
+*.tsbuildinfo
+
+# local tooling
+/.vercel

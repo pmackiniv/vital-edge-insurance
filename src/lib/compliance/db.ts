@@ -67,14 +67,50 @@ export async function ensureComplianceTables(): Promise<void> {
             "timestamp" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             "leadRequestId" TEXT NOT NULL,
             "leadTransferDisclosureAck" BOOLEAN NOT NULL DEFAULT FALSE,
+            "permissionToContact" BOOLEAN NOT NULL DEFAULT FALSE,
+            "permissionToContactMethod" TEXT,
+            "permissionToContactText" TEXT,
+            "permissionToContactVersion" TEXT,
+            "automatedContactConsent" BOOLEAN NOT NULL DEFAULT FALSE,
+            "automatedContactConsentText" TEXT,
+            "automatedContactConsentVersion" TEXT,
             "dataSharingConsent" BOOLEAN NOT NULL DEFAULT FALSE,
             "dataSharingEntitiesJson" TEXT NOT NULL,
             "beneficiaryInitiated" BOOLEAN NOT NULL DEFAULT FALSE,
             "sourceRoute" TEXT NOT NULL,
+            "leadSource" TEXT,
+            "pageSource" TEXT,
+            "utmSource" TEXT,
+            "utmMedium" TEXT,
+            "utmCampaign" TEXT,
+            "linkedinReferral" BOOLEAN NOT NULL DEFAULT FALSE,
+            "eventReferral" BOOLEAN NOT NULL DEFAULT FALSE,
+            "partnerReferral" BOOLEAN NOT NULL DEFAULT FALSE,
+            "leadCategory" TEXT,
+            "state" TEXT,
             "zip" TEXT,
-            "productInterest" TEXT
+            "productInterest" TEXT,
+            "consentTimestamp" TIMESTAMP
           )
         `);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "LeadDisclosureAudit" ADD COLUMN IF NOT EXISTS "permissionToContact" BOOLEAN NOT NULL DEFAULT FALSE`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "LeadDisclosureAudit" ADD COLUMN IF NOT EXISTS "permissionToContactMethod" TEXT`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "LeadDisclosureAudit" ADD COLUMN IF NOT EXISTS "permissionToContactText" TEXT`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "LeadDisclosureAudit" ADD COLUMN IF NOT EXISTS "permissionToContactVersion" TEXT`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "LeadDisclosureAudit" ADD COLUMN IF NOT EXISTS "automatedContactConsent" BOOLEAN NOT NULL DEFAULT FALSE`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "LeadDisclosureAudit" ADD COLUMN IF NOT EXISTS "automatedContactConsentText" TEXT`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "LeadDisclosureAudit" ADD COLUMN IF NOT EXISTS "automatedContactConsentVersion" TEXT`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "LeadDisclosureAudit" ADD COLUMN IF NOT EXISTS "leadSource" TEXT`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "LeadDisclosureAudit" ADD COLUMN IF NOT EXISTS "pageSource" TEXT`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "LeadDisclosureAudit" ADD COLUMN IF NOT EXISTS "utmSource" TEXT`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "LeadDisclosureAudit" ADD COLUMN IF NOT EXISTS "utmMedium" TEXT`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "LeadDisclosureAudit" ADD COLUMN IF NOT EXISTS "utmCampaign" TEXT`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "LeadDisclosureAudit" ADD COLUMN IF NOT EXISTS "linkedinReferral" BOOLEAN NOT NULL DEFAULT FALSE`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "LeadDisclosureAudit" ADD COLUMN IF NOT EXISTS "eventReferral" BOOLEAN NOT NULL DEFAULT FALSE`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "LeadDisclosureAudit" ADD COLUMN IF NOT EXISTS "partnerReferral" BOOLEAN NOT NULL DEFAULT FALSE`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "LeadDisclosureAudit" ADD COLUMN IF NOT EXISTS "leadCategory" TEXT`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "LeadDisclosureAudit" ADD COLUMN IF NOT EXISTS "state" TEXT`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "LeadDisclosureAudit" ADD COLUMN IF NOT EXISTS "consentTimestamp" TIMESTAMP`);
         await prisma.$executeRawUnsafe(`
           CREATE INDEX IF NOT EXISTS "LeadDisclosureAudit_timestamp_idx"
           ON "LeadDisclosureAudit"("timestamp")

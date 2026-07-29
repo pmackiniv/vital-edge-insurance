@@ -1,3 +1,5 @@
+import { GOOGLE_BUSINESS_PROFILE_URL } from "@/lib/googleBusinessProfile";
+
 export type SiteNavItem = {
   label: string;
   href: string;
@@ -9,11 +11,42 @@ export type SiteMainNavItem = {
   children?: SiteNavItem[];
 };
 
+const PRODUCTION_SITE_URL = "https://www.vital-edge-insurance.com";
+const LEGACY_SITE_URLS = new Set(["https://vital-edge-insurance.vercel.app"]);
+export const licensedStateNames = [
+  "Florida",
+  "Georgia",
+  "South Carolina",
+  "North Carolina",
+  "Texas",
+  "Tennessee",
+  "Arizona",
+  "Washington",
+  "Pennsylvania",
+  "Ohio",
+  "Michigan",
+  "Louisiana",
+] as const;
+
+export const serviceAreaStatement =
+  "Headquartered in Florida. Serving clients across 12 states and growing.";
+
+function normalizePublicSiteUrl(value?: string) {
+  if (!value || !value.startsWith("http")) return "";
+
+  const normalized = value.replace(/\/$/, "");
+  if (LEGACY_SITE_URLS.has(normalized)) return "";
+
+  return normalized;
+}
+
 export const site = {
   name: "Vital Edge Insurance",
   legalName: "Vital Edge Insurance",
-  domain: "vital-edge-insurance.vercel.app",
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+  domain: "www.vital-edge-insurance.com",
+  siteUrl: normalizePublicSiteUrl(process.env.NEXT_PUBLIC_SITE_URL) || PRODUCTION_SITE_URL,
+  npn: "21729046",
+  floridaLicense: "G275791",
   phoneDisplay: "(352) 214-8879",
   phoneE164: "+13522148879",
   email: "pmackiniv27@icloud.com",
@@ -24,15 +57,22 @@ export const site = {
     postalCode: "32223",
     addressCountry: "US",
   },
-  serviceAreas: ["Jacksonville, FL", "Duval County, FL", "St. Johns County, FL", "Miami-Dade County, FL"],
+  serviceAreas: [
+    ...licensedStateNames,
+    "Jacksonville, FL",
+    "Duval County, FL",
+    "St. Johns County, FL",
+    "Miami-Dade County, FL",
+  ],
   sameAs: [
+    "https://www.linkedin.com/in/patrick-mackin-iv-297574187",
     "https://www.linkedin.com/company/vital-edge-insurance/",
-    "https://www.google.com/search?q=Vital+Edge+Insurance&stick=H4sIAAAAAAAA_-NgU1I1qEi0TDZOTUs1MzIwME4yT0uzMqgwSzE0sjA0NEpOSk5NMjEwWcQqEpZZkpij4JqSnqrgmVdcWpSYl5wKANLkHDxAAAAA&hl=en&mat=CW35JL1kTIqIElcBTVDHnqVfH-Wi1kZaybAAgEkbbguVbMIiOx3q7WK137Zlmt8PEjkzMjCVWgPbHAq2C2xH1w8p9BoEq0B1ljI2u_pt8FnNlaK60z23RCABICMr0GIQYIw&authuser=1",
+    GOOGLE_BUSINESS_PROFILE_URL,
   ],
   logoPath: "/brand/vital-edge-logo.png",
   ogImagePath: "/og-image.svg",
   primaryCta: {
-    label: "Get Personalized Medicare Advice",
+    label: "Request a Call",
     href: "/contact",
   },
   /** Cal.com, Calendly, or other booking embed URL. Set NEXT_PUBLIC_SCHEDULE_URL in Vercel. */
@@ -42,77 +82,75 @@ export const site = {
     { label: "Medicare Advantage", href: "/medicare/medicare-advantage-request" },
     { label: "Medigap", href: "/medicare/medigap-request" },
     { label: "ACA / ICHRA", href: "/aca" },
+    { label: "Ancillary", href: "/ancillary" },
     { label: "Small Group", href: "/small-group" },
     { label: "Contact", href: "/contact" },
   ] as SiteNavItem[],
   mainNav: [
-    { label: "Home", href: "/" },
-    {
-      label: "About",
-      href: "/about",
-      children: [
-        { label: "About Vital Edge", href: "/about" },
-        { label: "Contact", href: "/contact" },
-        { label: "Schedule a Call", href: "/schedule" },
-      ],
-    },
     {
       label: "Medicare",
       href: "/medicare",
       children: [
         { label: "Medicare Overview", href: "/medicare" },
-        { label: "Medicare Advantage Request", href: "/medicare/medicare-advantage-request" },
-        { label: "Medigap Request", href: "/medicare/medigap-request" },
-        { label: "Enrollment Links", href: "/enroll" },
+        { label: "New to Medicare", href: "/resources#new-to-medicare" },
+        { label: "Medicare Advantage", href: "/medicare/medicare-advantage-request" },
+        { label: "Medigap", href: "/medicare/medigap" },
+        { label: "Part D", href: "/resources#part-d-basics" },
+        { label: "Special Needs Plans", href: "/medicare/snp" },
+        { label: "D-SNP", href: "/medicare/d-snp" },
+        { label: "C-SNP", href: "/medicare/c-snp" },
       ],
     },
     {
-      label: "Health Insurance",
+      label: "ACA",
       href: "/aca",
       children: [
         { label: "ACA Marketplace", href: "/aca" },
+        { label: "ACA Subsidies", href: "/resources#aca-subsidies-overview" },
+        { label: "Special Enrollment Periods", href: "/aca/sep" },
         { label: "ICHRA", href: "/ichra" },
         { label: "Off-Exchange", href: "/off-exchange" },
-        { label: "Small Group", href: "/small-group" },
       ],
     },
     {
-      label: "Other Services",
-      href: "/contact?topic=other",
+      label: "Ancillary",
+      href: "/ancillary",
       children: [
-        { label: "Life Insurance", href: "/contact?topic=life-insurance" },
-        { label: "Final Expense", href: "/contact?topic=final-expense" },
-        { label: "Term Life", href: "/contact?topic=term-life" },
-        { label: "Dental / Vision / Hearing", href: "/contact?topic=dental-vision-hearing" },
-        { label: "Hospital Plans", href: "/contact?topic=hospital-plans" },
-        { label: "Cancer / Heart Attack / Stroke", href: "/contact?topic=cancer-heart-stroke" },
+        { label: "Ancillary Overview", href: "/ancillary" },
+        { label: "Dental/Vision/Hearing", href: "/ancillary#dental-vision-hearing" },
+        { label: "Hospital Indemnity", href: "/ancillary" },
+        { label: "Request Help Comparing Options", href: "/contact?topic=ancillary" },
       ],
     },
     {
       label: "Resources",
       href: "/resources",
       children: [
-        { label: "Resources", href: "/resources" },
-        { label: "Blog", href: "/blog" },
+        { label: "Resource Hub", href: "/resources" },
+        { label: "Medicare Coverage Pathways", href: "/resources#medicare-coverage-pathways" },
+        { label: "What to Bring", href: "/resources#what-to-bring" },
+        { label: "Prescription Savings", href: "/resources#prescription-savings-basics" },
+        { label: "Referral Information", href: "/referrals" },
       ],
     },
     {
-      label: "Locations",
-      href: "/duval-county",
+      label: "About",
+      href: "/about",
       children: [
-        { label: "Duval County", href: "/duval-county" },
-        { label: "St. Johns County", href: "/st-johns-county" },
-        { label: "Miami-Dade", href: "/miami" },
+        { label: "About Vital Edge", href: "/about" },
+        { label: "Licensed States", href: "/licensed-states" },
+        { label: "Contact", href: "/contact" },
+        { label: "Request a Call", href: "/contact" },
       ],
     },
   ] as SiteMainNavItem[],
 } as const;
 
 export function absoluteUrl(path = "/") {
-  const vercelUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "";
-  const explicit = process.env.NEXT_PUBLIC_SITE_URL || "";
-  const fallback = "http://localhost:3000";
-  const base = (explicit || vercelUrl || fallback).replace(/\/$/, "");
+  const vercelUrl = normalizePublicSiteUrl(process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "");
+  const explicit = normalizePublicSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
+  const fallback = process.env.NODE_ENV === "production" ? PRODUCTION_SITE_URL : vercelUrl || "http://localhost:3000";
+  const base = (explicit || fallback).replace(/\/$/, "");
   const p = path.startsWith("/") ? path : `/${path}`;
   return `${base}${p}`;
 }
@@ -126,6 +164,20 @@ export function organizationJsonLd() {
     email: site.email,
     telephone: site.phoneE164,
     sameAs: site.sameAs,
+    identifier: [
+      { "@type": "PropertyValue", name: "National Producer Number", value: site.npn },
+      { "@type": "PropertyValue", name: "Florida insurance license", value: site.floridaLicense },
+    ],
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        telephone: site.phoneE164,
+        email: site.email,
+        contactType: "customer service",
+        areaServed: site.serviceAreas,
+        availableLanguage: "English",
+      },
+    ],
   };
 }
 
@@ -137,6 +189,10 @@ export function localBusinessJsonLd() {
     url: site.siteUrl,
     telephone: site.phoneE164,
     email: site.email,
+    identifier: [
+      { "@type": "PropertyValue", name: "National Producer Number", value: site.npn },
+      { "@type": "PropertyValue", name: "Florida insurance license", value: site.floridaLicense },
+    ],
     areaServed: site.serviceAreas.map((name) => ({ "@type": "AdministrativeArea", name })),
     address: {
       "@type": "PostalAddress",
@@ -154,7 +210,7 @@ export function insuranceAgencyJsonLd() {
     telephone: site.phoneE164,
     email: site.email,
     description:
-      "Independent insurance guidance for individuals, families, and small businesses in Jacksonville, Florida and nearby counties.",
+      "Independent health insurance guidance for Medicare, ACA Marketplace, ancillary coverage, and small group questions across Florida and additional licensed states.",
     areaServed: site.serviceAreas.map((name) => ({ "@type": "AdministrativeArea", name })),
     address: {
       "@type": "PostalAddress",
@@ -166,6 +222,18 @@ export function insuranceAgencyJsonLd() {
     },
     sameAs: site.sameAs,
     logo: absoluteUrl(site.logoPath),
+    identifier: [
+      { "@type": "PropertyValue", name: "National Producer Number", value: site.npn },
+      { "@type": "PropertyValue", name: "Florida insurance license", value: site.floridaLicense },
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: site.phoneE164,
+      email: site.email,
+      contactType: "licensed insurance guidance",
+      areaServed: site.serviceAreas,
+      availableLanguage: "English",
+    },
   };
 }
 
@@ -189,6 +257,10 @@ export function personJsonLd() {
     email: site.email,
     url: absoluteUrl("/about"),
     sameAs: site.sameAs,
+    identifier: [
+      { "@type": "PropertyValue", name: "National Producer Number", value: site.npn },
+      { "@type": "PropertyValue", name: "Florida insurance license", value: site.floridaLicense },
+    ],
     areaServed: site.serviceAreas.map((name) => ({ "@type": "AdministrativeArea", name })),
     knowsAbout: [
       "ACA Marketplace",
@@ -198,7 +270,31 @@ export function personJsonLd() {
       "ICHRA",
       "Small Group Health Insurance",
       "Florida Health Insurance",
+      "Georgia Health Insurance",
+      "South Carolina Health Insurance",
+      "North Carolina Health Insurance",
+      "Texas Health Insurance",
+      "Tennessee Health Insurance",
+      "Arizona Health Insurance",
+      "Washington Health Insurance",
+      "Pennsylvania Health Insurance",
+      "Ohio Health Insurance",
+      "Michigan Health Insurance",
+      "Louisiana Health Insurance",
       "Health Insurance Compliance",
     ],
+  };
+}
+
+export function webSiteJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: site.name,
+    url: absoluteUrl("/"),
+    publisher: {
+      "@type": "Organization",
+      name: site.legalName,
+    },
   };
 }

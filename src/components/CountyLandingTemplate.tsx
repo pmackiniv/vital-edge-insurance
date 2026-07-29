@@ -1,6 +1,13 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/Container";
+import {
+  PremiumCard,
+  PremiumContentBand,
+  PremiumDisclosure,
+  PremiumFeatureGrid,
+  PremiumInteriorHero,
+  PremiumLinkGrid,
+} from "@/components/PremiumInteriorPage";
 import { absoluteUrl, site } from "@/lib/site";
 
 type CountyLink = { label: string; href: string };
@@ -28,8 +35,6 @@ export function CountyLandingTemplate({
   canonicalPath,
   intro,
   details,
-  heroImageSrc,
-  heroImageAlt,
   neighboringCounties = [],
 }: CountyLandingTemplateProps) {
   const pageJsonLd = {
@@ -62,68 +67,86 @@ export function CountyLandingTemplate({
   };
 
   return (
-    <Container className="py-14">
-      <div className="max-w-3xl space-y-4">
-        {heroImageSrc ? (
-          <div className="relative overflow-hidden rounded-3xl border border-black/10 bg-white">
-            <div className="relative aspect-[16/9]">
-              <Image
-                src={heroImageSrc}
-                alt={heroImageAlt || `${countyName} skyline`}
-                fill
-                className="object-cover"
-                sizes="(min-width: 768px) 720px, 100vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/20 to-transparent" />
-            </div>
-            <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-              <div className="text-sm font-semibold text-white/80">Service Area</div>
-              <h1 className="mt-1 text-2xl font-semibold tracking-tight">{countyName}</h1>
-            </div>
-          </div>
-        ) : (
-          <h1 className="text-2xl font-semibold tracking-tight">{countyName}</h1>
-        )}
+    <>
+      <PremiumInteriorHero
+        eyebrow="Service Area"
+        title={`${countyName} Guidance`}
+        subtitle={intro}
+        actions={[
+          { label: "Request Guidance", href: "/contact", kind: "primary" },
+          { label: "Medicare Guidance", href: "/medicare", kind: "gold" },
+          { label: `Call ${site.phoneDisplay}`, href: `tel:${site.phoneE164}`, kind: "light" },
+        ]}
+      >
+        <PremiumDisclosure>
+          Local service availability, product availability, carrier appointment, plan details, and enrollment timing can
+          vary by state, county, ZIP code, and carrier.
+        </PremiumDisclosure>
+      </PremiumInteriorHero>
 
-        <p className="text-black/70">{intro}</p>
-        <p className="text-black/70">{details}</p>
-
-        <div className="rounded-2xl border border-black/10 bg-white p-5">
-          <h2 className="text-sm font-semibold text-black">Core services</h2>
-          <div className="mt-3 flex flex-wrap gap-3 text-sm">
-            {coreServiceLinks.map((serviceLink) => (
-              <Link key={serviceLink.href} className="text-black/70 hover:text-black" href={serviceLink.href}>
-                {serviceLink.label}
-              </Link>
-            ))}
-          </div>
-          {neighboringCounties.length ? (
-            <div className="mt-4 text-sm text-black/70">
-              Also serving{" "}
-              {neighboringCounties.map((county, index) => (
-                <span key={county.href}>
-                  {index > 0 ? " and " : ""}
-                  <Link className="text-black hover:underline" href={county.href}>
-                    {county.label}
-                  </Link>
-                </span>
-              ))}
-              .
+      <Container className="py-12">
+        <div className="space-y-10">
+          <PremiumContentBand title={`Insurance guidance for ${countyName}`}>
+            <div className="space-y-3">
+              <p>{details}</p>
+              <p>
+                Vital Edge keeps the process education-first: clarify the coverage question, prepare the right details,
+                and hand off to a licensed agent for plan-specific next steps.
+              </p>
             </div>
-          ) : null}
+          </PremiumContentBand>
+
+          <PremiumFeatureGrid
+            features={[
+              {
+                title: "Local routing",
+                body: "Start with ZIP code, timing, current coverage, and the type of help needed.",
+              },
+              {
+                title: "Coverage education",
+                body: "Review Medicare, ACA, ancillary, employer, and off-exchange concepts without pressure.",
+              },
+              {
+                title: "Licensed handoff",
+                body: "Plan-specific conversations are handled with the right disclosures and licensed follow-up.",
+              },
+            ]}
+          />
+
+          <div className="grid gap-5 md:grid-cols-2">
+            <PremiumCard title="Core services" tone="soft">
+              <PremiumLinkGrid links={coreServiceLinks} />
+            </PremiumCard>
+            <PremiumCard title={site.legalName} tone="teal">
+              <p>
+                {site.address.addressLocality}, {site.address.addressRegion}
+              </p>
+              <p className="mt-2">
+                <a className="font-bold underline underline-offset-4" href={`tel:${site.phoneE164}`}>
+                  {site.phoneDisplay}
+                </a>
+              </p>
+              {neighboringCounties.length ? (
+                <p className="mt-3">
+                  Also serving{" "}
+                  {neighboringCounties.map((county, index) => (
+                    <span key={county.href}>
+                      {index > 0 ? " and " : ""}
+                      <Link className="font-bold underline underline-offset-4" href={county.href}>
+                        {county.label}
+                      </Link>
+                    </span>
+                  ))}
+                  .
+                </p>
+              ) : null}
+            </PremiumCard>
+          </div>
         </div>
-
-        <div className="rounded-2xl border border-black/10 bg-white p-4 text-sm text-black/70">
-          <div className="font-semibold text-black">{site.legalName}</div>
-          <div>
-            {site.address.addressLocality}, {site.address.addressRegion}
-          </div>
-          <div>{site.phoneDisplay}</div>
-        </div>
-      </div>
+      </Container>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(pageJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
-    </Container>
+    </>
   );
 }

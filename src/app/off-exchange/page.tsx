@@ -2,21 +2,22 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
+import { PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
 import { SeoFaq } from "@/components/SeoFaq";
-import { absoluteUrl, site } from "@/lib/site";
+import { absoluteUrl, serviceAreaStatement, site } from "@/lib/site";
 import { StructuredData } from "@/components/StructuredData";
 
 export const metadata: Metadata = {
-  title: "Off-Exchange Health Insurance | Florida Non-Marketplace Plans",
+  title: "Off-Exchange Health Insurance | Vital Edge Insurance",
   description:
-    "Vital Edge Insurance provides guidance on off-exchange health insurance options in Florida when ACA Marketplace coverage is not the right fit.",
+    "Vital Edge Insurance provides guidance on off-exchange health insurance options when ACA Marketplace coverage is not the right fit.",
   alternates: {
     canonical: absoluteUrl("/off-exchange"),
   },
   openGraph: {
-    title: "Off-Exchange Health Insurance in Florida | Vital Edge Insurance",
+    title: "Off-Exchange Health Insurance | Vital Edge Insurance",
     description:
-      "Licensed agent guidance for non-Marketplace health insurance options in Florida.",
+      "Licensed agent guidance for non-Marketplace health insurance options across Vital Edge's approved service footprint.",
     url: absoluteUrl("/off-exchange"),
   },
 };
@@ -29,7 +30,7 @@ export default function Page() {
     url: absoluteUrl("/off-exchange"),
     telephone: site.phoneDisplay,
     email: site.email,
-    areaServed: "Florida",
+    areaServed: site.serviceAreas,
   };
 
   const serviceJsonLd = {
@@ -41,7 +42,7 @@ export default function Page() {
       "@type": "InsuranceAgency",
       name: site.legalName,
     },
-    areaServed: "Florida",
+    areaServed: site.serviceAreas,
     url: absoluteUrl("/off-exchange"),
     description:
       "Education-first guidance on individual coverage purchased outside the Marketplace.",
@@ -67,30 +68,25 @@ export default function Page() {
   };
 
   return (
-    <Container className="py-14">
-      <div className="space-y-10">
-        <div className="max-w-3xl space-y-3 rounded-3xl border border-white/30 bg-white/35 p-6 shadow-lg backdrop-blur">
-          <h1 className="text-2xl font-semibold tracking-tight text-black">Off-Exchange Coverage</h1>
-          <p className="text-black/70">
-            Education-first guidance on individual coverage purchased outside the Marketplace. We help clarify timing,
-            documentation, and next steps with clear, general guidance.
-          </p>
-          <div className="flex flex-wrap gap-3 pt-2">
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-green)]"
-            >
-              Request guidance
-            </Link>
-            <Link
-              href="/chat"
-              className="inline-flex items-center justify-center rounded-xl border border-black/10 px-4 py-2 text-sm font-semibold text-black hover:bg-black/5"
-            >
-              Chat with our team
-            </Link>
-          </div>
-        </div>
+    <>
+      <PremiumInteriorHero
+        eyebrow="Health Insurance"
+        title="Off-Exchange Coverage"
+        subtitle={`Education-first guidance on individual coverage purchased outside the Marketplace. ${serviceAreaStatement}`}
+        actions={[
+          { label: "Request Guidance", href: "/contact", kind: "primary" },
+          { label: "ACA Marketplace", href: "/aca", kind: "gold" },
+          { label: "Chat With Our Team", href: "/chat", kind: "light" },
+        ]}
+      >
+        <PremiumDisclosure>
+          Off-exchange coverage availability, eligibility, underwriting, subsidies, plan details, and enrollment timing
+          vary by state, county, household, carrier, and product.
+        </PremiumDisclosure>
+      </PremiumInteriorHero>
 
+    <Container className="py-12">
+      <div className="space-y-10">
         <div className="grid gap-4 md:grid-cols-3">
           {[
             {
@@ -106,25 +102,25 @@ export default function Page() {
               body: "Plan a simple, compliant path to compare coverage paths.",
             },
           ].map((item) => (
-            <div key={item.title} className="rounded-2xl border border-black/10 bg-white p-6">
-              <div className="text-sm font-semibold text-black">{item.title}</div>
-              <p className="mt-2 text-sm leading-6 text-black/70">{item.body}</p>
+            <div key={item.title} className="rounded-2xl border border-[var(--ve-teal)]/10 bg-white p-6 shadow-[0_18px_48px_rgba(15,23,42,0.08)]">
+              <div className="text-sm font-extrabold text-[var(--ve-teal)]">{item.title}</div>
+              <p className="mt-2 text-sm leading-6 text-slate-700">{item.body}</p>
             </div>
           ))}
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-2xl border border-black/10 bg-white p-6">
-            <h2 className="text-sm font-semibold text-black">Good to know</h2>
-            <ul className="mt-3 space-y-2 text-sm text-black/70">
+          <div className="rounded-3xl border border-[var(--ve-teal)]/10 bg-white p-6 shadow-[0_18px_52px_rgba(15,23,42,0.08)]">
+            <h2 className="text-sm font-extrabold text-[var(--ve-teal)]">Good to know</h2>
+            <ul className="mt-3 space-y-2 text-sm text-slate-700">
               <li>Marketplace coverage may include premium tax credits for eligible households.</li>
               <li>Off‑exchange coverage generally does not include premium tax credits.</li>
               <li>Enrollment timing and options can differ from the Marketplace.</li>
             </ul>
           </div>
-          <div className="rounded-2xl border border-black/10 bg-[var(--muted)] p-6">
-            <h2 className="text-sm font-semibold text-black">Education-first guidance</h2>
-            <p className="mt-3 text-sm leading-6 text-black/70">
+          <div className="rounded-3xl border border-[var(--ve-teal)]/10 bg-[linear-gradient(135deg,rgba(228,246,247,0.92),rgba(255,255,255,0.94))] p-6 shadow-[0_18px_52px_rgba(15,23,42,0.08)]">
+            <h2 className="text-sm font-extrabold text-[var(--ve-teal)]">Education-first guidance</h2>
+            <p className="mt-3 text-sm leading-6 text-slate-700">
               We provide general education and routing. If you&apos;d like plan-specific information, please provide a bit
               of information to{" "}
               <Link className="underline" href="/schedule">schedule an appointment</Link> or{" "}
@@ -135,12 +131,12 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-black/10 bg-white p-6">
-          <h2 className="text-sm font-semibold text-black">Helpful resources</h2>
+        <div className="rounded-3xl border border-[var(--ve-teal)]/10 bg-white p-6 shadow-[0_18px_52px_rgba(15,23,42,0.08)]">
+          <h2 className="text-sm font-extrabold text-[var(--ve-teal)]">Helpful resources</h2>
           <div className="mt-3 flex flex-wrap gap-3 text-sm">
-            <Link className="text-black/70 hover:text-black" href="/resources#off-exchange-vs-marketplace">Off‑exchange vs Marketplace</Link>
-            <Link className="text-black/70 hover:text-black" href="/resources#aca-subsidies-overview">ACA subsidies overview</Link>
-            <Link className="text-black/70 hover:text-black" href="/resources#what-to-bring">What to bring</Link>
+            <Link className="font-bold text-[var(--ve-teal)] underline underline-offset-4" href="/resources#off-exchange-vs-marketplace">Off‑exchange vs Marketplace</Link>
+            <Link className="font-bold text-[var(--ve-teal)] underline underline-offset-4" href="/resources#aca-subsidies-overview">ACA subsidies overview</Link>
+            <Link className="font-bold text-[var(--ve-teal)] underline underline-offset-4" href="/resources#what-to-bring">What to bring</Link>
           </div>
         </div>
 
@@ -173,5 +169,6 @@ export default function Page() {
       </div>
       <StructuredData entries={[localBusinessJsonLd, serviceJsonLd, breadcrumbJsonLd]} />
     </Container>
+    </>
   );
 }

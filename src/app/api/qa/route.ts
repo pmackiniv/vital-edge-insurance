@@ -10,7 +10,7 @@ const responses = [
     match: (q: string) => q.includes("medicare") || q.includes("medigap"),
     topic: "medicare",
     answer:
-      "We can share general Medicare education and help you connect with a licensed agent. For plan-specific Medicare discussions, we’ll guide you to a phone call. Please share your Florida ZIP code in the chat so we can provide the required TPMO disclaimer.",
+      "We can share general Medicare education and help you connect with a licensed agent. For plan-specific Medicare discussions, we’ll guide you to a phone call. Please share your ZIP code in the chat so we can provide required plan-availability and disclaimer context.",
   },
   {
     match: (q: string) => q.includes("aca") || q.includes("marketplace"),

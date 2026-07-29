@@ -25,31 +25,31 @@ model AgentEvent {
 }
 
 model AppointmentSponsor {
-  id                  String   @id @default(cuid())
+  id                  String    @id @default(cuid())
   sponsorKey          String
   displayName         String
   status              String
   state               String
   effectiveDate       DateTime
   terminationDate     DateTime?
-  countsAsSeparateOrg Boolean  @default(true)
+  countsAsSeparateOrg Boolean   @default(true)
   notes               String?
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
 
   @@unique([sponsorKey, state])
   @@index([state, status])
 }
 
 model SponsorAlias {
-  id        String   @id @default(cuid())
-  alias     String
+  id         String   @id @default(cuid())
+  alias      String
   sponsorKey String
-  priority  Int      @default(100)
-  active    Boolean  @default(true)
-  version   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  priority   Int      @default(100)
+  active     Boolean  @default(true)
+  version    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@unique([alias, sponsorKey, version])
   @@index([active, version])
@@ -110,34 +110,34 @@ model TpmoDatasetMeta {
 }
 
 model CallComplianceAudit {
-  id                   String   @id @default(cuid())
-  timestamp            DateTime @default(now())
+  id                   String    @id @default(cuid())
+  timestamp            DateTime  @default(now())
   callId               String
   product              String
   discussionStage      String
   actorId              String
   actorRole            String
-  recordingRequired    Boolean  @default(false)
-  callRecordingConsent Boolean  @default(false)
-  callRecordingActive  Boolean  @default(false)
+  recordingRequired    Boolean   @default(false)
+  callRecordingConsent Boolean   @default(false)
+  callRecordingActive  Boolean   @default(false)
   zip                  String?
   planYear             Int?
   orgCount             Int?
   planCount            Int?
   disclaimerText       String?
   disclaimerVariant    String?
-  cfuConfirmed         Boolean  @default(false)
-  soaOnFile            Boolean  @default(false)
+  cfuConfirmed         Boolean   @default(false)
+  soaOnFile            Boolean   @default(false)
   soaRequestedAt       DateTime?
   soaSignedAt          DateTime?
   appointmentAt        DateTime?
-  soaTimingValid       Boolean  @default(false)
-  callRecorded         Boolean  @default(false)
+  soaTimingValid       Boolean   @default(false)
+  callRecorded         Boolean   @default(false)
   retentionUntil       DateTime?
   sourceRoute          String
-  allowed              Boolean  @default(false)
+  allowed              Boolean   @default(false)
   blockCode            String?
-  requiredOwner        Boolean  @default(false)
+  requiredOwner        Boolean   @default(false)
   requestContextJson   Json?
 
   @@index([timestamp])
@@ -147,16 +147,34 @@ model CallComplianceAudit {
 }
 
 model LeadDisclosureAudit {
-  id                       String   @id @default(cuid())
-  timestamp                DateTime @default(now())
-  leadRequestId            String
-  leadTransferDisclosureAck Boolean  @default(false)
-  dataSharingConsent       Boolean  @default(false)
-  dataSharingEntitiesJson  Json
-  beneficiaryInitiated     Boolean  @default(false)
-  sourceRoute              String
-  zip                      String?
-  productInterest          String?
+  id                             String   @id @default(cuid())
+  timestamp                      DateTime @default(now())
+  leadRequestId                  String
+  leadTransferDisclosureAck      Boolean  @default(false)
+  permissionToContact            Boolean  @default(false)
+  permissionToContactMethod      String?
+  permissionToContactText        String?
+  permissionToContactVersion     String?
+  automatedContactConsent        Boolean  @default(false)
+  automatedContactConsentText    String?
+  automatedContactConsentVersion String?
+  dataSharingConsent             Boolean  @default(false)
+  dataSharingEntitiesJson        Json
+  beneficiaryInitiated           Boolean  @default(false)
+  sourceRoute                    String
+  leadSource                     String?
+  pageSource                     String?
+  utmSource                      String?
+  utmMedium                      String?
+  utmCampaign                    String?
+  linkedinReferral               Boolean  @default(false)
+  eventReferral                  Boolean  @default(false)
+  partnerReferral                Boolean  @default(false)
+  leadCategory                   String?
+  state                          String?
+  zip                            String?
+  productInterest                String?
+  consentTimestamp               DateTime?
 
   @@index([timestamp])
   @@index([leadRequestId])

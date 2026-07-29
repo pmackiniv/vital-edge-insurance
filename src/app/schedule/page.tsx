@@ -1,19 +1,30 @@
+import Link from "next/link";
 import { Container } from "@/components/Container";
 import { site } from "@/lib/site";
+import { PremiumCard, PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
 
 export default function SchedulePage() {
   const scheduleUrl = site.scheduleUrl;
 
   return (
-    <Container className="py-14">
-      <div className="max-w-4xl">
-        <h1 className="text-3xl font-semibold tracking-tight text-black">Schedule a call</h1>
-        <p className="mt-3 text-sm leading-6 text-black/70">
-          Book time with a licensed agent for a consultation. Choose a slot that works for you.
-        </p>
+    <>
+      <PremiumInteriorHero
+        eyebrow="Schedule"
+        title="Schedule a Call"
+        subtitle="Book time with a licensed agent for a consultation. Choose a slot that works for you."
+        actions={[
+          { label: "Contact Form", href: "/contact", kind: "primary" },
+          { label: `Call ${site.phoneDisplay}`, href: `tel:${site.phoneE164}`, kind: "light" },
+        ]}
+      >
+        <PremiumDisclosure>
+          Plan-specific Medicare guidance requires the required disclosures and scope controls before discussion.
+        </PremiumDisclosure>
+      </PremiumInteriorHero>
 
+      <Container className="py-12">
         {scheduleUrl ? (
-          <div className="mt-8 min-h-[600px] w-full overflow-hidden rounded-2xl border border-black/10 bg-white shadow-sm">
+          <div className="min-h-[600px] w-full overflow-hidden rounded-3xl border border-[var(--ve-teal)]/10 bg-white shadow-[0_22px_70px_rgba(15,23,42,0.08)]">
             <iframe
               title="Schedule a call with Vital Edge Insurance"
               src={scheduleUrl}
@@ -22,27 +33,27 @@ export default function SchedulePage() {
             />
           </div>
         ) : (
-          <div className="mt-8 rounded-2xl border border-black/10 bg-white p-8 text-center">
-            <p className="text-sm text-black/70">
+          <PremiumCard title="Scheduling is not set up yet">
+            <p>
               Scheduling is not set up yet. You can still reach us by phone or the contact form.
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-4">
               <a
                 href={`tel:${site.phoneE164}`}
-                className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-blue)] px-5 py-3 text-sm font-semibold text-white hover:opacity-90"
+                className="premium-small-button premium-small-button-primary"
               >
                 Call {site.phoneDisplay}
               </a>
-              <a
+              <Link
                 href="/contact"
-                className="inline-flex items-center justify-center rounded-xl border border-black/10 px-5 py-3 text-sm font-semibold text-black hover:bg-black/5"
+                className="premium-small-button premium-small-button-light"
               >
                 Contact form
-              </a>
+              </Link>
             </div>
-          </div>
+          </PremiumCard>
         )}
-      </div>
-    </Container>
+      </Container>
+    </>
   );
 }

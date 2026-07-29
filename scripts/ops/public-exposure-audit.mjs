@@ -16,28 +16,74 @@ const ROUTE_EXPECTATIONS = [
   { route: "/medicare/ma-lead", expected: [200, 301, 302, 307, 308], redirectTo: "/medicare/medicare-advantage-request" },
   { route: "/medicare/medigap-lead", expected: [200, 301, 302, 307, 308], redirectTo: "/medicare/medigap-request" },
 ];
-const SOURCE_BLOCKLIST = [
-  /submit ma lead/i,
-  /submit medigap lead/i,
-  /compute tpmo/i,
-  /tpmo counts/i,
-  /handled by patrick/i,
-  /patrick only/i,
-  /route to patrick/i,
-  /directly to patrick/i,
-  /\bpatrick\b/i,
+
+// Patrick Mackin IV is approved public professional identity for Vital Edge Insurance.
+// The public site may intentionally show his name, headshot, bio, licensed agent role,
+// NPN/license metadata, public business email/phone, and "Speak with Patrick" style copy.
+const APPROVED_PUBLIC_PROFESSIONAL_IDENTITY = [
+  "Patrick",
+  "Patrick Mackin IV",
+  "Licensed Health Insurance Agent",
+  "Licensed Health, Life and Annuities Insurance Agent",
 ];
+
+const SENSITIVE_EXPOSURE_BLOCKLIST = [
+  { label: "legacy internal MA lead submission wording", pattern: /submit ma lead/i },
+  { label: "legacy internal Medigap lead submission wording", pattern: /submit medigap lead/i },
+  { label: "internal TPMO computation wording", pattern: /compute tpmo/i },
+  { label: "internal TPMO counts wording", pattern: /tpmo counts/i },
+  { label: "internal owner-only routing wording", pattern: /handled by patrick/i },
+  { label: "internal owner-only routing wording", pattern: /patrick only/i },
+  { label: "internal owner-only routing wording", pattern: /route to patrick/i },
+  { label: "internal owner-only routing wording", pattern: /directly to patrick/i },
+  { label: "Agent Boost internal program reference", pattern: /\bAgent Boost\b/i },
+  { label: "unapproved FMO/internal hierarchy reference", pattern: /\bFMO\b/i },
+  {
+    label: "Social Security number value",
+    pattern: /\b(?:\d{3}[- ]\d{2}[- ]\d{4}|(?:ssn|social security(?: number)?)\s*[:=]?\s*\d{9})\b/i,
+  },
+  {
+    label: "Medicare Beneficiary Identifier value",
+    pattern: /\b[1-9][ACDEFGHJKMNPQRTUVWXY]{2}[- ]?\d[ACDEFGHJKMNPQRTUVWXY]{2}[- ]?\d[ACDEFGHJKMNPQRTUVWXY]{2}[- ]?\d{2}\b/i,
+  },
+  {
+    label: "OpenAI/API key-like value",
+    pattern: /\b(?:sk-(?:proj-)?[A-Za-z0-9_-]{20,}|(?:pk|rk)_[A-Za-z0-9]{20,})\b/,
+  },
+  {
+    label: "secret/token assignment with concrete value",
+    pattern: /\b(?:api[_-]?key|secret|token|access[_-]?token|refresh[_-]?token|client[_-]?secret)\s*[:=]\s*["']?[A-Za-z0-9_.+/=-]{16,}["']?/i,
+  },
+  {
+    label: "bank account/routing value",
+    pattern: /\b(?:bank\s+account|routing|account)\s*(?:number|#)?\s*[:=]\s*\d{6,17}\b/i,
+  },
+  {
+    label: "IBAN/SWIFT value",
+    pattern: /\b(?:iban|swift)\s*[:=]\s*[A-Z0-9]{8,34}\b/i,
+  },
+  {
+    label: "private/internal note marker",
+    pattern: /\b(?:private note|internal note|agent note|staff note|ops note)\s*[:=]/i,
+  },
+  {
+    label: "client DOB value",
+    pattern: /\b(?:date of birth|dob)\s*[:=]\s*\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b/i,
+  },
+  {
+    label: "client medical/Medicare detail marker",
+    pattern: /\b(?:client|member|lead)\s+(?:medical|medicare|health|diagnosis|prescription|medication)\s+(?:notes?|details?|data)\s*[:=]/i,
+  },
+  {
+    label: "unpublished/private client data marker",
+    pattern: /\b(?:unpublished client data|private client data|internal client data|client data\s*[:=])/i,
+  },
+];
+
+const SOURCE_BLOCKLIST = SENSITIVE_EXPOSURE_BLOCKLIST;
 const RENDER_BLOCKLIST = [
-  /\bleads?\b/i,
-  /submit ma lead/i,
-  /submit medigap lead/i,
-  /compute tpmo/i,
-  /tpmo counts/i,
-  /handled by patrick/i,
-  /patrick only/i,
-  /route to patrick/i,
-  /directly to patrick/i,
-  /\bpatrick\b/i,
+  { label: "public lead-system wording", pattern: /\bleads?\b/i },
+  ...SENSITIVE_EXPOSURE_BLOCKLIST,
 ];
 
 function parseArgs(argv) {
@@ -114,8 +160,9 @@ function isPublicRenderFile(filePath) {
 
 function countMatches(text, patterns) {
   const hits = [];
-  for (const pattern of patterns) {
-    if (pattern.test(text)) hits.push(pattern.source);
+  for (const entry of patterns) {
+    entry.pattern.lastIndex = 0;
+    if (entry.pattern.test(text)) hits.push(entry.label);
   }
   return hits;
 }
@@ -128,7 +175,7 @@ function toPt(px) {
 function runGrep() {
   try {
     const output = execSync(
-      String.raw`rg -n --hidden -S "submit ma lead|submit medigap lead|compute tpmo|tpmo counts|handled by patrick|patrick only|route to patrick|directly to patrick|\\bpatrick\\b" src/app src/components src/lib/site.ts src/app/layout.tsx || true`,
+      String.raw`rg -n --hidden -S "submit ma lead|submit medigap lead|compute tpmo|tpmo counts|handled by patrick|patrick only|route to patrick|directly to patrick|Agent Boost|FMO|private note|internal note|agent note|staff note|ops note|unpublished client data|private client data|internal client data" src/app src/components src/lib/site.ts src/app/layout.tsx || true`,
       { encoding: "utf8" },
     );
     return output.trim();
@@ -192,12 +239,18 @@ function buildReportMarkdown(result) {
   lines.push("## Repro Commands");
   lines.push("```bash");
   lines.push(`node scripts/ops/public-exposure-audit.mjs --baseUrl ${result.baseUrl}`);
-  lines.push(String.raw`rg -n --hidden -S "submit ma lead|submit medigap lead|compute tpmo|tpmo counts|handled by patrick|patrick only|route to patrick|directly to patrick|\bpatrick\b" src/app src/components src/lib/site.ts src/app/layout.tsx`);
+  lines.push(String.raw`rg -n --hidden -S "submit ma lead|submit medigap lead|compute tpmo|tpmo counts|handled by patrick|patrick only|route to patrick|directly to patrick|Agent Boost|FMO|private note|internal note|agent note|staff note|ops note|unpublished client data|private client data|internal client data" src/app src/components src/lib/site.ts src/app/layout.tsx`);
   lines.push("```");
   lines.push("");
+  lines.push("## Approved Public Professional Identity");
+  lines.push(
+    "- Patrick Mackin IV and related licensed-agent identity are approved public professional identity for Vital Edge Insurance.",
+  );
+  lines.push(`- Allowed identity references: ${result.approvedPublicProfessionalIdentity.join(", ")}`);
+  lines.push("");
   lines.push("## Pass/Fail Matrix");
-  lines.push(`- Source forbidden phrase scan: ${result.sourceScan.passed ? "PASS" : "FAIL"} (${result.sourceScan.totalHits} hits)`);
-  lines.push(`- Rendered forbidden phrase scan: ${result.renderScan.passed ? "PASS" : "FAIL"} (${result.renderScan.totalHits} hits)`);
+  lines.push(`- Source sensitive exposure scan: ${result.sourceScan.passed ? "PASS" : "FAIL"} (${result.sourceScan.totalHits} hits)`);
+  lines.push(`- Rendered sensitive exposure scan: ${result.renderScan.passed ? "PASS" : "FAIL"} (${result.renderScan.totalHits} hits)`);
   lines.push(`- Route probe (status expectations): ${result.routeProbe.passed ? "PASS" : "FAIL"}`);
   lines.push(`- Nav excludes legacy lead routes: ${result.navPolicy.passed ? "PASS" : "FAIL"}`);
   lines.push(`- Canonical URLs exclude lead wording: ${result.canonicalPolicy.passed ? "PASS" : "FAIL"}`);
@@ -210,9 +263,9 @@ function buildReportMarkdown(result) {
     lines.push(`- ${route.route}: ${route.status} -> ${route.finalPath} (expected ${route.expected.join(",")}${route.redirectTo ? ` and final ${route.redirectTo}` : ""})`);
   }
   lines.push("");
-  lines.push("## Rendered DOM Blocklist Scan");
+  lines.push("## Rendered DOM Sensitive Exposure Scan");
   if (result.renderScan.hits.length === 0) {
-    lines.push("- PASS: no blocked terms detected in rendered public DOM.");
+    lines.push("- PASS: no sensitive exposure patterns detected in rendered public DOM.");
   } else {
     for (const hit of result.renderScan.hits) {
       lines.push(`- ${hit.route}: ${hit.pattern}`);
@@ -251,7 +304,7 @@ function buildReportMarkdown(result) {
   lines.push("");
   lines.push("## Final Exposure Verdict");
   lines.push(`- Remaining occurrences of blocked strings on public rendered pages: ${result.renderScan.totalHits}`);
-  lines.push(`- Remaining occurrences of blocked phrase patterns in public render files: ${result.sourceScan.totalHits}`);
+  lines.push(`- Remaining occurrences of sensitive exposure patterns in public render files: ${result.sourceScan.totalHits}`);
   lines.push("");
   return lines.join("\n");
 }
@@ -332,9 +385,10 @@ async function main() {
       screenshots.push(path.relative(process.cwd(), shotPath));
 
       const bodyText = await desktopPage.evaluate(() => document.body.innerText || "");
-      for (const pattern of RENDER_BLOCKLIST) {
-        if (pattern.test(bodyText)) {
-          renderHits.push({ route: routeConfig.route, pattern: pattern.source });
+      for (const entry of RENDER_BLOCKLIST) {
+        entry.pattern.lastIndex = 0;
+        if (entry.pattern.test(bodyText)) {
+          renderHits.push({ route: routeConfig.route, pattern: entry.label });
         }
       }
 
@@ -435,6 +489,7 @@ async function main() {
 
   const result = {
     baseUrl: args.baseUrl,
+    approvedPublicProfessionalIdentity: APPROVED_PUBLIC_PROFESSIONAL_IDENTITY,
     passed:
       sourceScan.passed &&
       renderScan.passed &&

@@ -1,7 +1,10 @@
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
+import Link from "next/link";
 import { Container } from "@/components/Container";
+import { PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
 import { SeoFaq } from "@/components/SeoFaq";
+import { serviceAreaStatement } from "@/lib/site";
 
 type ResourceDoc = {
   slug: string;
@@ -102,18 +105,15 @@ async function loadResources(): Promise<ResourceDoc[]> {
       const slug = file.replace(/\.md$/, "");
       const raw = await readFile(path.join(contentDir, file), "utf8");
       const lines = raw.split("\n");
-      const titleLine = lines.find((line) => line.trim().startsWith("# "));
+      const headingIndex = lines.findIndex((line) => line.trim().startsWith("# "));
+      const titleLine = headingIndex === -1 ? undefined : lines[headingIndex];
       const title = titleLine ? titleLine.replace(/^#\s+/, "").trim() : slug.replace(/-/g, " ");
-      const summaryLine = lines.find((line) => {
+      const summaryIndex = lines.findIndex((line) => {
         const trimmed = line.trim();
         return trimmed && !trimmed.startsWith("#") && !trimmed.startsWith("-") && !trimmed.startsWith("*");
       });
-      const summary = summaryLine ? summaryLine.trim() : "Education-first overview.";
-      const contentLines = [...lines];
-      const headingIndex = contentLines.findIndex((line) => line.trim().startsWith("# "));
-      if (headingIndex !== -1) {
-        contentLines.splice(headingIndex, 1);
-      }
+      const summary = summaryIndex === -1 ? "Education-first overview." : lines[summaryIndex].trim();
+      const contentLines = lines.filter((_line, index) => index !== headingIndex && index !== summaryIndex);
       const html = markdownToHtml(contentLines.join("\n"));
 
       return { slug, title, summary, html };
@@ -126,35 +126,45 @@ async function loadResources(): Promise<ResourceDoc[]> {
 export default async function ResourcesPage() {
   const resources = await loadResources();
   return (
-    <Container className="py-14">
-      <div className="max-w-3xl">
-        <h1 className="text-3xl font-semibold tracking-tight text-black">Resources</h1>
-        <p className="mt-3 text-sm leading-6 text-black/70">
-          Client education hub with clear primers, checklists, and step-by-step guidance. Built for Florida residents
-          seeking neutral explanations and next steps.
-        </p>
-        <div className="mt-5 flex flex-wrap gap-3 text-sm">
-          <a className="underline text-black/70 hover:text-black" href="/medicare">Medicare guidance</a>
-          <a className="underline text-black/70 hover:text-black" href="/aca">ACA Marketplace</a>
-          <a className="underline text-black/70 hover:text-black" href="/ichra">ICHRA</a>
-          <a className="underline text-black/70 hover:text-black" href="/off-exchange">Off-exchange</a>
-          <a className="underline text-black/70 hover:text-black" href="/small-group">Small group</a>
-        </div>
+    <>
+      <PremiumInteriorHero
+        eyebrow="Resources"
+        title="Client Education Hub"
+        subtitle={`Clear primers, checklists, and step-by-step guidance for clients seeking neutral explanations and next steps. ${serviceAreaStatement}`}
+        actions={[
+          { label: "Medicare Guidance", href: "/medicare", kind: "primary" },
+          { label: "ACA Marketplace", href: "/aca", kind: "gold" },
+          { label: "Request a Call", href: "/contact", kind: "light" },
+        ]}
+      >
+        <PremiumDisclosure>
+          Resource content is education only. Plan-specific guidance is handled by a licensed agent with applicable
+          disclosures and scope controls.
+        </PremiumDisclosure>
+      </PremiumInteriorHero>
+
+    <Container className="py-12">
+      <div className="flex flex-wrap gap-3 text-sm">
+        <Link className="font-bold text-[var(--ve-teal)] underline underline-offset-4" href="/medicare">Medicare guidance</Link>
+        <Link className="font-bold text-[var(--ve-teal)] underline underline-offset-4" href="/aca">ACA Marketplace</Link>
+        <Link className="font-bold text-[var(--ve-teal)] underline underline-offset-4" href="/ichra">ICHRA</Link>
+        <Link className="font-bold text-[var(--ve-teal)] underline underline-offset-4" href="/off-exchange">Off-exchange</Link>
+        <Link className="font-bold text-[var(--ve-teal)] underline underline-offset-4" href="/small-group">Small group</Link>
       </div>
 
       <div className="mt-10 grid gap-8">
         {resources.map((item) => (
-          <section key={item.slug} id={item.slug} className="rounded-2xl border border-white/30 bg-white/35 p-6 backdrop-blur">
+          <section key={item.slug} id={item.slug} className="scroll-mt-28 rounded-3xl border border-[var(--ve-teal)]/10 bg-white/88 p-6 shadow-[0_18px_52px_rgba(15,23,42,0.08)] backdrop-blur-md">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <h2 className="text-lg font-semibold text-black">{item.title}</h2>
-                <p className="mt-2 text-sm leading-6 text-black/70">{item.summary}</p>
+                <h2 className="font-display text-2xl font-bold tracking-normal text-[var(--ve-teal)]">{item.title}</h2>
+                <p className="mt-2 font-sans text-sm leading-6 text-slate-700">{item.summary}</p>
               </div>
               <a
                 href={`/resources#${item.slug}`}
-                className="text-xs font-semibold text-black/60 hover:text-black"
+                className="text-xs font-bold text-[var(--ve-teal)] underline underline-offset-4"
               >
-                Link
+                Section link
               </a>
             </div>
             <div
@@ -193,5 +203,6 @@ export default async function ResourcesPage() {
         />
       </div>
     </Container>
+    </>
   );
 }

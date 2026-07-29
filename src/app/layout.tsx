@@ -8,38 +8,39 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
 import TimedLeadPopup from "@/components/TimedLeadPopup";
-import { insuranceAgencyJsonLd, localBusinessJsonLd, organizationJsonLd, personJsonLd } from "@/lib/site";
+import { insuranceAgencyJsonLd, localBusinessJsonLd, organizationJsonLd, personJsonLd, serviceAreaStatement, webSiteJsonLd } from "@/lib/site";
 
-const PRODUCTION_SITE_URL = "https://vital-edge-insurance.vercel.app";
+const PRODUCTION_SITE_URL = "https://www.vital-edge-insurance.com";
 const METADATA_BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL && process.env.NEXT_PUBLIC_SITE_URL.startsWith("http")
+  process.env.NEXT_PUBLIC_SITE_URL &&
+  process.env.NEXT_PUBLIC_SITE_URL.startsWith("http") &&
+  process.env.NEXT_PUBLIC_SITE_URL !== "https://vital-edge-insurance.vercel.app"
     ? process.env.NEXT_PUBLIC_SITE_URL
     : PRODUCTION_SITE_URL;
+const googleSiteVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
+const bingSiteVerification = process.env.BING_SITE_VERIFICATION?.trim();
 
 export const metadata: Metadata = {
   metadataBase: new URL(METADATA_BASE_URL),
   title: {
-    default: "Vital Edge Insurance | Licensed Health Insurance Agency in Jacksonville, FL",
-    template: "%s | Vital Edge Insurance",
+    default: "Vital Edge Insurance | Health Insurance Guidance Across 12 States",
+    template: "%s",
   },
   description:
-    "Independent, licensed guidance for ACA Marketplace, Medicare Advantage, Medigap, and ICHRA in Jacksonville and nearby Florida counties. Call (352) 214-8879 or request a callback.",
-  alternates: {
-    canonical: "/",
-  },
+    `Licensed health insurance guidance for Medicare, ACA Marketplace, ancillary coverage, and small group questions. ${serviceAreaStatement} Call (352) 214-8879 or request a callback.`,
   openGraph: {
     type: "website",
     url: "/",
-    title: "Vital Edge Insurance | Licensed Health Insurance Agency in Jacksonville, FL",
+    title: "Vital Edge Insurance | Health Insurance Guidance Across 12 States",
     description:
-      "Independent, licensed guidance for ACA Marketplace, Medicare Advantage, Medigap, and ICHRA in Jacksonville and nearby Florida counties. Call (352) 214-8879 or request a callback.",
+      `Licensed health insurance guidance for Medicare, ACA Marketplace, ancillary coverage, and small group questions. ${serviceAreaStatement} Call (352) 214-8879 or request a callback.`,
     siteName: "Vital Edge Insurance",
     images: [
       {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Vital Edge Insurance - Licensed Florida Health Insurance Guidance",
+        alt: "Vital Edge Insurance - licensed health insurance guidance across 12 states",
       },
     ],
   },
@@ -49,15 +50,24 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vital Edge Insurance | Licensed Health Insurance Agency in Jacksonville, FL",
+    title: "Vital Edge Insurance | Health Insurance Guidance Across 12 States",
     description:
-      "Independent, licensed guidance for ACA Marketplace, Medicare Advantage, Medigap, and ICHRA in Jacksonville and nearby Florida counties. Call (352) 214-8879 or request a callback.",
+      `Licensed health insurance guidance for Medicare, ACA Marketplace, ancillary coverage, and small group questions. ${serviceAreaStatement} Call (352) 214-8879 or request a callback.`,
     images: ["/og.png"],
   },
   robots: {
     index: true,
     follow: true,
   },
+  verification:
+    googleSiteVerification || bingSiteVerification
+      ? {
+          ...(googleSiteVerification ? { google: googleSiteVerification } : {}),
+          ...(bingSiteVerification
+            ? { other: { "msvalidate.01": bingSiteVerification } }
+            : {}),
+        }
+      : undefined,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -65,6 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const local = localBusinessJsonLd();
   const agency = insuranceAgencyJsonLd();
   const person = personJsonLd();
+  const website = webSiteJsonLd();
 
   return (
     <html lang="en" className="h-full">
@@ -97,6 +108,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(person) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(website) }}
         />
       </body>
     </html>

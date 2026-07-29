@@ -2,6 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import {
+  AUTOMATED_CONTACT_CONSENT_TEXT,
+  AUTOMATED_CONTACT_CONSENT_VERSION,
+  PERMISSION_TO_CONTACT_TEXT,
+  PERMISSION_TO_CONTACT_VERSION,
+} from "@/lib/leadConsent";
+import { buildClientLeadTracking } from "@/lib/clientLeadTracking";
 import { site } from "@/lib/site";
 
 type LeadPayload = {
@@ -10,9 +17,13 @@ type LeadPayload = {
   phone: string;
   email: string;
   topic: string;
+  state: string;
   county: string;
+  zip: string;
+  preferredContactMethod: string;
   message: string;
   consent: boolean;
+  automatedContactConsent: boolean;
   licensedAgentDisclosure: boolean;
 };
 
@@ -31,7 +42,9 @@ const offerings = [
   "Other",
 ];
 
-const counties = ["Duval County", "St. Johns County", "Other"];
+const counties = ["Duval County", "St. Johns County", "Other / not listed"];
+const states = ["Florida", "Georgia", "South Carolina", "North Carolina", "Texas", "Tennessee", "Arizona", "Washington", "Pennsylvania", "Ohio", "Michigan", "Louisiana"];
+const preferredContactMethods = ["Call", "Text", "Email"];
 
 const topicParamToOffering: Record<string, string> = {
   medicare: "Medicare",
@@ -49,9 +62,13 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
     phone: "",
     email: "",
     topic: "",
+    state: "Florida",
     county: "",
+    zip: "",
+    preferredContactMethod: "Call",
     message: "",
     consent: false,
+    automatedContactConsent: false,
     licensedAgentDisclosure: false,
   });
   const [selectedOfferings, setSelectedOfferings] = useState<string[]>([]);
@@ -124,23 +141,47 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
 
     setIsSubmitting(true);
     try {
-      const nameLine = `Name: ${formState.firstName} ${formState.lastName}`.trim();
-      const messageWithName = [nameLine, formState.message || ""].filter(Boolean).join("\n");
+    const nameLine = `Name: ${formState.firstName} ${formState.lastName}`.trim();
+      const selectedTopic = selectedOfferings.length ? selectedOfferings.join(", ") : "General inquiry";
+      const leadCategory = /medicare/i.test(selectedTopic)
+        ? "Medicare consumer review"
+        : /aca|health/i.test(selectedTopic)
+          ? "ACA/private health"
+          : /group|employer/i.test(selectedTopic)
+            ? "Employer/private options"
+            : "ACA/private health";
+      const tracking = buildClientLeadTracking(window.location.pathname, leadCategory);
+      const messageWithName = [
+        nameLine,
+        `State: ${formState.state}`,
+        `ZIP: ${formState.zip}`,
+        `Preferred contact method: ${formState.preferredContactMethod}`,
+        formState.message || "",
+      ].filter(Boolean).join("\n");
       const response = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          topic: selectedOfferings.length ? selectedOfferings.join(", ") : "General inquiry",
+          topic: selectedTopic,
           county: formState.county || "",
-          contactMethod: `Phone: ${formState.phone} | Email: ${formState.email}`,
+          state: formState.state,
+          zip: formState.zip,
+          contactMethod: `Preferred: ${formState.preferredContactMethod} | Phone: ${formState.phone} | Email: ${formState.email}`,
           message: messageWithName,
           consent: formState.consent,
+          permissionToContactMethod: "Phone, Text, Email",
+          permissionToContactText: PERMISSION_TO_CONTACT_TEXT,
+          permissionToContactVersion: PERMISSION_TO_CONTACT_VERSION,
+          automatedContactConsent: formState.automatedContactConsent,
+          automatedContactConsentText: AUTOMATED_CONTACT_CONSENT_TEXT,
+          automatedContactConsentVersion: AUTOMATED_CONTACT_CONSENT_VERSION,
           dataSharingConsent: formState.licensedAgentDisclosure,
           dataSharingRecipient: "Vital Edge Licensed Agent",
           dataSharingEntities: ["Vital Edge Licensed Agent"],
           leadTransferDisclosureAck: formState.licensedAgentDisclosure,
           beneficiaryInitiated: true,
-          productInterest: selectedOfferings.length ? selectedOfferings.join(", ") : "General inquiry",
+          productInterest: selectedTopic,
+          ...tracking,
         }),
       });
 
@@ -148,7 +189,7 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
       if (!response.ok) {
         throw new Error(data.error || "Unable to submit right now.");
       }
-      setSuccess(data.message ?? "Got it, a licensed agent will follow up.");
+      setSuccess(data.message ?? "Got it. Patrick Mackin IV has been notified and will follow up.");
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unable to submit right now.";
       setError(message);
@@ -242,6 +283,36 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                   />
                 </div>
                 <div>
+                  <label className="text-sm font-semibold text-black">Preferred contact method</label>
+                  <select
+                    value={formState.preferredContactMethod}
+                    onChange={updateField("preferredContactMethod")}
+                    className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+                    required
+                  >
+                    {preferredContactMethods.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-black">State</label>
+                  <select
+                    value={formState.state}
+                    onChange={updateField("state")}
+                    className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+                    required
+                  >
+                    {states.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
                   <label className="text-sm font-semibold text-black">County</label>
                   <select
                     value={formState.county}
@@ -257,6 +328,19 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                   </select>
                 </div>
                 <div>
+                  <label className="text-sm font-semibold text-black">ZIP code</label>
+                  <input
+                    value={formState.zip}
+                    onChange={(event) =>
+                      setFormState((prev) => ({ ...prev, zip: event.target.value.replace(/\D/g, "").slice(0, 5) }))
+                    }
+                    className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+                    inputMode="numeric"
+                    autoComplete="postal-code"
+                    required
+                  />
+                </div>
+                <div>
                   <label className="text-sm font-semibold text-black">What should we know?</label>
                   <textarea
                     value={formState.message}
@@ -264,8 +348,13 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                     className="mt-2 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
                     rows={4}
                   />
+                  <p className="mt-2 text-xs text-black/60">
+                    Please do not submit Medicare numbers, Social Security numbers, or sensitive medical information
+                    through this form.
+                  </p>
                 </div>
                 <div className="rounded-xl border border-black/10 p-4 text-xs text-black/70">
+                  <div className="mb-2 font-semibold text-black">Permission to Contact</div>
                   <label className="flex items-start gap-3">
                     <input
                       type="checkbox"
@@ -274,11 +363,25 @@ export function LeadModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                       className="mt-0.5"
                       required
                     />
-                    <span>
-                      By checking this box, you agree to be contacted by call, text, and/or email about your request.
-                      Message &amp; data rates may apply. Reply STOP to opt out.
-                    </span>
+                    <span>{PERMISSION_TO_CONTACT_TEXT}</span>
                   </label>
+                </div>
+                <div className="rounded-xl border border-black/10 p-4 text-xs text-black/70">
+                  <div className="mb-2 font-semibold text-black">Automated communications consent</div>
+                  <label className="flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      checked={formState.automatedContactConsent}
+                      onChange={updateField("automatedContactConsent")}
+                      className="mt-0.5"
+                    />
+                    <span>{AUTOMATED_CONTACT_CONSENT_TEXT}</span>
+                  </label>
+                  {!formState.automatedContactConsent ? (
+                    <p className="mt-2 text-black/60">
+                      Optional. Permission to Contact above still lets Patrick respond manually about your request.
+                    </p>
+                  ) : null}
                 </div>
                 <div className="rounded-xl border border-black/10 p-4 text-xs text-black/70">
                   <label className="flex items-start gap-3">

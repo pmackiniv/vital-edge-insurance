@@ -6,7 +6,21 @@ import { chromium, devices } from "playwright";
 
 const DEFAULT_TIMEOUT_MS = 45_000;
 const CHAT_TEXT = "Hello from automated triage.";
-const MOBILE_LINK_LABELS = ["Home", "About", "Medicare", "Health Insurance", "Other Services", "Resources", "Locations"];
+const CHAT_LAUNCHER_PATTERN = /open vital guide|vital guide|24\/7 coverage guide|chat with a licensed agent now|talk with a licensed agent now|live help/i;
+const FULL_CHAT_LINK_PATTERN = /open full vital guide|open full chat page/i;
+const MOBILE_NAV_TARGETS = [
+  { label: "Medicare", sectionLabel: "Medicare", linkLabel: "Medicare Overview" },
+  { label: "ACA", sectionLabel: "ACA", linkLabel: "ACA Marketplace" },
+  { label: "Ancillary", sectionLabel: "Ancillary", linkLabel: "Ancillary Overview" },
+  { label: "Resources", sectionLabel: "Resources", linkLabel: "Resource Hub" },
+  { label: "About", sectionLabel: "About", linkLabel: "About Vital Edge" },
+  { label: "Request a Call", linkLabel: "Request a Call" },
+];
+const MOBILE_HOME_CTA_LABELS = [
+  "Start My Review",
+  "Dental, Vision & Hospital Coverage",
+  "Request a Call",
+];
 
 function parseArgs(argv) {
   const args = { baseUrl: process.env.BASE_URL || "", timeoutMs: DEFAULT_TIMEOUT_MS };
@@ -91,6 +105,37 @@ async function findFirstVisibleEnabled(locator) {
   return null;
 }
 
+async function waitForFirstVisibleEnabled(locator, timeoutMs, description) {
+  const deadline = Date.now() + timeoutMs;
+  let lastCount = 0;
+
+  while (Date.now() < deadline) {
+    const count = await locator.count();
+    lastCount = count;
+    for (let i = 0; i < count; i += 1) {
+      const candidate = locator.nth(i);
+      if (await candidate.isVisible() && await candidate.isEnabled()) {
+        return candidate;
+      }
+    }
+    await new Promise((resolve) => setTimeout(resolve, 150));
+  }
+
+  throw new Error(`No visible and enabled ${description} found. candidates=${lastCount}`);
+}
+
+async function countVisibleText(page, label) {
+  const locator = page.getByText(new RegExp(`^${escapeRegExp(label)}$`, "i"));
+  const count = await locator.count();
+  let visibleCount = 0;
+  for (let i = 0; i < count; i += 1) {
+    if (await locator.nth(i).isVisible()) {
+      visibleCount += 1;
+    }
+  }
+  return visibleCount;
+}
+
 async function runDesktop({
   browser,
   baseUrl,
@@ -167,10 +212,10 @@ async function runDesktop({
       await page.goto(result.fallbackUrl, { waitUntil: "domcontentloaded" });
     }
 
-    const launchers = page.getByRole("button", { name: /chat with a licensed agent now|talk with a licensed agent now|live help/i });
+    const launchers = page.getByRole("button", { name: CHAT_LAUNCHER_PATTERN });
     const launcherClicked = await clickFirstVisible(launchers);
     if (launcherClicked) {
-      await page.getByText(/Talk with a licensed agent now/i).first().waitFor({ state: "visible", timeout: 8_000 }).catch(() => {});
+      await page.getByText(/Vital Guide|Ask a question/i).first().waitFor({ state: "visible", timeout: 8_000 }).catch(() => {});
     }
 
     const askQuestion = page.getByRole("button", { name: /Ask a question/i });
@@ -178,14 +223,18 @@ async function runDesktop({
 
     let chatInput = await findFirstVisibleEnabled(page.locator(".chat-widget-root textarea"));
     if (!chatInput) {
-      const fullChatLink = page.getByRole("link", { name: /Open full chat page/i });
+      const fullChatLink = page.getByRole("link", { name: FULL_CHAT_LINK_PATTERN });
       const fullChatOpened = await clickFirstVisible(fullChatLink);
       if (fullChatOpened) {
         await page.waitForLoadState("domcontentloaded");
       } else if (!page.url().includes("/chat")) {
         await page.goto(result.fallbackUrl, { waitUntil: "domcontentloaded" });
       }
-      chatInput = await findFirstVisibleEnabled(page.locator("textarea"));
+      chatInput = await waitForFirstVisibleEnabled(
+        page.locator("textarea"),
+        Math.min(timeoutMs, 10_000),
+        "chat textarea",
+      );
     }
     if (!chatInput) {
       throw new Error("No visible and enabled chat textarea found after opening chat widget and /chat fallback.");
@@ -193,9 +242,7 @@ async function runDesktop({
 
     await chatInput.fill(CHAT_TEXT);
     const sendButton = page.getByRole("button", { name: /^Send$/i }).first();
-    if (!(await sendButton.isVisible()) || !(await sendButton.isEnabled())) {
-      throw new Error("Send button not visible/enabled.");
-    }
+    await waitForFirstVisibleEnabled(sendButton, Math.min(timeoutMs, 10_000), "Send button");
 
     const responsePromise = page.waitForResponse(
       (response) => response.url().includes("/api/chat") && response.request().method() === "POST",
@@ -308,7 +355,25 @@ async function runMobile({
 
     await page.goto(withBase(baseUrl, "/"), { waitUntil: "domcontentloaded" });
 
-    for (const label of MOBILE_LINK_LABELS) {
+    result.ctaChecks = [];
+    for (const label of MOBILE_HOME_CTA_LABELS) {
+      const visibleCount = await countVisibleText(page, label);
+      const check = {
+        label,
+        visible: visibleCount > 0,
+        visibleCount,
+        error: visibleCount > 0 ? null : `CTA not visible: ${label}`,
+      };
+      result.ctaChecks.push(check);
+      if (check.error) {
+        appendLog(logLines, `Mobile CTA check ${label}: error=${check.error}`);
+      } else {
+        appendLog(logLines, `Mobile CTA check ${label}: visibleCount=${visibleCount}`);
+      }
+    }
+
+    for (const target of MOBILE_NAV_TARGETS) {
+      const label = target.label;
       const attempt = {
         label,
         clicked: false,
@@ -324,10 +389,20 @@ async function runMobile({
       };
       try {
         const toggle = page.getByRole("button", { name: /Toggle navigation/i }).first();
+        const panel = page.locator("#mobile-nav-panel");
         if (await toggle.count()) {
+          await waitForFirstVisibleEnabled(toggle, Math.min(timeoutMs, 10_000), "mobile navigation toggle");
           const navExpanded = await toggle.getAttribute("aria-expanded");
           if (await toggle.isVisible() && navExpanded !== "true") {
             await toggle.click();
+            await panel.waitFor({ state: "visible", timeout: Math.min(timeoutMs, 8_000) });
+            await page.waitForFunction(() => {
+              const navButton = document.querySelector('button[aria-controls="mobile-nav-panel"]');
+              const navPanel = document.querySelector("#mobile-nav-panel");
+              return navButton?.getAttribute("aria-expanded") === "true"
+                && navPanel
+                && window.getComputedStyle(navPanel).display !== "none";
+            }, { timeout: Math.min(timeoutMs, 8_000) });
           }
           attempt.navToggle = await toggle.evaluate((el) => ({
             ariaExpanded: el.getAttribute("aria-expanded"),
@@ -335,12 +410,22 @@ async function runMobile({
           }));
         }
 
-        const panel = page.locator("#mobile-nav-panel");
-        const labelPattern = new RegExp(`^${escapeRegExp(label)}$`, "i");
+        if (target.sectionLabel) {
+          const sectionPattern = new RegExp(`^${escapeRegExp(target.sectionLabel)}$`, "i");
+          const sectionButton = panel.getByRole("button", { name: sectionPattern }).first();
+          if (!(await sectionButton.isVisible())) {
+            throw new Error(`Section not visible: ${target.sectionLabel}`);
+          }
+          if ((await sectionButton.getAttribute("aria-expanded")) !== "true") {
+            await sectionButton.click();
+          }
+        }
+
+        const labelPattern = new RegExp(`^${escapeRegExp(target.linkLabel)}$`, "i");
         const link = panel.getByRole("link", { name: labelPattern }).first();
         attempt.visible = await link.isVisible();
         if (!attempt.visible) {
-          throw new Error(`Link not visible: ${label}`);
+          throw new Error(`Link not visible: ${target.linkLabel}`);
         }
         const box = await link.boundingBox();
         if (box) {
@@ -363,9 +448,14 @@ async function runMobile({
           }, center);
         }
 
+        const routePromise = page.waitForURL(
+          (url) => url.href !== attempt.beforeUrl,
+          { timeout: Math.min(timeoutMs, 10_000) },
+        ).catch(() => null);
         await link.click({ timeout: timeoutMs });
         attempt.clicked = true;
-        await page.waitForLoadState("domcontentloaded", { timeout: Math.min(timeoutMs, 10_000) });
+        await routePromise;
+        await page.waitForLoadState("domcontentloaded", { timeout: Math.min(timeoutMs, 10_000) }).catch(() => {});
         attempt.afterUrl = page.url();
         attempt.routeChanged = attempt.afterUrl !== attempt.beforeUrl;
         if (attempt.routeChanged) {
@@ -392,14 +482,17 @@ async function runMobile({
       (attempt) => typeof attempt.error === "string" && attempt.error.toLowerCase().includes("intercepts pointer events"),
     );
     const failedAttempts = result.attempts.filter((attempt) => typeof attempt.error === "string" && attempt.error.length > 0);
+    const failedCtaChecks = result.ctaChecks.filter((check) => typeof check.error === "string" && check.error.length > 0);
     result.interceptedAttemptCount = interceptedAttempts.length;
     result.failedAttemptCount = failedAttempts.length;
+    result.failedCtaCheckCount = failedCtaChecks.length;
     result.passed = result.routeChangedCount > 0
       && result.interceptedAttemptCount === 0
-      && result.failedAttemptCount === 0;
+      && result.failedAttemptCount === 0
+      && result.failedCtaCheckCount === 0;
     appendLog(
       logLines,
-      `Mobile summary: routeChanged=${result.routeChangedCount} intercepted=${result.interceptedAttemptCount} failed=${result.failedAttemptCount}`,
+      `Mobile summary: routeChanged=${result.routeChangedCount} intercepted=${result.interceptedAttemptCount} failed=${result.failedAttemptCount} ctaFailed=${result.failedCtaCheckCount}`,
     );
     await page.screenshot({ path: screenshotPath, fullPage: true });
   } catch (err) {
