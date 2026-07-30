@@ -379,13 +379,13 @@ export default function HomePageClient() {
                   </>
                 );
 
+                // No aria-label here. The visible text ("FL" plus "Florida") is
+                // already a good accessible name, and an aria-label that does
+                // not contain the visible text fails WCAG 2.5.3 Label in Name --
+                // it breaks voice control, where a user says the label they can
+                // see. Lighthouse flagged all twelve.
                 return resourcePageSlugs.includes(slug) ? (
-                  <Link
-                    key={state.name}
-                    href={`/${slug}`}
-                    className="state-outline-cell"
-                    aria-label={`${state.name} Medicare help`}
-                  >
+                  <Link key={state.name} href={`/${slug}`} className="state-outline-cell">
                     {cell}
                   </Link>
                 ) : (

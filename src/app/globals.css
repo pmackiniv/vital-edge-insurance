@@ -463,7 +463,9 @@ textarea::placeholder {
 
 .premium-small-button-gold {
   background: var(--ve-gold);
-  color: #ffffff;
+  /* White on #c58a2b is 2.98:1 and fails AA. Brand ink on the same gold is
+     4.80:1 and passes, so the brand colour is kept and the text changes. */
+  color: var(--ve-text);
   box-shadow: 0 14px 34px rgba(197, 138, 43, 0.2);
 }
 
@@ -547,8 +549,30 @@ textarea::placeholder {
   animation: vei-bg-drift 30s ease-in-out infinite;
 }
 
+/*
+ * Site-wide background photograph.
+ *
+ * This is a CSS background, so it bypasses the Next image optimiser entirely --
+ * every visitor on every page was downloading the 2,578 KB source PNG. A
+ * photograph should never have been a PNG; AVIF at q60 is 191 KB, a 92.6%
+ * reduction, with no visible difference at the scale and blur this renders at.
+ *
+ * image-set() lets the browser pick: AVIF where supported, WebP next, and the
+ * original PNG only for browsers that understand neither. The bare url() below
+ * is the fallback for browsers without image-set() support at all.
+ */
 .vei-bg-beach {
-  background-image: url("/images/hero/vital-edge-goa-beach-hero.png");
+  background-image: url("/images/hero/vital-edge-goa-beach-hero.webp");
+  background-image: -webkit-image-set(
+    url("/images/hero/vital-edge-goa-beach-hero.avif") type("image/avif"),
+    url("/images/hero/vital-edge-goa-beach-hero.webp") type("image/webp"),
+    url("/images/hero/vital-edge-goa-beach-hero.png") type("image/png")
+  );
+  background-image: image-set(
+    url("/images/hero/vital-edge-goa-beach-hero.avif") type("image/avif"),
+    url("/images/hero/vital-edge-goa-beach-hero.webp") type("image/webp"),
+    url("/images/hero/vital-edge-goa-beach-hero.png") type("image/png")
+  );
 }
 
 /*
