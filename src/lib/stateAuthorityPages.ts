@@ -21,12 +21,26 @@ import type { ResourcePage } from "./resourcePages";
  */
 
 export type StateLicenseRecord = {
-  /** State-issued producer license number. Not the NPN. */
+  /**
+   * State-issued producer license number. Note that AZ, MI, NC and SC issue
+   * the license under the producer's NPN, so for those states this legitimately
+   * equals the NPN.
+   */
   number: string;
-  /** Public URL where this specific license record can be verified. */
-  verifyUrl: string;
-  /** ISO date the record was checked against the state DOI. */
+  /**
+   * Exact line-of-authority wording from the licensing record, used verbatim in
+   * page copy. States differ: most say "Accident & Health", Georgia says
+   * "Accident and Sickness", and Washington's health line is named
+   * "Disability". Never generalise these to "health insurance license" -- the
+   * claim has to match the record.
+   */
+  lineOfAuthority: string;
+  /** ISO date the record was checked. */
   verifiedOn: string;
+  /** ISO expiry, when the record carries one. Absent means no stated expiry. */
+  expiresOn?: string;
+  /** Direct URL to this specific record, where the state publishes stable ones. */
+  verifyUrl?: string;
 };
 
 export type StateAuthorityDraft = {
@@ -67,7 +81,12 @@ export const stateAuthorityDrafts: StateAuthorityDraft[] = [
   {
     slugBase: "georgia",
     stateName: "Georgia",
-    license: null,
+    license: {
+      number: "3882193",
+      lineOfAuthority: "Agent - Accident and Sickness",
+      verifiedOn: "2026-07-29",
+      expiresOn: "2028-02-29",
+    },
     doiName: "Georgia Office of Commissioner of Insurance and Safety Fire",
     doiShortName: "Georgia Office of Insurance and Safety Fire",
     doiConsumerUrl: "https://oci.georgia.gov",
@@ -87,7 +106,12 @@ export const stateAuthorityDrafts: StateAuthorityDraft[] = [
   {
     slugBase: "south-carolina",
     stateName: "South Carolina",
-    license: null,
+    license: {
+      number: "21729046",
+      lineOfAuthority: "Accident & Health or Sickness, and Life",
+      verifiedOn: "2026-07-29",
+      expiresOn: "2029-02-28",
+    },
     doiName: "South Carolina Department of Insurance",
     doiShortName: "South Carolina Department of Insurance",
     doiConsumerUrl: "https://doi.sc.gov",
@@ -107,7 +131,11 @@ export const stateAuthorityDrafts: StateAuthorityDraft[] = [
   {
     slugBase: "north-carolina",
     stateName: "North Carolina",
-    license: null,
+    license: {
+      number: "21729046",
+      lineOfAuthority: "Accident & Health or Sickness, and Medicare Supplement/Long-Term Care",
+      verifiedOn: "2026-07-29",
+    },
     doiName: "North Carolina Department of Insurance",
     doiShortName: "North Carolina Department of Insurance",
     doiConsumerUrl: "https://www.ncdoi.gov",
@@ -127,7 +155,12 @@ export const stateAuthorityDrafts: StateAuthorityDraft[] = [
   {
     slugBase: "texas",
     stateName: "Texas",
-    license: null,
+    license: {
+      number: "3461683",
+      lineOfAuthority: "Life, Accident, Health and HMO",
+      verifiedOn: "2026-07-29",
+      expiresOn: "2028-02-29",
+    },
     doiName: "Texas Department of Insurance",
     doiShortName: "Texas Department of Insurance",
     doiConsumerUrl: "https://www.tdi.texas.gov",
@@ -147,7 +180,12 @@ export const stateAuthorityDrafts: StateAuthorityDraft[] = [
   {
     slugBase: "tennessee",
     stateName: "Tennessee",
-    license: null,
+    license: {
+      number: "3004239694",
+      lineOfAuthority: "Accident & Health, and Life",
+      verifiedOn: "2026-07-29",
+      expiresOn: "2029-02-28",
+    },
     doiName: "Tennessee Department of Commerce and Insurance",
     doiShortName: "Tennessee Department of Commerce and Insurance",
     doiConsumerUrl: "https://www.tn.gov/commerce/insurance.html",
@@ -167,7 +205,12 @@ export const stateAuthorityDrafts: StateAuthorityDraft[] = [
   {
     slugBase: "louisiana",
     stateName: "Louisiana",
-    license: null,
+    license: {
+      number: "1260392",
+      lineOfAuthority: "Accident, Health or Sickness",
+      verifiedOn: "2026-07-29",
+      expiresOn: "2028-02-29",
+    },
     doiName: "Louisiana Department of Insurance",
     doiShortName: "Louisiana Department of Insurance",
     doiConsumerUrl: "https://www.ldi.la.gov",
@@ -187,7 +230,12 @@ export const stateAuthorityDrafts: StateAuthorityDraft[] = [
   {
     slugBase: "arizona",
     stateName: "Arizona",
-    license: null,
+    license: {
+      number: "21729046",
+      lineOfAuthority: "Accident & Health or Sickness, and Life",
+      verifiedOn: "2026-07-29",
+      expiresOn: "2030-02-28",
+    },
     doiName: "Arizona Department of Insurance and Financial Institutions",
     doiShortName: "Arizona Department of Insurance and Financial Institutions",
     doiConsumerUrl: "https://difi.az.gov",
@@ -207,7 +255,12 @@ export const stateAuthorityDrafts: StateAuthorityDraft[] = [
   {
     slugBase: "washington",
     stateName: "Washington",
-    license: null,
+    license: {
+      number: "1352072",
+      lineOfAuthority: "Disability, and Life",
+      verifiedOn: "2026-07-29",
+      expiresOn: "2028-02-28",
+    },
     doiName: "Washington State Office of the Insurance Commissioner",
     doiShortName: "Washington Office of the Insurance Commissioner",
     doiConsumerUrl: "https://www.insurance.wa.gov",
@@ -227,7 +280,12 @@ export const stateAuthorityDrafts: StateAuthorityDraft[] = [
   {
     slugBase: "pennsylvania",
     stateName: "Pennsylvania",
-    license: null,
+    license: {
+      number: "1302380",
+      lineOfAuthority: "Accident & Health",
+      verifiedOn: "2026-07-29",
+      expiresOn: "2028-02-29",
+    },
     doiName: "Pennsylvania Insurance Department",
     doiShortName: "Pennsylvania Insurance Department",
     doiConsumerUrl: "https://www.pa.gov/agencies/insurance.html",
@@ -247,7 +305,12 @@ export const stateAuthorityDrafts: StateAuthorityDraft[] = [
   {
     slugBase: "ohio",
     stateName: "Ohio",
-    license: null,
+    license: {
+      number: "1725275",
+      lineOfAuthority: "Accident & Health, and Life",
+      verifiedOn: "2026-07-29",
+      expiresOn: "2028-02-29",
+    },
     doiName: "Ohio Department of Insurance",
     doiShortName: "Ohio Department of Insurance",
     doiConsumerUrl: "https://insurance.ohio.gov/",
@@ -267,7 +330,11 @@ export const stateAuthorityDrafts: StateAuthorityDraft[] = [
   {
     slugBase: "michigan",
     stateName: "Michigan",
-    license: null,
+    license: {
+      number: "21729046",
+      lineOfAuthority: "Accident and Health, and Life",
+      verifiedOn: "2026-07-29",
+    },
     doiName: "Michigan Department of Insurance and Financial Services",
     doiShortName: "Michigan Department of Insurance and Financial Services",
     doiConsumerUrl: "https://www.michigan.gov/difs",
@@ -318,7 +385,7 @@ function buildStateAuthorityPage(
     eyebrow: `${stateName} Medicare help`,
     title: `${stateName} Medicare Help`,
     metaTitle: `${stateName} Medicare Help from a Licensed Agent | Vital Edge Insurance`,
-    description: `${stateName} Medicare education from ${REVIEWER}, a licensed health insurance agent (${stateName} license ${license.number}, NPN ${NPN}). Review enrollment timing, ${countyNoun}-level availability, provider networks, prescriptions, and free official ${stateName} resources.`,
+    description: `${stateName} Medicare education from ${REVIEWER}, a licensed insurance producer (${stateName} license ${license.number}, NPN ${NPN}). Review enrollment timing, ${countyNoun}-level availability, provider networks, prescriptions, and free official ${stateName} resources.`,
     heroSubtitle: `Licensed in ${stateName}, with ${countyNoun}-by-${countyNoun} Medicare education for households across the state.`,
     leadCategory: "Medicare consumer review",
     audience: `${stateName} Medicare consumers and families`,
@@ -331,7 +398,7 @@ function buildStateAuthorityPage(
     cards: [
       {
         title: `${stateName}-licensed and verifiable`,
-        body: `${REVIEWER} holds an active ${stateName} health insurance license (${license.number}, NPN ${NPN}). Verify it anytime through the ${draft.doiShortName}.`,
+        body: `${REVIEWER} holds an active ${stateName} insurance license (${license.number}, NPN ${NPN}) with ${license.lineOfAuthority} authority. Verify it anytime through the ${draft.doiShortName}.`,
       },
       {
         title: `${stateName} has ${countyCount} ${countyPlural}`,
@@ -354,8 +421,8 @@ function buildStateAuthorityPage(
       {
         title: "About your licensed agent",
         paragraphs: [
-          `${REVIEWER} holds an active ${stateName} health insurance license (${stateName} license ${license.number}, National Producer Number ${NPN}). The license record, including active status and carrier appointments, is publicly verifiable through the ${draft.doiName}, linked below.`,
-          `Reviewed by ${REVIEWER}. Last reviewed ${reviewed}.`,
+          `${REVIEWER} is a Florida-resident licensed agent holding a non-resident ${stateName} insurance license (${stateName} license ${license.number}, National Producer Number ${NPN}) with ${license.lineOfAuthority} authority. The license record, including active status and carrier appointments, is publicly verifiable through the ${draft.doiName}, linked below.`,
+          `Reviewed by ${REVIEWER}. Last reviewed ${reviewed}.${license.expiresOn ? ` License current through ${formatReviewDate(license.expiresOn)}.` : ""}`,
         ],
       },
       {
@@ -371,7 +438,7 @@ function buildStateAuthorityPage(
     faqs: [
       {
         question: `Is Vital Edge Insurance licensed in ${stateName}?`,
-        answer: `Yes. ${REVIEWER} holds an active ${stateName} health insurance license (${license.number}, NPN ${NPN}). You can verify the license through the ${draft.doiShortName} at any time.`,
+        answer: `Yes. ${REVIEWER} holds an active non-resident ${stateName} insurance license (${license.number}, NPN ${NPN}) with ${license.lineOfAuthority} authority. You can verify the license through the ${draft.doiShortName} at any time.`,
       },
       draft.stateSpecificFaq,
       {
@@ -385,8 +452,12 @@ function buildStateAuthorityPage(
       },
     ],
     links: [
-      { label: `Verify ${REVIEWER}'s ${stateName} license`, href: license.verifyUrl },
-      { label: `${draft.doiShortName}`, href: draft.doiConsumerUrl },
+      // Only claim a direct-record link where the state actually publishes a
+      // stable one (as Florida does). Otherwise point at the regulator's own
+      // lookup, which is what the page copy tells the reader to use.
+      license.verifyUrl
+        ? { label: `Verify ${REVIEWER}'s ${stateName} license`, href: license.verifyUrl }
+        : { label: `Verify licenses through the ${draft.doiShortName}`, href: draft.doiConsumerUrl },
       { label: "Medicare.gov", href: "https://www.medicare.gov" },
       SHIP_LINK,
       ...coreLinks,
