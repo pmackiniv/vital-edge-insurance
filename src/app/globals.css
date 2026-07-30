@@ -34,14 +34,14 @@
   --color-ink: var(--ink);
   --color-paper: var(--paper);
   --color-muted: var(--muted);
-  --font-sans: "Times New Roman", Times, serif;
-  --font-display: "Times New Roman", Times, serif;
+  --font-sans: Georgia, "Times New Roman", Times, serif;
+  --font-display: Georgia, "Times New Roman", Times, serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 html,
 body {
-  font-family: "Times New Roman", Times, serif;
+  font-family: Georgia, "Times New Roman", Times, serif;
 }
 
 body {
@@ -70,7 +70,7 @@ h3 {
 
 h1,
 h2.editorial-heading {
-  font-family: "Times New Roman", Times, serif;
+  font-family: Georgia, "Times New Roman", Times, serif;
 }
 
 .text-xs {
@@ -132,7 +132,7 @@ button,
 input,
 select,
 textarea {
-  font-family: "Times New Roman", Times, serif;
+  font-family: Georgia, "Times New Roman", Times, serif;
 }
 
 select {
@@ -233,7 +233,7 @@ textarea::placeholder {
   gap: 0.9rem;
   border-radius: 1.05rem;
   padding: 0.92rem 1rem;
-  font-family: "Times New Roman", Times, serif;
+  font-family: Georgia, "Times New Roman", Times, serif;
   font-weight: 800;
   line-height: 1.2;
   text-decoration: none;
@@ -364,7 +364,7 @@ textarea::placeholder {
   border-radius: 0.95rem;
   padding: 0.85rem 1rem;
   text-align: center;
-  font-family: "Times New Roman", Times, serif;
+  font-family: Georgia, "Times New Roman", Times, serif;
   font-size: 0.9rem;
   font-weight: 800;
   line-height: 1.2;
