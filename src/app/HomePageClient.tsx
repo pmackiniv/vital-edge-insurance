@@ -200,8 +200,11 @@ export default function HomePageClient() {
               className="h-full w-full object-cover object-[center_top] md:object-center"
             />
           </picture>
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,249,238,1)_0%,rgba(255,247,232,0.98)_50%,rgba(255,247,232,0.74)_78%,rgba(255,247,232,0.48)_100%)] md:bg-[linear-gradient(90deg,rgba(255,249,238,0.98)_0%,rgba(255,247,232,0.82)_38%,rgba(255,247,232,0.24)_66%,rgba(0,55,63,0.08)_100%)]" />
-          <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-white via-white/75 to-transparent" />
+          {/* Scrim lightened substantially now that the copy sits on its own
+              glass pane. Was 1.0/0.98/0.74/0.48 and 0.98/0.82/0.24 — which
+              flattened the photograph to near-cream across most of its width. */}
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,249,238,0.55)_0%,rgba(255,247,232,0.4)_50%,rgba(255,247,232,0.24)_78%,rgba(255,247,232,0.14)_100%)] md:bg-[linear-gradient(90deg,rgba(255,249,238,0.45)_0%,rgba(255,247,232,0.28)_38%,rgba(255,247,232,0.1)_66%,rgba(0,55,63,0.06)_100%)]" />
+          <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-white/85 via-white/45 to-transparent" />
         </div>
 
         <Container>
@@ -213,19 +216,27 @@ export default function HomePageClient() {
               transition={{ duration: 0.6, ease: "easeOut" }}
               className="max-w-[52rem]"
             >
-              <p className="font-sans text-[0.78rem] font-extrabold uppercase leading-5 tracking-[0.12em] text-[var(--ve-teal)] md:text-xs md:tracking-[0.16em]">
-                Personal guidance. Biblical principles. Real people.
-              </p>
-              <h1 className="mt-4 font-display text-[clamp(3.1rem,7vw,6rem)] font-bold leading-[0.95] tracking-normal text-[var(--ve-teal)]">
-                Vital Edge Insurance
-              </h1>
-              <p className="mt-4 font-display text-[clamp(1.55rem,2.4vw,2.25rem)] italic leading-tight text-[#8d611f] md:text-[var(--ve-gold)]">
-                Guidance with Integrity. Coverage with Purpose.
-              </p>
-              <p className="mt-5 max-w-[38rem] font-sans text-[1.08rem] font-semibold leading-7 text-slate-950 md:text-lg md:font-normal">
-                We help individuals and families find health insurance solutions that fit their needs and their budget.
-                {` ${serviceAreaStatement}`}
-              </p>
+              {/*
+                Glass pane behind the hero copy. Without it the tagline runs off
+                the scrim and onto bright palm foliage, where it stops being
+                readable. The pane is what allows the scrim to be light enough
+                for the photograph to stay vivid.
+              */}
+              <div className="vei-glass vei-glass-light rounded-3xl px-6 py-7 md:px-9 md:py-9">
+                <p className="font-sans text-[0.78rem] font-extrabold uppercase leading-5 tracking-[0.12em] text-[var(--ve-teal)] md:text-xs md:tracking-[0.16em]">
+                  Personal guidance. Biblical principles. Real people.
+                </p>
+                <h1 className="mt-4 font-display text-[clamp(3.1rem,7vw,6rem)] font-bold leading-[0.95] tracking-normal text-[var(--ve-teal)]">
+                  Vital Edge Insurance
+                </h1>
+                <p className="mt-4 font-display text-[clamp(1.55rem,2.4vw,2.25rem)] italic leading-tight text-[#7d5518] md:text-[#8d611f]">
+                  Guidance with Integrity. Coverage with Purpose.
+                </p>
+                <p className="mt-5 max-w-[38rem] font-sans text-[1.08rem] font-semibold leading-7 text-slate-950 md:text-lg md:font-normal">
+                  We help individuals and families find health insurance solutions that fit their needs and their budget.
+                  {` ${serviceAreaStatement}`}
+                </p>
+              </div>
 
               <div className="mt-7 grid gap-3 md:grid-cols-[15rem_15rem_12rem]">
                 <a
