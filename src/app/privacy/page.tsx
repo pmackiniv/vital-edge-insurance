@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { PremiumCard, PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
-import AnalyticsOptOutToggle from "@/components/AnalyticsOptOutToggle";
 
 /**
  * Effective date for the policy text below. Update this whenever the substance
@@ -67,18 +66,16 @@ export default function Page() {
                 This site does not use advertising cookies, tracking pixels, or cross-site trackers.
               </p>
               <p className="mt-3">
-                We use <strong>Vercel Analytics</strong> and <strong>Vercel Speed Insights</strong> to understand which
-                pages people find useful and how quickly pages load. Both are first-party and cookieless: they set no
-                cookies, do not follow you between websites, and do not receive your name, email address, or phone
-                number.
+                We keep basic, anonymous counts of which pages are viewed and how quickly they load, so the site stays
+                useful and fast. This sets no cookies, does not follow you between websites, and does not receive your
+                name, email address, or phone number.
               </p>
               <p className="mt-3">
-                Small amounts of information may be stored in your browser to remember choices you make here, such as an
-                analytics opt-out or whether the chat window is minimised. That data stays in your browser.
+                Small amounts of information may be stored in your browser to remember choices you make here, such as
+                whether the chat window is minimised. That data stays in your browser.
               </p>
               <p className="mt-3">
-                We honour the <strong>Global Privacy Control</strong> signal. If your browser sends it, analytics are not
-                loaded for you at all.
+                We honour browser privacy signals that ask us not to measure a visit.
               </p>
             </PremiumCard>
 
@@ -88,7 +85,7 @@ export default function Page() {
                 information only to provide their service to us:
               </p>
               <ul className="mt-3 list-disc space-y-1 pl-5">
-                <li><strong>Vercel</strong> — website hosting, analytics, and performance measurement</li>
+                <li><strong>Vercel</strong> — website hosting and performance</li>
                 <li><strong>Neon</strong> — the database where inquiries and consent records are stored</li>
                 <li><strong>Email delivery</strong> — our mail provider, and a form-relay service as a backup, used to notify us of a new inquiry</li>
                 <li><strong>OpenAI</strong> — powers the website chat assistant; chat messages are processed to generate replies</li>
@@ -111,39 +108,7 @@ export default function Page() {
             <ul className="mt-3 list-disc space-y-1 pl-5">
               <li><strong>Phone and text:</strong> reply STOP to any text to stop texts, or tell us during any call.</li>
               <li><strong>Email:</strong> ask us to remove you and we will.</li>
-              <li><strong>Analytics:</strong> use the control below, or send a Global Privacy Control signal from your browser.</li>
-              <li>
-                <strong>Access or deletion:</strong> ask through our{" "}
-                <Link href="/contact" className="underline">contact form</Link> and say what you would like us to do.
-              </li>
             </ul>
-            <p className="mt-3">
-              Where you gave permission to be contacted, that permission is recorded with the date and the wording you
-              agreed to, and withdrawing it does not affect contact that already happened.
-            </p>
-            <p className="mt-3">
-              Depending on your state, you may have additional rights over your personal information. Ask us and we will
-              honour any right that applies to you.
-            </p>
-          </PremiumCard>
-
-          <PremiumCard title="Analytics preference" tone="soft">
-            <AnalyticsOptOutToggle />
-          </PremiumCard>
-
-          <PremiumCard title="Security and retention" tone="soft">
-            <p>
-              Information is held in access-controlled systems and transmitted over encrypted connections. No method of
-              storage or transmission is perfectly secure, so we do not claim otherwise.
-            </p>
-            <p className="mt-3">
-              We keep inquiry and consent records for as long as needed to follow up and to satisfy insurance
-              recordkeeping obligations, which for Medicare-related activity is generally ten years. Records not subject
-              to those obligations are removed when they are no longer needed, or sooner on request.
-            </p>
-            <p className="mt-3">
-              This site is not intended for children, and we do not knowingly collect information from anyone under 18.
-            </p>
           </PremiumCard>
 
           <PremiumCard title="Questions about privacy?" tone="teal">
