@@ -340,13 +340,13 @@ export function ChatWidget() {
           initial={false}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="group flex h-11 w-11 items-center justify-center rounded-full border border-white/70 bg-white/92 text-left text-sm text-[var(--ve-teal)] shadow-[0_14px_34px_rgba(0,63,69,0.18)] backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[var(--ve-teal)]/25 hover:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--ve-gold)]/55 sm:h-11 sm:w-auto sm:min-w-[11.75rem] sm:gap-2.5 sm:px-3"
+          className="group flex h-16 w-16 items-center justify-center rounded-full border-2 border-white/80 bg-white/95 text-left text-sm text-[var(--ve-teal)] shadow-[0_18px_44px_rgba(0,63,69,0.3)] backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[var(--ve-teal)]/25 hover:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--ve-gold)]/55 sm:h-11 sm:w-auto sm:min-w-[11.75rem] sm:gap-2.5 sm:px-3"
           onClick={openPanel}
           aria-label="Open 24/7 Coverage Guide"
           aria-controls="vital-guide-panel"
           aria-expanded={showPanel}
         >
-          <VitalGuideIcon className="h-8 w-8" />
+          <VitalGuideIcon className="h-11 w-11 sm:h-8 sm:w-8" />
           <span className="hidden flex-col sm:flex">
             <span className="text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-[var(--ve-teal)]/65">24/7 Coverage Guide</span>
             <span className="text-sm font-extrabold leading-4 text-[var(--ve-teal)]">Vital Guide</span>

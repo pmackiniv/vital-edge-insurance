@@ -126,7 +126,7 @@ const routingCards = [
     icon: "users" as const,
   },
   {
-    title: "Speak With a Licensed Agent",
+    title: "Speak With a Licensed Broker",
     description: "Let's connect for personal guidance.",
     href: "/contact",
     icon: "phone" as const,
@@ -371,7 +371,7 @@ export default function HomePageClient() {
           <div className="grid items-center gap-5 rounded-3xl border border-[var(--ve-teal)]/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(238,247,247,0.86))] p-5 shadow-[0_18px_52px_rgba(15,23,42,0.07)] md:grid-cols-[auto_1fr_auto] md:p-6">
             <Image
               src="/images/team/patrick-professional-headshot-320.jpg"
-              alt="Patrick Mackin IV, licensed health insurance agent"
+              alt="Patrick Mackin IV, licensed health insurance broker"
               width={96}
               height={96}
               className="h-24 w-24 rounded-2xl object-cover shadow-[0_16px_34px_rgba(0,63,69,0.16)]"
