@@ -8,6 +8,7 @@ import { Container } from "@/components/Container";
 import { LeadModal } from "@/components/LeadModal";
 import { externalLinkProps, PLANENROLL } from "@/lib/externalLinks";
 import { absoluteUrl, serviceAreaStatement } from "@/lib/site";
+import { resourcePageSlugs } from "@/lib/resourcePages";
 
 const sectionReveal = {
   hidden: { opacity: 0, y: 18 },
@@ -193,13 +194,22 @@ export default function HomePageClient() {
     <div className="bg-transparent text-[var(--ve-text)]">
       <section className="premium-hero relative isolate overflow-hidden">
         <div className="absolute inset-0 -z-10">
-          <picture className="block h-full w-full">
-            <img
-              src="/images/hero/vital-edge-goa-beach-hero.png"
-              alt=""
-              className="h-full w-full object-cover object-[center_top] md:object-center"
-            />
-          </picture>
+          {/*
+            next/image, not a raw <img>. The source PNG is 2.6 MB and was being
+            served unoptimised as the homepage LCP element — the interior heroes
+            already went through the optimiser, so the most important page was
+            the only one paying full price. `priority` preloads it because it is
+            the LCP element; `sizes="100vw"` lets the optimiser emit an
+            appropriately sized AVIF/WebP per device instead of one huge PNG.
+          */}
+          <Image
+            src="/images/hero/vital-edge-goa-beach-hero.png"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[center_top] md:object-center"
+          />
           {/* Scrim lightened substantially now that the copy sits on its own
               glass pane. Was 1.0/0.98/0.74/0.48 and 0.98/0.82/0.24 — which
               flattened the photograph to near-cream across most of its width. */}
@@ -349,15 +359,41 @@ export default function HomePageClient() {
                 </p>
               </div>
             </div>
-            <div className="state-outline-grid" aria-label="Licensed state outline list">
-              {states.map((state) => (
-                <div key={state.name} className="state-outline-cell">
-                  <div className="state-outline-art" aria-hidden="true">
-                    {state.abbr}
+            {/*
+              These were plain divs, so the twelve state pages had exactly one
+              internal link path — from /licensed-states. Linking them from the
+              homepage puts each state page one click from the site's strongest
+              page and gives crawlers a direct route to all twelve. Guarded
+              against resourcePageSlugs so a removed page cannot leave a dead
+              link behind.
+            */}
+            <div className="state-outline-grid" aria-label="Licensed states">
+              {states.map((state) => {
+                const slug = `${state.name.toLowerCase().replace(/\s+/g, "-")}-medicare-help`;
+                const cell = (
+                  <>
+                    <div className="state-outline-art" aria-hidden="true">
+                      {state.abbr}
+                    </div>
+                    <div className="state-outline-label">{state.name}</div>
+                  </>
+                );
+
+                return resourcePageSlugs.includes(slug) ? (
+                  <Link
+                    key={state.name}
+                    href={`/${slug}`}
+                    className="state-outline-cell"
+                    aria-label={`${state.name} Medicare help`}
+                  >
+                    {cell}
+                  </Link>
+                ) : (
+                  <div key={state.name} className="state-outline-cell">
+                    {cell}
                   </div>
-                  <div className="state-outline-label">{state.name}</div>
-                </div>
-              ))}
+                );
+              })}
             </div>
             <Link href="/licensed-states" className="justify-self-start font-sans text-sm font-bold text-[var(--ve-teal)] underline underline-offset-4 lg:col-start-2 lg:justify-self-end">
               View All Licensed States &amp; Disclosures -&gt;
