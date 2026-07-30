@@ -83,17 +83,87 @@ h2.editorial-heading {
   line-height: 1.35;
 }
 
-/* Opt-in glass styles only where explicitly used. */
+/* ---------------------------------------------------------------------------
+ * Glass surfaces
+ *
+ * Modelled on Apple's glass material. Three things make it read as glass rather
+ * than as flat translucency, and all three matter for legibility:
+ *
+ *   1. A large blur radius. This is the load-bearing part. At 22px the beach
+ *      photograph behind a panel loses all high-frequency detail, so text sits
+ *      on a smooth field instead of on palm fronds. It is what lets the
+ *      background stay vivid while the text stays readable.
+ *   2. Saturation boost. Blurring alone reads grey and dead; pushing saturation
+ *      restores the colour of whatever is behind, which is the "liquid" quality.
+ *   3. A specular top edge -- a light inset highlight along the upper border,
+ *      as though light catches the lip of a pane.
+ *
+ * Contrast: body text is --ve-text (#092f34, near-black). Over white at 0.66
+ * the effective background stays above roughly 75 L* even where the darkest
+ * palm foliage sits behind, which keeps contrast comfortably past WCAG AA.
+ * The audience skews 65+, so headroom here is deliberate, not incidental.
+ * --------------------------------------------------------------------------- */
+
+.vei-glass {
+  backdrop-filter: blur(22px) saturate(175%);
+  -webkit-backdrop-filter: blur(22px) saturate(175%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 18px 48px rgba(9, 47, 52, 0.16);
+}
+
+/* Default light pane: most body content. */
+.vei-glass-light {
+  background-color: rgba(255, 255, 255, 0.66);
+  color: var(--ve-text);
+}
+
+/* Tinted pane: sections that should feel cooler and recede slightly. */
+.vei-glass-tint {
+  background-image: linear-gradient(135deg, rgba(228, 246, 247, 0.62), rgba(255, 255, 255, 0.7));
+  color: var(--ve-text);
+}
+
+/* Deep pane: inverted glass for emphasis blocks. White text needs the tint
+   dark enough that bright sand behind it cannot lift the background. */
+.vei-glass-deep {
+  background-color: rgba(0, 47, 52, 0.78);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 18px 48px rgba(9, 47, 52, 0.3);
+}
+
+/*
+ * Fallback: without backdrop-filter there is no blur to flatten the photo, so
+ * the panels become far more opaque. Legibility wins over the effect.
+ */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .vei-glass-light { background-color: rgba(255, 255, 255, 0.95); }
+  .vei-glass-tint { background-image: linear-gradient(135deg, rgba(228, 246, 247, 0.95), rgba(255, 255, 255, 0.97)); }
+  .vei-glass-deep { background-color: rgba(0, 47, 52, 0.95); }
+}
+
+/* Retained aliases so existing markup picks up the new material. */
 .glass-panel {
-  background-color: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background-color: rgba(255, 255, 255, 0.66);
+  backdrop-filter: blur(22px) saturate(175%);
+  -webkit-backdrop-filter: blur(22px) saturate(175%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 18px 48px rgba(9, 47, 52, 0.16);
 }
 .glass-card {
-  background-color: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background-color: rgba(255, 255, 255, 0.68);
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.52);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 14px 38px rgba(9, 47, 52, 0.14);
 }
 
 /* Skip link: visually hidden until focused (a11y) */
@@ -294,8 +364,13 @@ textarea::placeholder {
   align-items: center;
   justify-content: space-between;
   border-radius: 1rem;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.68);
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 14px 38px rgba(9, 47, 52, 0.14);
   padding: 1.25rem 1rem 1rem;
   text-align: center;
   text-decoration: none;
@@ -314,9 +389,13 @@ textarea::placeholder {
   grid-template-columns: 1fr;
   gap: 1.5rem;
   border-radius: 1.2rem;
-  background: linear-gradient(90deg, rgba(228, 246, 247, 0.95), rgba(246, 250, 249, 0.95));
+  background: linear-gradient(90deg, rgba(228, 246, 247, 0.6), rgba(246, 250, 249, 0.66));
+  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
   padding: 1rem;
-  box-shadow: inset 0 0 0 1px rgba(0, 63, 69, 0.07);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 0 0 1px rgba(0, 63, 69, 0.07);
 }
 
 .state-outline-grid {
@@ -472,13 +551,35 @@ textarea::placeholder {
   background-image: url("/images/hero/vital-edge-goa-beach-hero.png");
 }
 
+/*
+ * Scrim over the beach photograph.
+ *
+ * Deliberately light. Legibility is carried by the glass surfaces (see
+ * .vei-glass) rather than by washing out the image -- a heavy backdrop blur
+ * removes the photo's high-frequency detail wherever text actually sits, which
+ * means the image can stay vivid everywhere else.
+ *
+ * Previous values (0.78 / 0.58 / 0.86) flattened the photo to near-cream.
+ */
 .vei-bg-overlay {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(255, 249, 238, 0.78), rgba(255, 249, 238, 0.58) 48%, rgba(246, 250, 249, 0.86)),
-    linear-gradient(90deg, rgba(0, 63, 69, 0.22), rgba(255, 247, 232, 0.1) 48%, rgba(0, 63, 69, 0.16));
+    linear-gradient(180deg, rgba(255, 249, 238, 0.38), rgba(255, 249, 238, 0.2) 48%, rgba(246, 250, 249, 0.5)),
+    linear-gradient(90deg, rgba(0, 63, 69, 0.14), rgba(255, 247, 232, 0.04) 48%, rgba(0, 63, 69, 0.1));
   mix-blend-mode: normal;
+}
+
+/*
+ * The background drifts slowly. Anyone who has asked their OS to reduce motion
+ * should get a still image instead -- vestibular sensitivity is more common in
+ * the 65+ audience this site serves.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .vei-bg-layer {
+    animation: none;
+    transform: scale(1.02);
+  }
 }
 
 /* Slow drift/scale so the beach atmosphere feels alive without distracting from content. */
