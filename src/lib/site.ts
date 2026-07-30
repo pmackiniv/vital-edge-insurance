@@ -210,7 +210,7 @@ export function insuranceAgencyJsonLd() {
     telephone: site.phoneE164,
     email: site.email,
     description:
-      "Independent health insurance guidance for Medicare, ACA Marketplace, ancillary coverage, and small group questions across Florida and additional licensed states.",
+      "Independent health insurance broker guidance for Medicare, ACA Marketplace, ancillary coverage, and small group questions across Florida and additional licensed states.",
     areaServed: site.serviceAreas.map((name) => ({ "@type": "AdministrativeArea", name })),
     address: {
       "@type": "PostalAddress",
