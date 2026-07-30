@@ -1,6 +1,14 @@
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { PremiumCard, PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
+import AnalyticsOptOutToggle from "@/components/AnalyticsOptOutToggle";
+
+/**
+ * Effective date for the policy text below. Update this whenever the substance
+ * of the policy changes -- a privacy policy without a date is not much use to a
+ * reader trying to work out what they agreed to.
+ */
+const LAST_UPDATED = "July 30, 2026";
 
 export default function Page() {
   return (
@@ -8,71 +16,155 @@ export default function Page() {
       <PremiumInteriorHero
         eyebrow="Privacy"
         title="Privacy & Information Handling"
-        subtitle="A high-level summary of how Vital Edge Insurance handles information shared through forms, phone, and chat."
+        subtitle="How Vital Edge Insurance handles information shared through forms, phone, chat, and this website."
         actions={[
           { label: "Ask a Privacy Question", href: "/contact", kind: "primary" },
           { label: "Chat With Our Team", href: "/chat", kind: "gold" },
         ]}
       >
         <PremiumDisclosure>
-          This page provides a high-level summary. A full privacy policy will be published after legal review.
+          Last updated {LAST_UPDATED}. Vital Edge Insurance serves consumers in the United States only. This policy
+          describes current practice and is reviewed as services change.
         </PremiumDisclosure>
       </PremiumInteriorHero>
 
       <Container className="py-12">
-      <div className="space-y-10">
-        <div className="grid gap-4 md:grid-cols-2">
-          <PremiumCard title="Information we collect">
+        <div className="space-y-10">
+          <div className="grid gap-4 md:grid-cols-2">
+            <PremiumCard title="Information we collect">
+              <p>
+                Contact details and the coverage questions you choose to share through our forms, by phone, by text, or
+                in chat. This typically means your name, email address, phone number, ZIP code or county, and a
+                description of what you are trying to figure out.
+              </p>
+              <p className="mt-3">
+                We do not ask for Social Security numbers, Medicare Beneficiary Identifiers, bank or card details, or
+                medical records through this website. Please do not send them to us through the site.
+              </p>
+              <p className="mt-3">
+                Our web host also records standard technical information such as your IP address, browser type, and the
+                pages you visited, which is ordinary server logging common to essentially all websites.
+              </p>
+            </PremiumCard>
+
+            <PremiumCard title="How we use information">
+              <p>
+                To answer your question, arrange a conversation, prepare for a scheduled appointment, keep required
+                records of consent and disclosures, and improve how the site explains coverage.
+              </p>
+              <p className="mt-3">
+                <strong>We do not sell personal information</strong>, and we do not share it for cross-context
+                behavioural advertising. We do not use your information for marketing unrelated to your inquiry.
+              </p>
+              <p className="mt-3">
+                Medicare-related conversations are subject to federal recordkeeping rules, so consent and disclosure
+                details are retained even where the inquiry does not lead to an application.
+              </p>
+            </PremiumCard>
+
+            <PremiumCard title="Cookies and similar technologies">
+              <p>
+                This site does not use advertising cookies, tracking pixels, or cross-site trackers.
+              </p>
+              <p className="mt-3">
+                We use <strong>Vercel Analytics</strong> and <strong>Vercel Speed Insights</strong> to understand which
+                pages people find useful and how quickly pages load. Both are first-party and cookieless: they set no
+                cookies, do not follow you between websites, and do not receive your name, email address, or phone
+                number.
+              </p>
+              <p className="mt-3">
+                Small amounts of information may be stored in your browser to remember choices you make here, such as an
+                analytics opt-out or whether the chat window is minimised. That data stays in your browser.
+              </p>
+              <p className="mt-3">
+                We honour the <strong>Global Privacy Control</strong> signal. If your browser sends it, analytics are not
+                loaded for you at all.
+              </p>
+            </PremiumCard>
+
+            <PremiumCard title="Service providers we share with">
+              <p>
+                We use a small number of vendors to operate this site and follow up on inquiries. They may process your
+                information only to provide their service to us:
+              </p>
+              <ul className="mt-3 list-disc space-y-1 pl-5">
+                <li><strong>Vercel</strong> — website hosting, analytics, and performance measurement</li>
+                <li><strong>Neon</strong> — the database where inquiries and consent records are stored</li>
+                <li><strong>Email delivery</strong> — our mail provider, and a form-relay service as a backup, used to notify us of a new inquiry</li>
+                <li><strong>OpenAI</strong> — powers the website chat assistant; chat messages are processed to generate replies</li>
+                <li><strong>Twilio</strong> — text message delivery, where you have asked to be contacted by text</li>
+                <li><strong>Notion</strong> — our internal record of inquiries and follow-up</li>
+              </ul>
+              <p className="mt-3">
+                We may also share details with an insurance carrier or a government marketplace when that is necessary to
+                act on your request, and we will disclose information where the law requires it.
+              </p>
+            </PremiumCard>
+          </div>
+
+          <PremiumCard title="Your choices and rights" tone="soft">
             <p>
-              Contact details and basic coverage questions that you share via forms, phone, or chat. We do not request
-              sensitive identifiers like Social Security numbers or Medicare IDs through this site.
+              You can ask us to access, correct, or delete your contact information, or to stop contacting you, at any
+              time. We confirm identity before making changes. There is no charge, and we do not treat you differently
+              for asking.
+            </p>
+            <ul className="mt-3 list-disc space-y-1 pl-5">
+              <li><strong>Phone and text:</strong> reply STOP to any text to stop texts, or tell us during any call.</li>
+              <li><strong>Email:</strong> ask us to remove you and we will.</li>
+              <li><strong>Analytics:</strong> use the control below, or send a Global Privacy Control signal from your browser.</li>
+              <li>
+                <strong>Access or deletion:</strong> ask through our{" "}
+                <Link href="/contact" className="underline">contact form</Link> and say what you would like us to do.
+              </li>
+            </ul>
+            <p className="mt-3">
+              Where you gave permission to be contacted, that permission is recorded with the date and the wording you
+              agreed to, and withdrawing it does not affect contact that already happened.
+            </p>
+            <p className="mt-3">
+              Depending on your state, you may have additional rights over your personal information. Ask us and we will
+              honour any right that applies to you.
             </p>
           </PremiumCard>
-          <PremiumCard title="How we use information">
+
+          <PremiumCard title="Analytics preference" tone="soft">
+            <AnalyticsOptOutToggle />
+          </PremiumCard>
+
+          <PremiumCard title="Security and retention" tone="soft">
             <p>
-              To respond to your inquiry, coordinate next steps, and improve our services. We do not sell personal
-              information or use it for unrelated marketing.
+              Information is held in access-controlled systems and transmitted over encrypted connections. No method of
+              storage or transmission is perfectly secure, so we do not claim otherwise.
+            </p>
+            <p className="mt-3">
+              We keep inquiry and consent records for as long as needed to follow up and to satisfy insurance
+              recordkeeping obligations, which for Medicare-related activity is generally ten years. Records not subject
+              to those obligations are removed when they are no longer needed, or sooner on request.
+            </p>
+            <p className="mt-3">
+              This site is not intended for children, and we do not knowingly collect information from anyone under 18.
             </p>
           </PremiumCard>
-          <PremiumCard title="Sharing">
+
+          <PremiumCard title="Questions about privacy?" tone="teal">
             <p>
-              We may share details only as needed to assist with your request, such as with a carrier or marketplace.
-              We do not compare carriers or recommend specific plans.
+              Reach out through the contact form or chat and we will respond with clear, non-technical answers. If you
+              want to know exactly what we hold about you, just ask.
             </p>
-          </PremiumCard>
-          <PremiumCard title="Your choices">
-            <p>
-              You can request access, updates, or deletion of your contact information by reaching out directly. We will
-              confirm identity before any changes.
-            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="/contact" className="premium-small-button premium-small-button-gold">
+                Contact us
+              </Link>
+              <Link
+                href="/chat"
+                className="premium-small-button border border-white/25 bg-white/10 text-white backdrop-blur hover:bg-white/15"
+              >
+                Chat now
+              </Link>
+            </div>
           </PremiumCard>
         </div>
-
-        <PremiumCard title="Security and retention" tone="soft">
-          <p>
-            We take reasonable safeguards to protect information and only retain it as needed for service follow-up and
-            recordkeeping. Specific retention periods will be posted in the full policy.
-          </p>
-        </PremiumCard>
-
-        <PremiumCard title="Questions about privacy?" tone="teal">
-          <p>
-            Use the contact form or chat to reach our team. We will respond with clear, non-technical answers.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="/contact" className="premium-small-button premium-small-button-gold">
-              Contact us
-            </Link>
-            <Link
-              href="/chat"
-              className="premium-small-button border border-white/25 bg-white/10 text-white backdrop-blur hover:bg-white/15"
-            >
-              Chat now
-            </Link>
-          </div>
-        </PremiumCard>
-      </div>
-    </Container>
+      </Container>
     </>
   );
 }
