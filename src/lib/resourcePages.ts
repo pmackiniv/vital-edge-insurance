@@ -1,15 +1,21 @@
-import { LINKEDIN_PERSONAL } from "./externalLinks";
 import { publishableStateAuthorityPages, publishedStateSlugBases } from "./stateAuthorityPages";
+
+import { site, licensedStateNames } from "./site";
+import { addLocalT65Guidance } from "./localT65Guidance";
+
+export type ResourceSource = { label: string; href: string };
 
 export type ResourceFaq = {
   question: string;
   answer: string;
+  sources?: ResourceSource[];
 };
 
 export type ResourceBlock = {
   title: string;
   paragraphs?: string[];
   bullets?: string[];
+  links?: ResourceSource[];
 };
 
 export type ResourceCard = {
@@ -139,22 +145,22 @@ const strategicPages: ResourcePage[] = [
     slug: "turning-65-medicare",
     eyebrow: "Turning 65",
     title: "Turning 65 Medicare Timeline",
-    metaTitle: "Turning 65 Medicare Timeline | Vital Edge Insurance Jacksonville",
+    metaTitle: "Turning 65 Medicare Help Across 12 States | Vital Edge Insurance",
     description:
-      "A plain-language Turning 65 Medicare timeline covering Part A, Part B, employer coverage, prescriptions, doctors, pharmacies, and coverage options.",
+      "Turning 65? Get Medicare enrollment guidance in St. Johns County and across 12 licensed states. Review employer coverage, prepare your questions, and book a consultation.",
     heroSubtitle:
-      "A month-by-month checklist for reviewing Medicare timing before your coverage begins.",
+      "Know when to enroll, how employer coverage fits, and what to bring. Personal guidance for St. Johns County, Nocatee, Jacksonville, and residents across our 12 licensed states.",
     leadCategory: "Turning 65",
     audience: "People approaching Medicare age",
-    primaryCtaLabel: "Start a Turning 65 Review",
-    primaryCtaHref: "/contact?topic=turning-65",
-    secondaryCtaLabel: "Connect on LinkedIn",
-    secondaryCtaHref: LINKEDIN_PERSONAL,
-    secondaryExternal: true,
+    primaryCtaLabel: "Book a Turning 65 Appointment",
+    primaryCtaHref: site.scheduleUrl,
+    primaryExternal: true,
+    secondaryCtaLabel: "Request a Callback",
+    secondaryCtaHref: "#resource-lead-form",
     serviceType: "Turning 65 Medicare guidance",
     cards: [
-      { title: "6 months before", body: "Confirm your expected Medicare start date, current coverage, employer status, and Social Security timing." },
-      { title: "3 months before", body: "Review Part A, Part B, prescription needs, doctors, pharmacies, and whether employer coverage changes your timing." },
+      { title: "6 months before", body: "Start gathering your current coverage details and questions. Check whether you will be enrolled automatically or need to apply." },
+      { title: "3 months before", body: "Your initial enrollment window generally opens three months before your 65th birthday month. Confirm your exact dates, including the special timing for a birthday on the first." },
       { title: "Before coverage starts", body: "Compare coverage paths carefully and document next steps before any plan-specific discussion." },
     ],
     blocks: [
@@ -168,13 +174,68 @@ const strategicPages: ResourcePage[] = [
           "Avoid submitting sensitive identifiers through web forms or chat.",
         ],
       },
+      {
+        title: "Start with your own enrollment dates",
+        paragraphs: [
+          "A first Medicare enrollment follows your eligibility dates. The fall Annual Enrollment Period is a separate opportunity to change health or drug plans. Do not wait for fall to find out when you should apply for Part A and Part B.",
+          "If you already have Medicare because of a disability, or will keep working after 65, tell Patrick when you request an appointment. Your current coverage and Medicare effective dates determine which questions to review.",
+        ],
+        links: [
+          { label: "Medicare.gov: When coverage starts", href: "https://www.medicare.gov/basics/get-started-with-medicare/sign-up/when-does-medicare-coverage-start" },
+          { label: "Medicare.gov: Joining a health or drug plan", href: "https://www.medicare.gov/basics/get-started-with-medicare/get-more-coverage/joining-a-plan" },
+        ],
+      },
+      {
+        title: "Turning 65 help across 12 licensed states",
+        paragraphs: [
+          `Vital Edge Insurance serves residents of ${licensedStateNames.slice(0, -1).join(", ")}, and ${licensedStateNames.at(-1)}. You can request a conversation even if you live outside Northeast Florida.`,
+          "Select your state and share your county or ZIP code when you request guidance. We start with your Medicare Part A and Part B dates and current coverage. Plan availability, carrier appointments, enrollment requirements, and provider access must be checked for your location and circumstances.",
+        ],
+        links: [{ label: "View our licensed states and license information", href: "/licensed-states" }],
+      },
       { title: "Compliance note", paragraphs: [medicareDisclosure, tpmoDisclosure] },
     ],
     faqs: [
-      { question: "Do I always need Part B when I turn 65?", answer: "Not always. Employer coverage, employer size, and creditable coverage rules should be reviewed carefully before delaying or starting Part B." },
-      { question: "Should I review prescriptions before Medicare starts?", answer: "Yes. Prescription coverage can affect costs and plan fit, so medication and pharmacy details should be reviewed before enrollment decisions." },
+      {
+        question: "Will I be enrolled in Medicare automatically when I turn 65?",
+        answer: "If you receive Social Security retirement or disability benefits at least four months before turning 65, Medicare says you will generally receive Part A and Part B automatically. Check your welcome package and coverage dates. If you are not on that path, you may need to apply. Medicare Advantage, Part D, and Medigap require separate coverage decisions.",
+        sources: [{ label: "Medicare.gov: Social Security benefits before 65", href: "https://www.medicare.gov/basics/get-started-with-medicare/before-65" }],
+      },
+      {
+        question: "When is my first chance to sign up for Medicare?",
+        answer: "For most people turning 65, the Initial Enrollment Period includes the three months before the birthday month, the birthday month, and the next three months. The month you enroll affects when coverage starts. A birthday on the first of the month changes the timing, so verify your dates before choosing a start date.",
+        sources: [{ label: "Medicare.gov: Initial enrollment and coverage dates", href: "https://www.medicare.gov/basics/get-started-with-medicare/sign-up/when-does-medicare-coverage-start" }],
+      },
+      {
+        question: "Do I have to wait for Annual Enrollment if I am turning 65?",
+        answer: "No. Your first Medicare enrollment window is based on your eligibility, and it can occur throughout the year. Annual Enrollment, October 15 through December 7, is a separate period for health and drug plan choices. A Medicare Advantage or Part D enrollment also requires the applicable Medicare coverage, service area, and enrollment period.",
+        sources: [{ label: "Medicare.gov: When you can join a plan", href: "https://www.medicare.gov/basics/get-started-with-medicare/get-more-coverage/joining-a-plan" }],
+      },
+      {
+        question: "Do I need Part B at 65 if I still have employer coverage?",
+        answer: "It depends on whether coverage is based on your or your spouse's current employment, the employer's size, and how the plan pays with Medicare. COBRA and retiree coverage do not offer the same Part B enrollment protections as coverage based on current employment. Ask the benefits administrator before delaying Part B. Check prescription coverage separately for Part D.",
+        sources: [
+          { label: "Medicare.gov: Employer coverage and when to sign up", href: "https://www.medicare.gov/basics/get-started-with-medicare/sign-up/when-can-i-sign-up-for-medicare" },
+          { label: "Medicare.gov: COBRA and Medicare", href: "https://www.medicare.gov/basics/get-started-with-medicare/medicare-basics/working-past-65/cobra-coverage" },
+        ],
+      },
+      {
+        question: "Where do I apply for Medicare Part A and Part B?",
+        answer: "If you need to apply, use SSA's Medicare sign-up page or call Social Security at 1-800-772-1213 for help with Part A and Part B enrollment. A consultation with Vital Edge helps you prepare; booking an appointment does not enroll you in Medicare.",
+        sources: [{ label: "SSA: Sign up for Medicare", href: "https://www.ssa.gov/medicare/sign-up" }],
+      },
+      {
+        question: "What should I prepare for my first Medicare appointment?",
+        answer: "Have your county and ZIP code, any Part A and Part B start dates, current coverage details, employer coverage dates, doctors and hospitals, and prescriptions with doses and pharmacies ready. Include questions about costs or travel. You can request help before you have a Medicare card. Keep Medicare numbers, Social Security numbers, and medical records out of this public form.",
+        sources: [{ label: "Medicare.gov: Preparing to choose coverage", href: "https://www.medicare.gov/basics/get-started-with-medicare/get-more-coverage/joining-a-plan" }],
+      },
     ],
-    links: coreLinks,
+    links: [
+      { label: "Medicare help in St. Johns County", href: "/st-johns-county-medicare-help" },
+      { label: "Medicare help in Nocatee", href: "/nocatee-medicare-help" },
+      { label: "Our 12 licensed states", href: "/licensed-states" },
+      ...coreLinks.filter((link) => link.href !== "/turning-65-medicare"),
+    ],
   },
   {
     slug: "medicare-still-working",
@@ -658,7 +719,7 @@ export const resourcePages: ResourcePage[] = [
   floridaPage,
   ...stateAuthorityPages,
   ...statePages,
-  ...localPages,
+  ...localPages.map(addLocalT65Guidance),
 ];
 
 export const resourcePageSlugs = resourcePages.map((page) => page.slug);

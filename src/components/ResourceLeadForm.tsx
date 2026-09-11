@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { getResourceContact, type ResourceContactMethod } from "@/lib/resourceLeadContact";
 import {
   AUTOMATED_CONTACT_CONSENT_TEXT,
   AUTOMATED_CONTACT_CONSENT_VERSION,
@@ -13,6 +14,7 @@ type ResourceLeadFormProps = {
   leadCategory: string;
   pageSource: string;
   defaultTopic: string;
+  showMedicareTiming?: boolean;
 };
 
 const helpOptions = [
@@ -97,6 +99,7 @@ export function ResourceLeadForm({
   leadCategory,
   pageSource,
   defaultTopic,
+  showMedicareTiming = false,
 }: ResourceLeadFormProps) {
   const [organizationName, setOrganizationName] = useState("");
   const [contactName, setContactName] = useState("");
@@ -105,7 +108,9 @@ export function ResourceLeadForm({
   const [state, setState] = useState("Florida");
   const [county, setCounty] = useState("");
   const [zip, setZip] = useState("");
-  const [preferredContactMethod, setPreferredContactMethod] = useState("Call");
+  const [preferredContactMethod, setPreferredContactMethod] = useState<ResourceContactMethod>("Call");
+  const [coverageSituation, setCoverageSituation] = useState("");
+  const [coverageMonth, setCoverageMonth] = useState("");
   const [helpRequested, setHelpRequested] = useState(leadCategory);
   const [audienceType, setAudienceType] = useState("");
   const [preferredDateTime, setPreferredDateTime] = useState("");
@@ -119,6 +124,7 @@ export function ResourceLeadForm({
   const [success, setSuccess] = useState("");
 
   const isOrganizationForm = variant === "event" || variant === "partner";
+  const contact = getResourceContact(preferredContactMethod, phone, email);
   const title =
     variant === "event"
       ? "Request an educational event"
@@ -134,7 +140,7 @@ export function ResourceLeadForm({
     setError("");
     setSuccess("");
 
-    if (!contactName || !phone || !email || !state || !zip || !preferredContactMethod || !helpRequested || !consent || !licensedAgentDisclosure) {
+    if (!contactName.trim() || !contact.hasRequiredContact || !state || !zip || !preferredContactMethod || !helpRequested || !consent || !licensedAgentDisclosure) {
       setError("Please complete required fields and consent acknowledgments.");
       return;
     }
@@ -152,6 +158,8 @@ export function ResourceLeadForm({
       `ZIP: ${zip}`,
       `Preferred contact method: ${preferredContactMethod}`,
       `Type of help requested: ${helpRequested}`,
+      showMedicareTiming && coverageSituation ? `Medicare timing situation: ${coverageSituation}` : "",
+      showMedicareTiming && coverageMonth ? `Expected coverage month: ${coverageMonth}` : "",
       audienceType ? `Audience type: ${audienceType}` : "",
       preferredDateTime ? `Preferred date/time: ${preferredDateTime}` : "",
       estimatedAttendance ? `Estimated attendance: ${estimatedAttendance}` : "",
@@ -176,7 +184,7 @@ export function ResourceLeadForm({
           county,
           state,
           zip,
-          contactMethod: `${preferredContactMethod}: ${preferredContactMethod === "Email" ? email : phone} | Email: ${email}`,
+          contactMethod: contact.summary,
           message: messageLines,
           consent,
           permissionToContactMethod: "Call, Text, Email",
@@ -207,6 +215,8 @@ export function ResourceLeadForm({
       setEmail("");
       setCounty("");
       setZip("");
+      setCoverageSituation("");
+      setCoverageMonth("");
       setPreferredDateTime("");
       setEstimatedAttendance("");
       setNotes("");
@@ -247,6 +257,22 @@ export function ResourceLeadForm({
 
         <div className="grid gap-4 md:grid-cols-2">
           <div>
+            <label htmlFor="resource-contact-method" className="text-sm font-extrabold text-[var(--ve-teal)]">
+              Preferred contact method *
+            </label>
+            <select
+              id="resource-contact-method"
+              value={preferredContactMethod}
+              onChange={(event) => setPreferredContactMethod(event.target.value as ResourceContactMethod)}
+              className="mt-2 h-12 w-full rounded-xl border border-[var(--ve-teal)]/15 px-4 text-sm"
+              required
+            >
+              <option value="Call">Call</option>
+              <option value="Text">Text</option>
+              <option value="Email">Email</option>
+            </select>
+          </div>
+          <div>
             <label htmlFor="resource-contact-name" className="text-sm font-extrabold text-[var(--ve-teal)]">
               Contact name *
             </label>
@@ -261,7 +287,7 @@ export function ResourceLeadForm({
           </div>
           <div>
             <label htmlFor="resource-phone" className="text-sm font-extrabold text-[var(--ve-teal)]">
-              Phone *
+              Phone {contact.phoneRequired ? "*" : "(optional)"}
             </label>
             <input
               id="resource-phone"
@@ -270,12 +296,12 @@ export function ResourceLeadForm({
               className="mt-2 h-12 w-full rounded-xl border border-[var(--ve-teal)]/15 px-4 text-sm"
               autoComplete="tel"
               type="tel"
-              required
+              required={contact.phoneRequired}
             />
           </div>
           <div>
             <label htmlFor="resource-email" className="text-sm font-extrabold text-[var(--ve-teal)]">
-              Email *
+              Email {contact.emailRequired ? "*" : "(optional)"}
             </label>
             <input
               id="resource-email"
@@ -284,24 +310,8 @@ export function ResourceLeadForm({
               className="mt-2 h-12 w-full rounded-xl border border-[var(--ve-teal)]/15 px-4 text-sm"
               autoComplete="email"
               type="email"
-              required
+              required={contact.emailRequired}
             />
-          </div>
-          <div>
-            <label htmlFor="resource-contact-method" className="text-sm font-extrabold text-[var(--ve-teal)]">
-              Preferred contact method *
-            </label>
-            <select
-              id="resource-contact-method"
-              value={preferredContactMethod}
-              onChange={(event) => setPreferredContactMethod(event.target.value)}
-              className="mt-2 h-12 w-full rounded-xl border border-[var(--ve-teal)]/15 px-4 text-sm"
-              required
-            >
-              <option value="Call">Call</option>
-              <option value="Text">Text</option>
-              <option value="Email">Email</option>
-            </select>
           </div>
           <div>
             <label htmlFor="resource-state" className="text-sm font-extrabold text-[var(--ve-teal)]">
@@ -365,6 +375,44 @@ export function ResourceLeadForm({
             </select>
           </div>
         </div>
+
+        {showMedicareTiming && !isOrganizationForm ? (
+          <fieldset className="rounded-2xl border border-[var(--ve-teal)]/15 p-4">
+            <legend className="px-2 text-base font-extrabold text-[var(--ve-teal)]">Your Medicare timing (optional)</legend>
+            <p id="resource-timing-help" className="mb-4 text-sm leading-6 text-slate-700">
+              Share what you know so we can prepare for your conversation. It is fine if you are still figuring out your dates.
+            </p>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <label htmlFor="resource-coverage-situation" className="text-sm font-extrabold text-[var(--ve-teal)]">Which best describes you?</label>
+                <select
+                  id="resource-coverage-situation"
+                  value={coverageSituation}
+                  onChange={(event) => setCoverageSituation(event.target.value)}
+                  aria-describedby="resource-timing-help"
+                  className="mt-2 h-12 w-full rounded-xl border border-[var(--ve-teal)]/15 px-4 text-base"
+                >
+                  <option value="">Select one, if you know</option>
+                  <option>Turning 65</option>
+                  <option>Retiring or leaving employer coverage</option>
+                  <option>Already on Medicare</option>
+                  <option>Not sure yet</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="resource-coverage-month" className="text-sm font-extrabold text-[var(--ve-teal)]">When do you expect to need coverage?</label>
+                <input
+                  id="resource-coverage-month"
+                  type="month"
+                  value={coverageMonth}
+                  onChange={(event) => setCoverageMonth(event.target.value)}
+                  aria-describedby="resource-timing-help"
+                  className="mt-2 h-12 w-full min-w-0 rounded-xl border border-[var(--ve-teal)]/15 px-4 text-base"
+                />
+              </div>
+            </div>
+          </fieldset>
+        ) : null}
 
         {isOrganizationForm ? (
           <div className="grid gap-4 md:grid-cols-3">
