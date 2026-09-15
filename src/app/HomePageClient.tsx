@@ -99,7 +99,7 @@ const routingCards = [
   {
     title: "New to Medicare",
     description: "I'm new to Medicare and need guidance.",
-    href: "/medicare",
+    href: "/turning-65-medicare",
     icon: "person" as const,
   },
   {

@@ -76,7 +76,7 @@ export const site = {
     href: "/contact",
   },
   /** Cal.com, Calendly, or other booking embed URL. Set NEXT_PUBLIC_SCHEDULE_URL in Vercel. */
-  scheduleUrl: process.env.NEXT_PUBLIC_SCHEDULE_URL || "",
+  scheduleUrl: process.env.NEXT_PUBLIC_SCHEDULE_URL || "https://calendly.com/pmackiniv27/medicare-annual-review",
   nav: [
     { label: "Home", href: "/" },
     { label: "Medicare Advantage", href: "/medicare/medicare-advantage-request" },

@@ -201,6 +201,11 @@ export default async function ResourcePage({ params }: { params: Promise<{ resou
                       ))}
                     </ul>
                   ) : null}
+                  {block.links?.map((source) => (
+                    <p key={source.href} className="mt-3">
+                      <a href={source.href} className="font-bold underline underline-offset-4">{source.label}</a>
+                    </p>
+                  ))}
                 </PremiumContentBand>
               ))}
             </div>
@@ -219,6 +224,11 @@ export default async function ResourcePage({ params }: { params: Promise<{ resou
                     <div key={faq.question}>
                       <h3 className="font-extrabold text-[var(--ve-teal)]">{faq.question}</h3>
                       <p className="mt-1 leading-6">{faq.answer}</p>
+                      {faq.sources?.map((source) => (
+                        <p key={source.href} className="mt-2 leading-6">
+                          <a href={source.href} className="font-semibold text-[var(--ve-teal)] underline underline-offset-4">{source.label}</a>
+                        </p>
+                      ))}
                     </div>
                   ))}
                 </div>
@@ -231,6 +241,7 @@ export default async function ResourcePage({ params }: { params: Promise<{ resou
             leadCategory={page.leadCategory}
             pageSource={`/${page.slug}`}
             defaultTopic={page.title}
+            showMedicareTiming={["turning-65-medicare", "st-johns-county-medicare-help", "nocatee-medicare-help"].includes(page.slug)}
           />
         </div>
       </Container>
