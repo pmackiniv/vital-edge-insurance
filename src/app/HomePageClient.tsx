@@ -256,7 +256,7 @@ export default function HomePageClient() {
                 >
                   <span className="premium-cta-icon"><Icon name="shield" /></span>
                   <span>
-                    <span className="block text-base">Start My Review</span>
+                    <span className="block text-base">Compare Plans Online</span>
                     <span className="block text-xs font-semibold opacity-90">Medicare Plan Review</span>
                     <span className="mt-2 block text-[0.66rem] font-medium opacity-80">Powered by SunFire</span>
                   </span>
@@ -398,6 +398,9 @@ export default function HomePageClient() {
             <Link href="/licensed-states" className="justify-self-start font-sans text-sm font-bold text-[var(--ve-teal)] underline underline-offset-4 lg:col-start-2 lg:justify-self-end">
               View All Licensed States &amp; Disclosures -&gt;
             </Link>
+            <p className="text-sm leading-6 text-slate-700 lg:col-span-2">
+              Looking for Medicare guidance nearby? Explore our resources for <Link href="/st-johns-county" className="font-bold underline underline-offset-4">St. Johns County</Link>, <Link href="/nocatee-medicare-help" className="font-bold underline underline-offset-4">Nocatee</Link>, and <Link href="/duval-county" className="font-bold underline underline-offset-4">Jacksonville and Duval County</Link>. If you are approaching 65, our <Link href="/turning-65-medicare" className="font-bold underline underline-offset-4">Turning 65 Medicare guide</Link> explains where to begin.
+            </p>
           </div>
         </Container>
       </section>
@@ -489,7 +492,7 @@ export default function HomePageClient() {
             </div>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row md:mt-0">
               <a href={PLANENROLL} {...externalLinkProps()} className="premium-small-button premium-small-button-primary">
-                Start My Review
+                Compare Plans Online
               </a>
               <Link href="/ancillary" className="premium-small-button premium-small-button-gold">
                 Dental, Vision &amp; Hospital Coverage

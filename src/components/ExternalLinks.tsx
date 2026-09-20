@@ -25,7 +25,7 @@ export function ExternalLinks() {
           {...linkProps}
           className="premium-small-button premium-small-button-primary"
         >
-          Start My Review
+          Compare Medicare plans online
         </a>
         <a
           href={UHONE_ANCILLARY}
