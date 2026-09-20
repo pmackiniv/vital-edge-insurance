@@ -5,6 +5,7 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import Link from "next/link";
 import { site } from "@/lib/site";
+import { PLANENROLL, externalLinkProps } from "@/lib/externalLinks";
 
 const chatTransport = new DefaultChatTransport({ api: "/api/chat" });
 
@@ -190,8 +191,8 @@ export function AIChatPanel({ onPatrickHandoffNeeded, displayMode = "page" }: AI
       {showError ? (
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800">
           {chatUnavailable
-            ? "Chat is temporarily unavailable. Call/text (352) 214-8879 or request a callback."
-            : "Chat is temporarily unavailable. Use the contact form or call."}
+            ? "Live AI answers are unavailable. The booking, plan finder, and guide links below are still available."
+            : "Your message could not be completed. Please use the links below or call/text (352) 214-8879."}
         </div>
       ) : null}
 
@@ -295,6 +296,11 @@ export function AIChatPanel({ onPatrickHandoffNeeded, displayMode = "page" }: AI
         </p>
       </form>
 
+      <nav aria-label="Chat next steps" className="flex shrink-0 flex-wrap gap-2 text-xs">
+        <Link href="/schedule" className="btn btn-primary px-3 py-2">Book a call</Link>
+        <a href={PLANENROLL} {...externalLinkProps()} className="btn btn-secondary px-3 py-2">Compare plans online</a>
+        <Link href="/turning-65-medicare" className="btn btn-secondary px-3 py-2">Turning 65 guide</Link>
+      </nav>
       {!isWidget ? (
         <div className="flex shrink-0 flex-wrap gap-x-3 gap-y-1 border-t border-black/5 pt-2 text-xs text-black/60">
           <a href={`tel:${site.phoneE164}`} className="hover:text-black hover:underline">

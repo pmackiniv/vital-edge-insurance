@@ -1,7 +1,3 @@
-import { generateText } from "ai";
-import { openai } from "@ai-sdk/openai";
-import { getChatModelId } from "@/lib/chatModelConfig";
-
 export type ChatUnavailableReason = "BILLING" | "AUTH" | "CONFIG";
 
 type ProviderProbeState = {
@@ -10,8 +6,7 @@ type ProviderProbeState = {
   reason: ChatUnavailableReason | null;
 };
 
-const PROBE_OK_TTL_MS = 60_000;
-const PROBE_BLOCK_TTL_MS = 20_000;
+const PROBE_BLOCK_TTL_MS = 300_000;
 
 let probeState: ProviderProbeState = {
   checkedAtMs: 0,
@@ -36,6 +31,8 @@ export function classifyChatProviderError(error: unknown): ChatUnavailableReason
 
   if (
     message.includes("insufficient_quota") ||
+    message.includes("credit_balance_exhausted") ||
+    message.includes("no credits remaining") ||
     message.includes("exceeded your current quota") ||
     message.includes("billing") ||
     message.includes("quota")
@@ -65,50 +62,14 @@ export function makeChatUnavailablePayload(requestId: string, reason: ChatUnavai
   };
 }
 
-function probeIsFresh(nowMs: number) {
-  if (probeState.checkedAtMs === 0) return false;
-  const ttl = probeState.status === "blocked" ? PROBE_BLOCK_TTL_MS : PROBE_OK_TTL_MS;
-  return nowMs - probeState.checkedAtMs < ttl;
+export function markChatProviderUnavailable(reason: ChatUnavailableReason, nowMs = Date.now()) {
+  probeState = { checkedAtMs: nowMs, status: "blocked", reason };
 }
 
-export async function ensureChatProviderAvailable(): Promise<{ ok: true } | { ok: false; reason: ChatUnavailableReason }> {
-  const nowMs = Date.now();
-  if (probeIsFresh(nowMs)) {
-    if (probeState.status === "blocked" && probeState.reason) {
-      return { ok: false, reason: probeState.reason };
-    }
-    return { ok: true };
+// Check failures from real requests; never spend tokens on an availability probe.
+export function ensureChatProviderAvailable(nowMs = Date.now()): { ok: true } | { ok: false; reason: ChatUnavailableReason } {
+  if (probeState.reason && nowMs - probeState.checkedAtMs < PROBE_BLOCK_TTL_MS) {
+    return { ok: false, reason: probeState.reason };
   }
-
-  try {
-    await generateText({
-      model: openai(getChatModelId()),
-      prompt: "Reply with OK.",
-      maxOutputTokens: 1,
-      temperature: 0,
-    });
-    probeState = {
-      checkedAtMs: nowMs,
-      status: "ok",
-      reason: null,
-    };
-    return { ok: true };
-  } catch (error) {
-    const reason = classifyChatProviderError(error);
-    if (!reason) {
-      probeState = {
-        checkedAtMs: nowMs,
-        status: "ok",
-        reason: null,
-      };
-      return { ok: true };
-    }
-
-    probeState = {
-      checkedAtMs: nowMs,
-      status: "blocked",
-      reason,
-    };
-    return { ok: false, reason };
-  }
+  return { ok: true };
 }

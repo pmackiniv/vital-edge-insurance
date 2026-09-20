@@ -34,13 +34,24 @@ const routes = [
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = site.siteUrl.replace(/\/$/, "");
+  // Use actual content-update dates, not a new timestamp on every crawl.
+  const updated: Record<string, string> = {
+    "": "2026-09-20",
+    enroll: "2026-09-20",
+    schedule: "2026-09-20",
+    "turning-65-medicare": "2026-09-15",
+    "st-johns-county": "2026-09-15",
+    "nocatee-medicare-help": "2026-09-15",
+  };
 
   return [
     ...routes.map((route) => ({
       url: `${base}/${route}`.replace(/\/$/, ""),
+      ...(updated[route] ? { lastModified: updated[route] } : {}),
     })),
     ...resourcePageSlugs.map((slug) => ({
       url: `${base}/${slug}`,
+      ...(updated[slug] ? { lastModified: updated[slug] } : {}),
     })),
   ];
 }

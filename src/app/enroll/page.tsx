@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Container } from "@/components/Container";
 import { ExternalLinks } from "@/components/ExternalLinks";
 import { PremiumContentBand, PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
@@ -41,8 +42,8 @@ export default function EnrollPage() {
     <>
       <PremiumInteriorHero
         eyebrow="Secure External Links"
-        title="Enrollment Destinations"
-        subtitle="Use the current approved external destinations when you already know your next step, or request a licensed-agent call first."
+        title="Compare Medicare Plans Online"
+        subtitle="Browse the plans available through Patrick’s secure SunFire plan finder at your own pace. No appointment is needed to open it. Licensed-agent help is available when you want it."
         actions={[
           { label: "Request a Call", href: "/contact", kind: "primary" },
           { label: "Medicare Guidance", href: "/medicare", kind: "gold" },
@@ -67,6 +68,23 @@ export default function EnrollPage() {
           </PremiumContentBand>
 
           <ExternalLinks />
+
+          <PremiumContentBand title="Prefer to explore on your own?">
+            <ol className="list-decimal space-y-3 pl-5">
+              <li>Open the Medicare plan finder and enter your ZIP code to see the plans it offers in your area.</li>
+              <li>Check the plan’s coverage, costs, doctors, hospitals, prescriptions, and pharmacies before deciding. Enter sensitive information only on the secure enrollment site, never in this website’s chat.</li>
+              <li>If you choose to apply, follow the secure site’s enrollment steps. You must meet the plan’s eligibility requirements and have a valid enrollment period; browsing does not enroll you.</li>
+            </ol>
+          </PremiumContentBand>
+
+          <PremiumContentBand title="What if my carrier or plan is missing?">
+            <p>
+              The online tool does not show every carrier or plan. A missing plan does not necessarily mean it is unavailable in your area. Availability also varies by location and plan year.
+            </p>
+            <p className="mt-3">
+              <Link href="/schedule" className="font-bold underline underline-offset-4">Book a call with Patrick</Link> or <Link href="/contact" className="font-bold underline underline-offset-4">request follow-up</Link> if you need help checking an option. New to Medicare? Start with the <Link href="/turning-65-medicare" className="font-bold underline underline-offset-4">Turning 65 guide</Link>.
+            </p>
+          </PremiumContentBand>
         </div>
       </Container>
     </>

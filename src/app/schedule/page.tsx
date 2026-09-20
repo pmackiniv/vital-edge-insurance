@@ -23,6 +23,20 @@ export default function SchedulePage() {
       </PremiumInteriorHero>
 
       <Container className="py-12">
+        <div className="mb-6 space-y-3 text-sm leading-6 text-slate-700">
+          <p>
+            Our scheduling calendar opens in <strong>Eastern Time (ET)</strong>, adjusting for daylight saving time.
+            If you are in another time zone, check the calendar’s time-zone selector before confirming your appointment.
+          </p>
+          {scheduleUrl ? (
+            <a href={scheduleUrl} target="_blank" rel="noopener noreferrer" className="premium-small-button premium-small-button-primary">
+              Open booking calendar in a new tab
+            </a>
+          ) : null}
+          <p>
+            Prefer to browse on your own? <Link href="/enroll" className="font-bold underline underline-offset-4">Compare Medicare plans online</Link> without booking a call.
+          </p>
+        </div>
         {scheduleUrl ? (
           <div className="min-h-[600px] w-full overflow-hidden rounded-3xl border border-[var(--ve-teal)]/10 bg-white shadow-[0_22px_70px_rgba(15,23,42,0.08)]">
             <iframe

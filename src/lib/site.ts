@@ -1,4 +1,5 @@
 import { GOOGLE_BUSINESS_PROFILE_URL } from "@/lib/googleBusinessProfile";
+import { websiteScheduleUrl } from "@/lib/scheduling";
 
 export type SiteNavItem = {
   label: string;
@@ -76,7 +77,7 @@ export const site = {
     href: "/contact",
   },
   /** Cal.com, Calendly, or other booking embed URL. Set NEXT_PUBLIC_SCHEDULE_URL in Vercel. */
-  scheduleUrl: process.env.NEXT_PUBLIC_SCHEDULE_URL || "https://calendly.com/pmackiniv27/medicare-annual-review",
+  scheduleUrl: websiteScheduleUrl(process.env.NEXT_PUBLIC_SCHEDULE_URL || "https://calendly.com/pmackiniv27/medicare-annual-review"),
   nav: [
     { label: "Home", href: "/" },
     { label: "Medicare Advantage", href: "/medicare/medicare-advantage-request" },
@@ -92,7 +93,7 @@ export const site = {
       href: "/medicare",
       children: [
         { label: "Medicare Overview", href: "/medicare" },
-        { label: "New to Medicare", href: "/resources#new-to-medicare" },
+        { label: "New to Medicare", href: "/turning-65-medicare" },
         { label: "Medicare Advantage", href: "/medicare/medicare-advantage-request" },
         { label: "Medigap", href: "/medicare/medigap" },
         { label: "Part D", href: "/resources#part-d-basics" },
