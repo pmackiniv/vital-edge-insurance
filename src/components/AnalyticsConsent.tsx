@@ -1,10 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const ANALYTICS_OPT_OUT_KEY = "ve-analytics-opt-out";
+
+function subscribeToPreferences(onChange: () => void) {
+  window.addEventListener("storage", onChange);
+  return () => window.removeEventListener("storage", onChange);
+}
+
+const getServerSnapshot = () => false;
+
+export function readAnalyticsEnabled() {
+  const gpc = (navigator as Navigator & { globalPrivacyControl?: boolean }).globalPrivacyControl;
+  if (gpc === true) return false;
+  try {
+    return window.localStorage.getItem(ANALYTICS_OPT_OUT_KEY) !== "1";
+  } catch {
+    // Preserve the existing default when browser storage cannot be read.
+    return true;
+  }
+}
 
 /**
  * Gates Vercel Analytics and Speed Insights.
@@ -31,25 +49,7 @@ export const ANALYTICS_OPT_OUT_KEY = "ve-analytics-opt-out";
  * this component.
  */
 export default function AnalyticsConsent() {
-  const [enabled, setEnabled] = useState(false);
-
-  useEffect(() => {
-    // Global Privacy Control overrides any stored preference.
-    const gpc = (navigator as Navigator & { globalPrivacyControl?: boolean })
-      .globalPrivacyControl;
-    if (gpc === true) {
-      setEnabled(false);
-      return;
-    }
-
-    try {
-      setEnabled(window.localStorage.getItem(ANALYTICS_OPT_OUT_KEY) !== "1");
-    } catch {
-      // Storage blocked. Analytics is cookieless and no preference is readable,
-      // so default to measuring.
-      setEnabled(true);
-    }
-  }, []);
+  const enabled = useSyncExternalStore(subscribeToPreferences, readAnalyticsEnabled, getServerSnapshot);
 
   if (!enabled) return null;
 

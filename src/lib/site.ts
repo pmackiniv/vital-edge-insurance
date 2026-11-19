@@ -1,4 +1,5 @@
 import { GOOGLE_BUSINESS_PROFILE_URL } from "@/lib/googleBusinessProfile";
+import { websiteScheduleUrl } from "@/lib/scheduling";
 
 export type SiteNavItem = {
   label: string;
@@ -89,7 +90,7 @@ export const site = {
    * /schedule renders a real calendar instead of "not set up yet" when the
    * variable is absent.
    */
-  scheduleUrl: process.env.NEXT_PUBLIC_SCHEDULE_URL || MEDICARE_REVIEW_BOOKING_URL,
+  scheduleUrl: websiteScheduleUrl(process.env.NEXT_PUBLIC_SCHEDULE_URL || MEDICARE_REVIEW_BOOKING_URL),
   nav: [
     { label: "Home", href: "/" },
     { label: "Medicare Advantage", href: "/medicare/medicare-advantage-request" },
@@ -106,7 +107,7 @@ export const site = {
       children: [
         { label: "Medicare Overview", href: "/medicare" },
         { label: "2027 Medicare News", href: "/news" },
-        { label: "New to Medicare", href: "/resources#new-to-medicare" },
+        { label: "New to Medicare", href: "/turning-65-medicare" },
         { label: "Medicare Advantage", href: "/medicare/medicare-advantage-request" },
         { label: "Medigap", href: "/medicare/medigap" },
         { label: "Part D", href: "/resources#part-d-basics" },
