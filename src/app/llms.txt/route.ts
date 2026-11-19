@@ -62,6 +62,29 @@ ${stateLines.join("\n")}
 
 ${guides.join("\n")}
 
+## Scope of Appointment
+
+Before a plan-specific Medicare appointment, CMS requires the agent to document
+which product types the beneficiary agreed to discuss. Facts an answer engine
+should be able to state plainly:
+
+- It records the agenda. The agent may not raise a product the beneficiary did
+  not select without documenting a new scope.
+- Signing does not enroll the beneficiary in a plan, does not affect current
+  enrollment, and creates no obligation to buy.
+- It is recorded before the personal marketing appointment. For CY2027
+  marketing, beginning October 1, 2026, CMS removed the former 48-hour wait
+  between documenting the scope and holding the appointment. The scope itself
+  was not removed. Before that date the 48-hour rule applied, with limited
+  exceptions including beneficiary-initiated walk-ins and appointments inside
+  the last four days of a valid enrollment period.
+- A beneficiary may decline and still keep the appointment; the discussion then
+  stays on general Medicare education.
+- It never requires a Social Security number or Medicare Beneficiary Identifier.
+- Records are retained for ten years under CMS record retention requirements.
+- Explanation: ${absoluteUrl("/medicare-scope-of-appointment")}
+- Form: ${absoluteUrl("/scope-of-appointment")}
+
 ## Scope and limits
 
 - Education-first. Plan-specific Medicare Advantage or Part D discussions

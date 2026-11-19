@@ -10,6 +10,9 @@ import {
 } from "@/components/PremiumInteriorPage";
 import {
   ALLSTATE_HEALTH_SOLUTIONS,
+  ALLSTATE_HEALTH_SOLUTIONS_CANCER,
+  ALLSTATE_HEALTH_SOLUTIONS_DVH,
+  ALLSTATE_HEALTH_SOLUTIONS_SENIOR_INDEMNITY,
   externalLinkProps,
   UHONE_ANCILLARY,
 } from "@/lib/externalLinks";
@@ -134,36 +137,61 @@ export default function Page() {
             <div className="mt-7 grid gap-5 md:grid-cols-2">
               <article className="rounded-2xl border border-[var(--ve-teal)]/10 bg-[#f5fbfb] p-6">
                 <h3 className="font-sans text-lg font-extrabold text-[var(--ve-teal)]">
-                  UnitedHealthcare options
+                  UnitedHealthcare Golden Rule (Dental, Vision, Hearing &amp; Hospital Indemnity)
                 </h3>
                 <p className="mt-3 font-sans text-sm leading-6 text-slate-700">
-                  Explore currently available health and supplemental coverage categories through the UnitedHealthOne
-                  quoting experience.
+                  Explore UnitedHealthOne / Golden Rule supplemental options across all 13 licensed states, including
+                  standalone Dental, Vision, and Hearing plans and fixed-benefit Hospital Indemnity coverage.
                 </p>
-                <a
-                  href={UHONE_ANCILLARY}
-                  {...externalLinkProps()}
-                  className="premium-small-button premium-small-button-primary mt-5"
-                >
-                  Quote UnitedHealthcare Options
-                </a>
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <a
+                    href={UHONE_ANCILLARY}
+                    {...externalLinkProps()}
+                    className="premium-small-button premium-small-button-primary"
+                  >
+                    Quote UnitedHealthcare Options
+                  </a>
+                </div>
               </article>
 
               <article className="rounded-2xl border border-[var(--ve-gold)]/20 bg-[#fff9ee] p-6">
                 <h3 className="font-sans text-lg font-extrabold text-[var(--ve-teal)]">
-                  Allstate Health Solutions
+                  Allstate Health Solutions (Direct Category Self-Quote)
                 </h3>
                 <p className="mt-3 font-sans text-sm leading-6 text-slate-700">
-                  Explore currently available health and supplemental coverage categories through the Allstate Health
-                  Solutions quick-quote experience.
+                  Jump directly to the Allstate Health Solutions quick-quote category that matches the specific gap you
+                  want to review, or browse the full supplemental catalog.
                 </p>
-                <a
-                  href={ALLSTATE_HEALTH_SOLUTIONS}
-                  {...externalLinkProps()}
-                  className="premium-small-button premium-small-button-gold mt-5"
-                >
-                  Quote Allstate Health Solutions
-                </a>
+                <div className="mt-5 flex flex-wrap gap-2.5">
+                  <a
+                    href={ALLSTATE_HEALTH_SOLUTIONS_DVH}
+                    {...externalLinkProps()}
+                    className="premium-small-button premium-small-button-gold"
+                  >
+                    Dental, Vision &amp; Hearing
+                  </a>
+                  <a
+                    href={ALLSTATE_HEALTH_SOLUTIONS_SENIOR_INDEMNITY}
+                    {...externalLinkProps()}
+                    className="premium-small-button premium-small-button-primary"
+                  >
+                    Senior Hospital Indemnity
+                  </a>
+                  <a
+                    href={ALLSTATE_HEALTH_SOLUTIONS_CANCER}
+                    {...externalLinkProps()}
+                    className="premium-small-button premium-small-button-light"
+                  >
+                    Cancer &amp; Critical Illness
+                  </a>
+                  <a
+                    href={ALLSTATE_HEALTH_SOLUTIONS}
+                    {...externalLinkProps()}
+                    className="premium-small-button premium-small-button-light"
+                  >
+                    All Allstate Options
+                  </a>
+                </div>
               </article>
             </div>
 

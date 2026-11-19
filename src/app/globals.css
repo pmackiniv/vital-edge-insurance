@@ -712,3 +712,11 @@ textarea::placeholder {
     animation: none;
   }
 }
+
+/* Calendly popup overlay.
+   The floating badge was replaced by the first-party ScheduleButton, so the old
+   .calendly-badge-widget overrides are gone. Only the popup remains, and it must
+   clear the ChatWidget (fixed bottom-4 right-3, z-[120]). */
+.calendly-overlay {
+  z-index: 140 !important;
+}

@@ -13,7 +13,7 @@ import { absoluteUrl, licensedStateNames, serviceAreaStatement } from "@/lib/sit
 export const metadata: Metadata = {
   title: "Licensed Health Insurance States | Vital Edge Insurance",
   description:
-    "Vital Edge Insurance provides licensed health insurance guidance for Florida, Georgia, South Carolina, North Carolina, Texas, Tennessee, Arizona, Washington, Pennsylvania, Ohio, Michigan, and Louisiana.",
+    "Vital Edge Insurance provides licensed health insurance guidance for Florida, Georgia, South Carolina, North Carolina, Texas, Tennessee, Arizona, Washington, Pennsylvania, Ohio, Michigan, Louisiana, and Wisconsin.",
   alternates: {
     canonical: absoluteUrl("/licensed-states"),
   },
@@ -33,6 +33,7 @@ const statePageSlugs: Record<(typeof licensedStateNames)[number], string> = {
   Ohio: "ohio-medicare-help",
   Michigan: "michigan-medicare-help",
   Louisiana: "louisiana-medicare-help",
+  Wisconsin: "wisconsin-medicare-help",
 };
 
 const stateSearchIntents = states.map((state) => ({
@@ -44,7 +45,7 @@ const faqs = [
   {
     question: "Can Vital Edge Insurance help me if I live outside Florida?",
     answer:
-      "Yes. Vital Edge Insurance is headquartered in Florida and serves clients across 12 states and growing. Availability still depends on your state, county, ZIP code, carrier appointment, eligibility, and enrollment timing.",
+      "Yes. Vital Edge Insurance is headquartered in Florida and serves clients across 13 states and growing. Availability still depends on your state, county, ZIP code, carrier appointment, eligibility, and enrollment timing.",
   },
   {
     question: "Can I get Medicare plan-specific guidance online?",
@@ -81,7 +82,7 @@ export default function Page() {
     <>
       <PremiumInteriorHero
         eyebrow="Licensed State Footprint"
-        title="Headquartered in Florida. Serving clients across 12 states and growing."
+        title="Headquartered in Florida. Serving clients across 13 states and growing."
         subtitle={`${serviceAreaStatement} Every plan-specific review still starts with state, county, ZIP code, eligibility, and carrier-appointment checks.`}
         actions={[
           { label: "Request a Call", href: "/contact?topic=licensed-states", kind: "primary" },

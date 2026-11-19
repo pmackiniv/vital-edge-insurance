@@ -57,6 +57,7 @@ const tpmoDisclosure =
 
 const coreLinks = [
   { label: "Medicare 101", href: "/medicare-101" },
+  { label: "Scope of Appointment", href: "/medicare-scope-of-appointment" },
   { label: "Turning 65", href: "/turning-65-medicare" },
   { label: "Still working past 65", href: "/medicare-still-working" },
   { label: "Extra Help and LIS", href: "/medicare-extra-help-lis" },
@@ -466,6 +467,116 @@ const strategicPages: ResourcePage[] = [
     ],
     links: coreLinks,
   },
+  {
+    slug: "medicare-scope-of-appointment",
+    eyebrow: "Scope of Appointment",
+    title: "What a Medicare Scope of Appointment Is",
+    metaTitle: "Medicare Scope of Appointment: What It Is and Why You Sign One | Vital Edge Insurance",
+    description:
+      "A plain-language explanation of the Medicare Scope of Appointment: what the form does, why CMS requires it 48 hours before a plan-specific appointment, what signing does not do, and whether you can decline.",
+    heroSubtitle:
+      "It is the form where you set the agenda. Once you choose the topics, those are the only products a licensed agent is permitted to raise.",
+    leadCategory: "Medicare consumer review",
+    audience: "Medicare consumers preparing for an appointment",
+    primaryCtaLabel: "Complete your Scope of Appointment",
+    primaryCtaHref: "/scope-of-appointment",
+    secondaryCtaLabel: "Medicare 101",
+    secondaryCtaHref: "/medicare-101",
+    serviceType: "Medicare appointment documentation",
+    areaServed: "Florida headquarters and 12-state approved service footprint",
+    cards: [
+      {
+        title: "You choose the topics",
+        body: "You check the product types you want covered. The agent may not introduce a product you did not select without documenting a new scope.",
+      },
+      {
+        title: "Signing enrolls you in nothing",
+        body: "The form does not enroll you, does not change your current coverage, and does not obligate you to buy anything.",
+      },
+      {
+        title: "Agreed before the appointment",
+        body: "The scope is recorded before a plan-specific appointment. For CY2027 marketing, beginning October 1, 2026, CMS removed the former 48-hour wait — the form itself remains.",
+      },
+    ],
+    blocks: [
+      {
+        title: "What the form actually does",
+        paragraphs: [
+          "A Scope of Appointment is a short record of what you and a licensed agent agreed to discuss before a Medicare sales or marketing appointment. The Centers for Medicare & Medicaid Services requires agents to document it so that both people arrive with the same understanding of the agenda.",
+          "In practice it works as a limit on the agent, not on you. If you check only prescription drug coverage, that is the conversation you get. Bringing up a product you did not select requires documenting a new scope first, which is why the form is worth taking seriously rather than treating as a formality.",
+        ],
+      },
+      {
+        title: "What happened to the 48-hour rule",
+        paragraphs: [
+          "For several years the scope had to be documented at least 48 hours before a plan-specific appointment, with limited exceptions such as beneficiary-initiated walk-ins and appointments falling in the last four days of a valid enrollment period.",
+          "For CY2027 marketing, beginning October 1, 2026, CMS removed that 48-hour wait. What did not change is the scope itself: the product types still have to be agreed and recorded before the personal marketing appointment. In practice that means you can now book a plan-specific review for tomorrow, or later today, and still complete the form properly.",
+          "Carriers and field marketing organizations may apply their own stricter timing, so a particular appointment can still be scheduled further out.",
+        ],
+      },
+      {
+        title: "What signing does not do",
+        bullets: [
+          "It does not enroll you in any plan.",
+          "It does not change or cancel your current coverage.",
+          "It does not obligate you to buy anything or to make a decision.",
+          "It does not give permission for unrelated marketing contact.",
+          "It does not require you to bring identification numbers. Never put a Social Security number or Medicare Beneficiary Identifier on a scope form.",
+        ],
+      },
+      {
+        title: "Can you decline?",
+        paragraphs: [
+          "Yes. Declining does not cost you an appointment. Without a documented scope the conversation stays on general Medicare education, and a scope can be completed later if you decide you want a plan-specific review.",
+          "Free, unbiased counselling is also available from your state's SHIP programme at shiphelp.org, and from Medicare directly at 1-800-MEDICARE.",
+        ],
+      },
+      { title: "Compliance note", paragraphs: [medicareDisclosure, tpmoDisclosure] },
+    ],
+    faqs: [
+      {
+        question: "What is a Medicare Scope of Appointment?",
+        answer:
+          "It is a form documenting which Medicare product types you have agreed to discuss with a licensed agent before a sales or marketing appointment. CMS requires agents to document it so the appointment stays limited to the topics you selected.",
+      },
+      {
+        question: "Does signing a Scope of Appointment enroll me in a plan?",
+        answer:
+          "No. Signing does not enroll you in a plan, does not affect your current enrollment, and does not obligate you to buy anything. It only records what may be discussed.",
+      },
+      {
+        question: "Do I still have to sign a Scope of Appointment 48 hours in advance?",
+        answer:
+          "No. For CY2027 marketing, beginning October 1, 2026, CMS removed the 48-hour wait between documenting the scope and the appointment. The Scope of Appointment itself was not removed — the product types still have to be agreed and recorded before a plan-specific appointment. Individual carriers may still apply stricter timing.",
+      },
+      {
+        question: "Did CMS get rid of the Scope of Appointment?",
+        answer:
+          "No. Only the 48-hour waiting period was removed for CY2027 marketing beginning October 1, 2026. The scope is still required before any plan-specific Medicare Advantage or Part D discussion, and the agent still may not raise a product you did not select.",
+      },
+      {
+        question: "Can I refuse to sign a Scope of Appointment?",
+        answer:
+          "Yes. You can decline and still keep the appointment. Without a documented scope the discussion stays on general Medicare education rather than specific plans, and you can complete one later if you want a plan-specific review.",
+      },
+      {
+        question: "What information does a Scope of Appointment ask for?",
+        answer:
+          "Your name, ZIP code, how the contact began, the product types you want discussed, the appointment date and time, and your signature. It should never ask for your Social Security number or Medicare Beneficiary Identifier.",
+      },
+      {
+        question: "Can the agent discuss a product I did not check?",
+        answer:
+          "Not without documenting a new scope. If the conversation turns to a product you did not select, the agent must record a new Scope of Appointment before discussing it.",
+      },
+      {
+        question: "How long is a Scope of Appointment kept?",
+        answer:
+          "Scope of Appointment documentation is subject to CMS record retention requirements. Vital Edge Insurance retains these records for ten years.",
+      },
+    ],
+    links: coreLinks,
+  },
 ];
 
 const floridaPage: ResourcePage = {
@@ -566,6 +677,7 @@ const statePages: ResourcePage[] = [
   ["ohio", "Ohio", "Ohio Medicare education for people comparing Original Medicare, Medicare Advantage, Medigap, and Part D basics."],
   ["michigan", "Michigan", "Michigan Medicare guidance focused on provider networks, prescriptions, enrollment timing, and county-level variation."],
   ["louisiana", "Louisiana", "Louisiana Medicare education for people who want clear next steps before plan-specific conversations."],
+  ["wisconsin", "Wisconsin", "Wisconsin Medicare education for residents reviewing doctors, prescriptions, county plan options, and enrollment timing."],
 ]
   // A state with a verified license record publishes a full authority page
   // instead, so drop its templated twin here to avoid a duplicate slug.

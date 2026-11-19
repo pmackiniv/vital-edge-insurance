@@ -60,8 +60,9 @@ export default function EnrollPage() {
             <div className="space-y-2">
               <p>Use the secure enrollment partners below. You will be redirected to a third-party site to continue.</p>
               <p>
-                We do not offer every plan available in your area. Any information we provide is limited to plans we
-                offer in your area.
+                We do not offer every plan available in your area. We represent many organizations which offer several
+                products in your area. Please contact Medicare.gov or 1-800-MEDICARE to get information on all of your
+                options.
               </p>
             </div>
           </PremiumContentBand>

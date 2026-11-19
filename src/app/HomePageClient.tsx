@@ -147,6 +147,7 @@ const states = [
   { name: "Ohio", abbr: "OH" },
   { name: "Michigan", abbr: "MI" },
   { name: "Louisiana", abbr: "LA" },
+  { name: "Wisconsin", abbr: "WI" },
 ];
 
 const values = [
@@ -159,7 +160,7 @@ const values = [
 
 const whyItems = [
   { label: "Personal Guidance", icon: "person" as const },
-  { label: "Licensed in 12 States", icon: "pin" as const },
+  { label: "Licensed in 13 States", icon: "pin" as const },
   { label: "No Pressure. Clear Guidance.", icon: "shield" as const },
   { label: "Ongoing Support", icon: "phone" as const },
 ];

@@ -8,14 +8,14 @@ import { absoluteUrl, serviceAreaStatement, site } from "@/lib/site";
 import { StructuredData } from "@/components/StructuredData";
 
 export const metadata: Metadata = {
-  title: "Medicare Guidance Across 12 States | Vital Edge Insurance",
+  title: "Medicare Guidance Across 13 States | Vital Edge Insurance",
   description:
-    "Vital Edge Insurance provides Medicare education on Original Medicare, Medicare Advantage, Medigap, Part D, and SNP pathways. Headquartered in Florida and serving clients across 12 states and growing.",
+    "Vital Edge Insurance provides Medicare education on Original Medicare, Medicare Advantage, Medigap, Part D, and SNP pathways. Headquartered in Florida and serving clients across 13 licensed states and growing.",
   alternates: {
     canonical: absoluteUrl("/medicare"),
   },
   openGraph: {
-    title: "Medicare Guidance Across 12 States | Vital Edge Insurance",
+    title: "Medicare Guidance Across 13 States | Vital Edge Insurance",
     description:
       "Licensed Medicare education on coverage pathways, provider access, prescriptions, cost exposure, and appointment-based plan-specific next steps.",
     url: absoluteUrl("/medicare"),
@@ -151,18 +151,20 @@ export default function Page() {
         ]}
       >
         <PremiumDisclosure>
-          We do not offer every plan available in your area. Any information we provide is limited to those plans we do
-          offer in your area. Please contact Medicare.gov or 1-800-MEDICARE to get information on all of your options.
+          We do not offer every plan available in your area. We represent many organizations which offer several
+          products in your area. Please contact Medicare.gov or 1-800-MEDICARE to get information on all of your
+          options.
         </PremiumDisclosure>
       </PremiumInteriorHero>
 
     <Container className="py-12">
       <div className="space-y-10">
         <section className="rounded-3xl border border-[var(--ve-teal)]/10 bg-white p-6 shadow-[0_22px_70px_rgba(15,23,42,0.08)] md:p-8">
-          <h2 className="font-display text-3xl font-bold tracking-normal text-[var(--ve-teal)]">Medicare in Florida and the States We Serve</h2>
+          <h2 className="font-display text-3xl font-bold tracking-normal text-[var(--ve-teal)]">Medicare in Florida and the 13 States We Serve</h2>
           <div className="mt-4 space-y-3 font-sans text-sm leading-7 text-slate-700">
             <p>
-              Vital Edge is headquartered in Florida and serves clients across 12 states and growing. Medicare generally
+              Vital Edge is headquartered in Florida and serves clients across 13 licensed states (AZ, FL, GA, LA, MI,
+              NC, OH, PA, SC, TN, TX, WA, and WI). Medicare generally
               starts with Part A and Part B, known as Original Medicare. Medicare.gov explains that Original Medicare
               lets you use any doctor or hospital that takes Medicare, anywhere in the United States.
             </p>
@@ -171,6 +173,15 @@ export default function Page() {
               private plans, often with provider networks and local service-area rules. Medigap works alongside Original
               Medicare to help with certain out-of-pocket costs; it is not the same thing as Medicare Advantage.
               Part D prescription drug coverage can be separate or included in many Medicare Advantage plans.
+            </p>
+            <p>
+              When you use our self-enroll plan lookup, look for a plan that keeps your doctors and covers your
+              prescriptions. Can&apos;t find the plan you&apos;re looking for? Call me! I work one-on-one for my clients
+              all through 2027 and for the rest of their lives, and we can also review optional{" "}
+              <Link className="underline font-semibold" href="/ancillary">
+                standalone Dental, Vision, Hearing, and Hospital Indemnity options
+              </Link>{" "}
+              separately with your permission.
             </p>
             <p>
               A practical review should include state, county, ZIP code, doctors, hospitals, prescriptions, pharmacy

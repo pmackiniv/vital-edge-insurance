@@ -1,4 +1,8 @@
 import { requiresSoaByStage } from "@/lib/compliance/policy";
+import {
+  isCy2027MarketingPeriod,
+  marketingTimeZoneForState,
+} from "@/lib/compliance/cy2027MarketingPolicy";
 
 export type SoaTimingInput = {
   discussionStage?: string;
@@ -7,12 +11,23 @@ export type SoaTimingInput = {
   soaSignedAt?: string;
   appointmentAt?: string;
   isElectionPeriodFinal4Days?: boolean;
+  /** Drives the marketing time zone for the CY2027 boundary. */
+  state?: string;
+  /** Evaluation moment. Injected in tests; defaults to now. */
+  now?: number | Date;
 };
 
 export type SoaTimingResult = {
   required: boolean;
   valid: boolean;
-  reason: "not_required" | "missing_soa" | "missing_timestamps" | "signed_after_appointment" | "less_than_48_hours" | "ok";
+  reason:
+    | "not_required"
+    | "missing_soa"
+    | "missing_timestamps"
+    | "signed_after_appointment"
+    | "less_than_48_hours"
+    | "cy2027_no_wait_required"
+    | "ok";
 };
 
 function parseIso(value: string | undefined): Date | null {
@@ -45,6 +60,25 @@ export function evaluateSoaTiming(input: SoaTimingInput): SoaTimingResult {
 
   if (input.isElectionPeriodFinal4Days === true) {
     return { required: true, valid: true, reason: "ok" };
+  }
+
+  /*
+   * CY2027 marketing (from 2026-10-01) removed the 48-hour wait, not the SOA.
+   * The scope must still be recorded before the appointment -- which the
+   * signed_after_appointment check above already enforces -- but no gap is
+   * required between signing and meeting.
+   *
+   * The boundary is evaluated in the beneficiary's marketing time zone. With no
+   * state supplied this falls back to America/Los_Angeles, the last zone to
+   * cross into October 1, so the stricter pre-CY2027 rule stays in force
+   * longest. Unknown state therefore fails safe.
+   */
+  const marketingActive = isCy2027MarketingPeriod(
+    input.now instanceof Date ? input.now : new Date(input.now ?? Date.now()),
+    marketingTimeZoneForState(input.state),
+  );
+  if (marketingActive) {
+    return { required: true, valid: true, reason: "cy2027_no_wait_required" };
   }
 
   const hoursBetween = (appointmentAt.getTime() - signedAt.getTime()) / (1000 * 60 * 60);

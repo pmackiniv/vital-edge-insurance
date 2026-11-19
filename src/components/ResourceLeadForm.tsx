@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { buildClientLeadTracking } from "@/lib/clientLeadTracking";
 import {
   AUTOMATED_CONTACT_CONSENT_TEXT,
   AUTOMATED_CONTACT_CONSENT_VERSION,
@@ -56,40 +57,14 @@ const audienceOptions = [
   "Other local organization",
 ];
 
+// Was a near-copy of buildClientLeadTracking. Kept as a thin wrapper only to
+// translate this form's `variant` prop into the shared helper's flags, so the
+// resource pages pick up session-persisted attribution like every other form.
 function getTracking(pageSource: string, leadCategory: string, variant?: string) {
-  if (typeof window === "undefined") {
-    return {
-      leadSource: "Website",
-      pageSource,
-      utmSource: "",
-      utmMedium: "",
-      utmCampaign: "",
-      linkedinReferral: false,
-      eventReferral: variant === "event",
-      partnerReferral: variant === "partner",
-      leadCategory,
-      consentTimestamp: new Date().toISOString(),
-    };
-  }
-
-  const params = new URLSearchParams(window.location.search);
-  const referrer = document.referrer || "";
-  const utmSource = params.get("utm_source") || "";
-  const source = params.get("source") || "";
-  const linkedinReferral = /linkedin/i.test([utmSource, source, referrer, pageSource].join(" "));
-
-  return {
-    leadSource: source || utmSource || "Website",
-    pageSource,
-    utmSource,
-    utmMedium: params.get("utm_medium") || "",
-    utmCampaign: params.get("utm_campaign") || "",
-    linkedinReferral,
-    eventReferral: variant === "event" || params.get("event") === "1",
-    partnerReferral: variant === "partner" || params.get("partner") === "1",
-    leadCategory,
-    consentTimestamp: new Date().toISOString(),
-  };
+  return buildClientLeadTracking(pageSource, leadCategory, {
+    eventReferral: variant === "event",
+    partnerReferral: variant === "partner",
+  });
 }
 
 export function ResourceLeadForm({

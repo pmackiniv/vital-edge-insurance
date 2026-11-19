@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { medicareNewsSlugs } from "@/lib/medicareNews";
 import { resourcePageSlugs } from "@/lib/resourcePages";
 import { site } from "@/lib/site";
 
@@ -22,6 +23,7 @@ const routes = [
   "medicare/medigap-request",
   "medicare/snp",
   "miami",
+  "news",
   "off-exchange",
   "privacy",
   "referrals",
@@ -38,6 +40,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...routes.map((route) => ({
       url: `${base}/${route}`.replace(/\/$/, ""),
+    })),
+    ...medicareNewsSlugs.map((slug) => ({
+      url: `${base}/news/${slug}`,
     })),
     ...resourcePageSlugs.map((slug) => ({
       url: `${base}/${slug}`,

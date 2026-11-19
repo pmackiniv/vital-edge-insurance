@@ -3,10 +3,12 @@ import { Suspense } from "react";
 import "./globals.css";
 
 import AnalyticsConsent from "@/components/AnalyticsConsent";
+import AttributionCapture from "@/components/AttributionCapture";
 import { BackgroundLayers } from "@/components/BackgroundLayers";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
+import { ScheduleButton } from "@/components/ScheduleButton";
 import TimedLeadPopup from "@/components/TimedLeadPopup";
 import { insuranceAgencyJsonLd, localBusinessJsonLd, organizationJsonLd, personJsonLd, serviceAreaStatement, webSiteJsonLd } from "@/lib/site";
 
@@ -23,7 +25,7 @@ const bingSiteVerification = process.env.BING_SITE_VERIFICATION?.trim();
 export const metadata: Metadata = {
   metadataBase: new URL(METADATA_BASE_URL),
   title: {
-    default: "Vital Edge Insurance | Health Insurance Guidance Across 12 States",
+    default: "Vital Edge Insurance | Health Insurance Guidance Across 13 States",
     template: "%s",
   },
   description:
@@ -31,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "/",
-    title: "Vital Edge Insurance | Health Insurance Guidance Across 12 States",
+    title: "Vital Edge Insurance | Health Insurance Guidance Across 13 States",
     description:
       `Licensed health insurance broker guidance for Medicare, ACA Marketplace, ancillary coverage, and small group questions. ${serviceAreaStatement} Call (352) 214-8879 or request a callback.`,
     siteName: "Vital Edge Insurance",
@@ -40,7 +42,7 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Vital Edge Insurance - licensed health insurance guidance across 12 states",
+        alt: "Vital Edge Insurance - licensed health insurance guidance across 13 states",
       },
     ],
   },
@@ -50,7 +52,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vital Edge Insurance | Health Insurance Guidance Across 12 States",
+    title: "Vital Edge Insurance | Health Insurance Guidance Across 13 States",
     description:
       `Licensed health insurance broker guidance for Medicare, ACA Marketplace, ancillary coverage, and small group questions. ${serviceAreaStatement} Call (352) 214-8879 or request a callback.`,
     images: ["/og.png"],
@@ -88,10 +90,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main-content" className="relative z-10" tabIndex={-1}>{children}</main>
         <Footer />
         <ChatWidget />
+        <ScheduleButton />
         <Suspense fallback={null}>
           <TimedLeadPopup />
         </Suspense>
         <AnalyticsConsent />
+        <AttributionCapture />
 
         <script
           type="application/ld+json"

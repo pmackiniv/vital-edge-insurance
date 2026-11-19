@@ -12,6 +12,14 @@ export type SiteMainNavItem = {
 };
 
 const PRODUCTION_SITE_URL = "https://www.vital-edge-insurance.com";
+
+/**
+ * Single source of truth for the booking destination. The ScheduleButton popup,
+ * the /schedule embed, and any request page all point at the same event type,
+ * so the 48-hour minimum-notice setting configured on it applies everywhere.
+ */
+export const MEDICARE_REVIEW_BOOKING_URL =
+  "https://calendly.com/pmackiniv27/medicare-annual-review";
 const LEGACY_SITE_URLS = new Set(["https://vital-edge-insurance.vercel.app"]);
 export const licensedStateNames = [
   "Florida",
@@ -26,10 +34,11 @@ export const licensedStateNames = [
   "Ohio",
   "Michigan",
   "Louisiana",
+  "Wisconsin",
 ] as const;
 
 export const serviceAreaStatement =
-  "Headquartered in Florida. Serving clients across 12 states and growing.";
+  "Headquartered in Florida. Serving clients across 13 licensed states and growing.";
 
 function normalizePublicSiteUrl(value?: string) {
   if (!value || !value.startsWith("http")) return "";
@@ -51,18 +60,17 @@ export const site = {
   phoneE164: "+13522148879",
   email: "pmackiniv27@icloud.com",
   address: {
-    streetAddress: "11247 San Jose Blvd.",
     addressLocality: "Jacksonville",
     addressRegion: "FL",
-    postalCode: "32223",
     addressCountry: "US",
   },
   serviceAreas: [
-    ...licensedStateNames,
     "Jacksonville, FL",
     "Duval County, FL",
     "St. Johns County, FL",
-    "Miami-Dade County, FL",
+    "Nocatee, FL",
+    "The Villages, FL",
+    ...licensedStateNames,
   ],
   sameAs: [
     "https://www.linkedin.com/in/patrick-mackin-iv-297574187",
@@ -75,8 +83,13 @@ export const site = {
     label: "Request a Call",
     href: "/contact",
   },
-  /** Cal.com, Calendly, or other booking embed URL. Set NEXT_PUBLIC_SCHEDULE_URL in Vercel. */
-  scheduleUrl: process.env.NEXT_PUBLIC_SCHEDULE_URL || "",
+  /**
+   * Booking destination. NEXT_PUBLIC_SCHEDULE_URL still wins when set, so an
+   * environment override keeps working; the constant is the fallback so
+   * /schedule renders a real calendar instead of "not set up yet" when the
+   * variable is absent.
+   */
+  scheduleUrl: process.env.NEXT_PUBLIC_SCHEDULE_URL || MEDICARE_REVIEW_BOOKING_URL,
   nav: [
     { label: "Home", href: "/" },
     { label: "Medicare Advantage", href: "/medicare/medicare-advantage-request" },
@@ -92,6 +105,7 @@ export const site = {
       href: "/medicare",
       children: [
         { label: "Medicare Overview", href: "/medicare" },
+        { label: "2027 Medicare News", href: "/news" },
         { label: "New to Medicare", href: "/resources#new-to-medicare" },
         { label: "Medicare Advantage", href: "/medicare/medicare-advantage-request" },
         { label: "Medigap", href: "/medicare/medigap" },
@@ -127,6 +141,7 @@ export const site = {
       href: "/resources",
       children: [
         { label: "Resource Hub", href: "/resources" },
+        { label: "2027 Medicare News", href: "/news" },
         { label: "Medicare Coverage Pathways", href: "/resources#medicare-coverage-pathways" },
         { label: "What to Bring", href: "/resources#what-to-bring" },
         { label: "Prescription Savings", href: "/resources#prescription-savings-basics" },
@@ -194,10 +209,6 @@ export function localBusinessJsonLd() {
       { "@type": "PropertyValue", name: "Florida insurance license", value: site.floridaLicense },
     ],
     areaServed: site.serviceAreas.map((name) => ({ "@type": "AdministrativeArea", name })),
-    address: {
-      "@type": "PostalAddress",
-      ...site.address,
-    },
   };
 }
 
@@ -210,16 +221,8 @@ export function insuranceAgencyJsonLd() {
     telephone: site.phoneE164,
     email: site.email,
     description:
-      "Independent health insurance broker guidance for Medicare, ACA Marketplace, ancillary coverage, and small group questions across Florida and additional licensed states.",
+      "Independent health insurance broker guidance for Medicare, ACA Marketplace, ancillary coverage, and small group questions across Florida and 12 additional licensed states.",
     areaServed: site.serviceAreas.map((name) => ({ "@type": "AdministrativeArea", name })),
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: site.address.streetAddress,
-      addressLocality: site.address.addressLocality,
-      addressRegion: site.address.addressRegion,
-      postalCode: site.address.postalCode,
-      addressCountry: site.address.addressCountry,
-    },
     sameAs: site.sameAs,
     logo: absoluteUrl(site.logoPath),
     identifier: [
@@ -246,12 +249,6 @@ export function personJsonLd() {
     worksFor: {
       "@type": "InsuranceAgency",
       name: site.legalName,
-    },
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: site.address.addressLocality,
-      addressRegion: site.address.addressRegion,
-      addressCountry: site.address.addressCountry,
     },
     telephone: site.phoneE164,
     email: site.email,
@@ -281,6 +278,7 @@ export function personJsonLd() {
       "Ohio Health Insurance",
       "Michigan Health Insurance",
       "Louisiana Health Insurance",
+      "Wisconsin Health Insurance",
       "Health Insurance Compliance",
     ],
   };
