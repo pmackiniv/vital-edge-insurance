@@ -207,7 +207,7 @@ export default function Page() {
             features={[
               {
                 title: "Dental, Vision & Hearing",
-                body: "Understand how common supplemental benefits can fit alongside Medicare, ACA, or other health coverage.",
+                body: "Understand how common supplemental benefits can fit alongside Medicare or other health coverage.",
               },
               {
                 title: "Hospital Indemnity",

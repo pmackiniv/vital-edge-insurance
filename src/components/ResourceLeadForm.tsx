@@ -21,11 +21,11 @@ type ResourceLeadFormProps = {
 const helpOptions = [
   "Medicare consumer review",
   "Turning 65",
+  "Medigap / Medicare Supplement",
   "Extra Help/Medicaid question",
   "Community event request",
   "Referral partner inquiry",
   "LinkedIn lead",
-  "ACA/private health",
   "Employer/private options",
 ];
 

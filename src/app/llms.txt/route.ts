@@ -33,8 +33,10 @@ export function GET() {
 
   const body = `# Vital Edge Insurance
 
-> Independent health insurance brokerage. Medicare, ACA Marketplace, ancillary
-> and small-group coverage. ${serviceAreaStatement}
+> Vital Edge Insurance is operated by Patrick Mackin IV, an independent licensed
+> Florida health insurance broker (NPN ${site.npn}, FL License #${site.floridaLicense}).
+> Medicare Advantage, Medigap, Part D, ancillary, and small-group coverage.
+> ${serviceAreaStatement}
 
 ## Who
 

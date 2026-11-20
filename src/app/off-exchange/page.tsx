@@ -10,14 +10,18 @@ import { StructuredData } from "@/components/StructuredData";
 export const metadata: Metadata = {
   title: "Off-Exchange Health Insurance | Vital Edge Insurance",
   description:
-    "Vital Edge Insurance provides guidance on off-exchange health insurance options when ACA Marketplace coverage is not the right fit.",
+    "General educational archive on individual off-exchange health insurance timing and licensed follow-up.",
+  robots: {
+    index: false,
+    follow: false,
+  },
   alternates: {
     canonical: absoluteUrl("/off-exchange"),
   },
   openGraph: {
     title: "Off-Exchange Health Insurance | Vital Edge Insurance",
     description:
-      "Licensed agent guidance for non-Marketplace health insurance options across Vital Edge's approved service footprint.",
+      "General educational archive on individual off-exchange health insurance timing and licensed follow-up.",
     url: absoluteUrl("/off-exchange"),
   },
 };

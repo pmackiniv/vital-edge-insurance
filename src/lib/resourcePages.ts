@@ -59,7 +59,7 @@ const medicareDisclosure =
   "Plan availability and eligibility vary by county and individual circumstances. Vital Edge Insurance is not connected with or endorsed by the U.S. Government or the federal Medicare program. Plan-specific Medicare Advantage or Part D discussions require appropriate appointment documentation.";
 
 const tpmoDisclosure =
-  "We do not offer every plan available in your area. Any information we provide is limited to those plans we do offer in your area. Please contact Medicare.gov or 1-800-MEDICARE to get information on all of your options.";
+  "We do not offer every plan available in your area. We represent many organizations which offer several products in your area. Please contact Medicare.gov or 1-800-MEDICARE to get information on all of your options. You may also contact 1-800-MEDICARE (TTY users should call 1-877-486-2048), 24 hours a day, 7 days a week, or your local State Health Insurance Assistance Program (SHIP) to get information on all of your options. Can't find the plan you're looking for? Call me!";
 
 const coreLinks = [
   { label: "Medicare 101", href: "/medicare-101" },
@@ -556,7 +556,7 @@ const strategicPages: ResourcePage[] = [
       },
       {
         title: "Agreed before the appointment",
-        body: "The scope is recorded before a plan-specific appointment. For CY2027 marketing, beginning October 1, 2026, CMS removed the former 48-hour wait — the form itself remains.",
+        body: "The scope is recorded before a plan-specific appointment. For CY2027 marketing, beginning October 1, 2026, CMS removed the former 48-hour wait, though the form itself remains.",
       },
     ],
     blocks: [
@@ -608,7 +608,7 @@ const strategicPages: ResourcePage[] = [
       {
         question: "Do I still have to sign a Scope of Appointment 48 hours in advance?",
         answer:
-          "No. For CY2027 marketing, beginning October 1, 2026, CMS removed the 48-hour wait between documenting the scope and the appointment. The Scope of Appointment itself was not removed — the product types still have to be agreed and recorded before a plan-specific appointment. Individual carriers may still apply stricter timing.",
+          "No. For CY2027 marketing, beginning October 1, 2026, CMS removed the 48-hour wait between documenting the scope and the appointment. The Scope of Appointment itself was not removed; the product types still have to be agreed and recorded before a plan-specific appointment. Individual carriers may still apply stricter timing.",
       },
       {
         question: "Did CMS get rid of the Scope of Appointment?",
@@ -664,7 +664,7 @@ const floridaPage: ResourcePage = {
     },
     {
       title: "County matters in Florida",
-      body: "Plan availability, provider networks, benefits, and eligibility vary by Florida county — what is available in Duval County can differ from Miami-Dade, Orange, or the Panhandle. A useful review always starts with your county and ZIP code.",
+      body: "Plan availability, provider networks, benefits, and eligibility vary by Florida county, so what is available in Duval County can differ from Miami-Dade, Orange, Sumter, or the Panhandle. A useful review always starts with your county and ZIP code.",
     },
     {
       title: "Free official help exists",
@@ -784,9 +784,10 @@ const localPages: ResourcePage[] = [
   ["jacksonville", "Jacksonville", "Jacksonville Medicare Help", "Local Medicare guidance based in Jacksonville with attention to doctors, hospitals, pharmacies, prescriptions, and appointment-based reviews."],
   ["duval-county", "Duval County", "Duval County Medicare Help", "Duval County Medicare education for provider network review, pharmacy access, prescriptions, and coverage timing."],
   ["st-johns-county", "St. Johns County", "St. Johns County Medicare Help", "St. Johns County Medicare guidance for families reviewing doctors, pharmacies, prescriptions, and county-specific availability."],
-  ["mandarin", "Mandarin", "Mandarin Medicare Help", "Mandarin-area Medicare education from a Florida-headquartered licensed agent serving clients across 12 states and growing."],
+  ["mandarin", "Mandarin", "Mandarin Medicare Help", "Mandarin-area Medicare education from a Florida-headquartered licensed agent serving clients across 13 states and growing."],
   ["ponte-vedra", "Ponte Vedra", "Ponte Vedra Medicare Help", "Ponte Vedra Medicare education for provider access, prescription review, pharmacy preferences, and timing questions."],
   ["nocatee", "Nocatee", "Nocatee Medicare Help", "Nocatee Medicare guidance for people approaching 65, still working, or helping a family member compare coverage paths."],
+  ["the-villages", "The Villages", "The Villages Medicare Help", "The Villages Medicare education for residents comparing Original Medicare, Medigap, Medicare Advantage, provider networks, and prescription coverage across Sumter, Marion, and Lake counties."],
 ].map(([slugBase, areaName, title, subtitle]) => ({
   slug: `${slugBase}-medicare-help`,
   eyebrow: `${areaName} Medicare help`,

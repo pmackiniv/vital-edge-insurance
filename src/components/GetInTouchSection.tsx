@@ -13,16 +13,16 @@ import { buildClientLeadTracking } from "@/lib/clientLeadTracking";
 const serviceOptions = [
   "Medicare Guidance",
   "Medigap Support",
-  "ACA Marketplace",
-  "Life Insurance",
-  "Final Expense",
-  "Term Life",
+  "Prescription Drug Savings",
   "Dental / Vision / Hearing",
   "Hospital Plans",
   "Cancer / Heart Attack / Stroke",
+  "Life Insurance",
+  "Final Expense",
+  "Term Life",
 ];
 
-const stateOptions = ["Florida", "Georgia", "South Carolina", "North Carolina", "Texas", "Tennessee", "Arizona", "Washington", "Pennsylvania", "Ohio", "Michigan", "Louisiana"];
+const stateOptions = ["Florida", "Georgia", "South Carolina", "North Carolina", "Texas", "Tennessee", "Arizona", "Washington", "Pennsylvania", "Ohio", "Michigan", "Louisiana", "Wisconsin"];
 const contactMethodOptions = ["Call", "Text", "Email"];
 
 const trustBullets = [

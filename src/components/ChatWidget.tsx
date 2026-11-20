@@ -61,22 +61,21 @@ type LeadPayload = {
 };
 
 const topics = [
-  "ACA Marketplace",
-  "Cancer / Heart Attack / Stroke",
-  "Dental / Vision / Hearing",
-  "Group Benefits",
-  "Hospital Plans",
-  "Life Insurance",
-  "Final Expense",
-  "Term Life",
   "Medicare",
   "Medicare Supplement/Medigap Plan",
   "Prescription Drug Savings",
+  "Dental / Vision / Hearing",
+  "Hospital Plans",
+  "Cancer / Heart Attack / Stroke",
+  "Group Benefits",
+  "Life Insurance",
+  "Final Expense",
+  "Term Life",
   "Other",
 ];
-const counties = ["Duval County", "St. Johns County", "Other / not listed"];
+const counties = ["Duval County", "St. Johns County", "Sumter County (The Villages)", "Other / not listed"];
 const contactMethods = ["Call", "Text", "Email"];
-const stateOptions = ["Florida", "Georgia", "South Carolina", "North Carolina", "Texas", "Tennessee", "Arizona", "Washington", "Pennsylvania", "Ohio", "Michigan", "Louisiana"];
+const stateOptions = ["Florida", "Georgia", "South Carolina", "North Carolina", "Texas", "Tennessee", "Arizona", "Washington", "Pennsylvania", "Ohio", "Michigan", "Louisiana", "Wisconsin"];
 
 function VitalGuideIcon({ className = "h-10 w-10" }: { className?: string }) {
   return (

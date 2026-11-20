@@ -169,7 +169,7 @@ function ContactForm() {
     },
     {
       question: "What should I include in my message?",
-      answer: "Your name, topic (ACA, Medicare, ICHRA, or other), and how you prefer to be contacted. A short description of what you need helps us route you to the right next step.",
+      answer: "Your name, topic (Medicare, Medigap, ancillary coverage, or small group), and how you prefer to be contacted. A short description of what you need helps us route you to the right next step.",
     },
     {
       question: "Can I schedule a call?",
@@ -289,15 +289,16 @@ function ContactForm() {
                   className="mt-2 h-12 w-full rounded-xl border border-[var(--ve-teal)]/15 px-4 text-sm"
                 >
                   <option value="">Select one</option>
-                  <option value="ACA">ACA</option>
                   <option value="Medicare">Medicare</option>
-                  <option value="ICHRA">ICHRA</option>
-                  <option value="Life Insurance">Life Insurance</option>
-                  <option value="Final Expense">Final Expense</option>
-                  <option value="Term Life">Term Life</option>
+                  <option value="Medicare Supplement / Medigap">Medicare Supplement / Medigap</option>
+                  <option value="Prescription Drug Plan (Part D)">Prescription Drug Plan (Part D)</option>
                   <option value="Dental / Vision / Hearing">Dental / Vision / Hearing</option>
                   <option value="Hospital Plans">Hospital Plans</option>
                   <option value="Cancer / Heart Attack / Stroke">Cancer / Heart Attack / Stroke</option>
+                  <option value="Small Group / Employer">Small Group / Employer</option>
+                  <option value="Life Insurance">Life Insurance</option>
+                  <option value="Final Expense">Final Expense</option>
+                  <option value="Term Life">Term Life</option>
                   <option value="Other">Other</option>
                 </select>
               </div>

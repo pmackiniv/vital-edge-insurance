@@ -1,7 +1,16 @@
+import type { Metadata } from "next";
 import { Container } from "@/components/Container";
 import { LeadCtaSection } from "@/components/LeadCtaSection";
 import { PremiumDisclosure, PremiumInteriorHero } from "@/components/PremiumInteriorPage";
 import { SeoFaq } from "@/components/SeoFaq";
+
+export const metadata: Metadata = {
+  title: "Special Enrollment Period Education | Vital Edge Insurance",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default function Page() {
   return (

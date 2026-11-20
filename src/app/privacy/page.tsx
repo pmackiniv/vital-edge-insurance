@@ -7,7 +7,7 @@ import { PremiumCard, PremiumDisclosure, PremiumInteriorHero } from "@/component
  * of the policy changes -- a privacy policy without a date is not much use to a
  * reader trying to work out what they agreed to.
  */
-const LAST_UPDATED = "July 30, 2026";
+const LAST_UPDATED = "November 19, 2026";
 
 export default function Page() {
   return (
@@ -18,12 +18,13 @@ export default function Page() {
         subtitle="How Vital Edge Insurance handles information shared through forms, phone, chat, and this website."
         actions={[
           { label: "Ask a Privacy Question", href: "/contact", kind: "primary" },
-          { label: "Chat With Our Team", href: "/chat", kind: "gold" },
+          { label: "Terms of Use", href: "/terms", kind: "gold" },
         ]}
       >
         <PremiumDisclosure>
-          Last updated {LAST_UPDATED}. Vital Edge Insurance serves consumers in the United States only. This policy
-          describes current practice and is reviewed as services change.
+          Last updated {LAST_UPDATED}. Vital Edge Insurance is operated by Patrick Mackin IV, an independent licensed
+          Florida health insurance broker (NPN 21729046, FL License #G275791). Vital Edge Insurance serves consumers in
+          the United States only. This policy describes current practice and is reviewed as services change.
         </PremiumDisclosure>
       </PremiumInteriorHero>
 
@@ -85,16 +86,16 @@ export default function Page() {
                 information only to provide their service to us:
               </p>
               <ul className="mt-3 list-disc space-y-1 pl-5">
-                <li><strong>Vercel</strong> — website hosting and performance</li>
-                <li><strong>Neon</strong> — the database where inquiries and consent records are stored</li>
-                <li><strong>Email delivery</strong> — our mail provider, and a form-relay service as a backup, used to notify us of a new inquiry</li>
-                <li><strong>OpenAI</strong> — powers the website chat assistant; chat messages are processed to generate replies</li>
-                <li><strong>Twilio</strong> — text message delivery, where you have asked to be contacted by text</li>
-                <li><strong>Notion</strong> — our internal record of inquiries and follow-up</li>
+                <li><strong>Vercel:</strong> website hosting and performance</li>
+                <li><strong>Neon:</strong> the database where inquiries and consent records are stored</li>
+                <li><strong>Email delivery:</strong> our mail provider, and a form-relay service as a backup, used to notify us of a new inquiry</li>
+                <li><strong>OpenAI:</strong> powers the website chat assistant; chat messages are processed to generate replies</li>
+                <li><strong>Twilio:</strong> text message delivery, where you have asked to be contacted by text</li>
+                <li><strong>Notion:</strong> our internal record of inquiries and follow-up</li>
               </ul>
               <p className="mt-3">
-                We may also share details with an insurance carrier or a government marketplace when that is necessary to
-                act on your request, and we will disclose information where the law requires it.
+                We may also share details with an insurance carrier or Medicare enrollment platform when that is
+                necessary to act on your request, and we will disclose information where the law requires it.
               </p>
             </PremiumCard>
           </div>

@@ -174,7 +174,7 @@ export function ScheduleButton() {
                       Something else
                     </span>
                     <span className="mt-1 block font-sans text-sm leading-6 text-slate-600">
-                      Marketplace, small group, or a general question.
+                      Ancillary coverage, small group, or a general question.
                     </span>
                   </button>
                 </div>
@@ -187,7 +187,7 @@ export function ScheduleButton() {
                 <p className="mt-3 font-sans text-sm leading-6 text-slate-700">
                   Before a plan-specific Medicare appointment, you can complete a{" "}
                   <strong>Scope of Appointment</strong>. It is a short form where{" "}
-                  <em>you</em> pick the topics — and once you have, those are the only
+                  <em>you</em> pick the topics, and once you have, those are the only
                   products I am permitted to bring up.
                 </p>
                 <p className="mt-3 font-sans text-sm leading-6 text-slate-700">
@@ -212,7 +212,7 @@ export function ScheduleButton() {
                   </button>
                 </div>
                 <p className="mt-4 font-sans text-xs leading-5 text-slate-500">
-                  Prefer to skip it? Completely fine — we will keep the conversation to
+                  Prefer to skip it? Completely fine. We will keep the conversation to
                   general Medicare education, and you can complete one later if the topic
                   turns specific.{" "}
                   <Link

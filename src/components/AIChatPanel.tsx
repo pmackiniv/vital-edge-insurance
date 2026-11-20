@@ -176,7 +176,7 @@ export function AIChatPanel({ onPatrickHandoffNeeded, displayMode = "page" }: AI
         <div className="shrink-0">
           <div className="text-base font-extrabold text-[var(--ve-teal)]">Vital Guide</div>
           <p className="mt-1 text-sm leading-6 text-black/68">
-            Ask general education questions about Medicare, ACA, coverage timing, and next steps. For Medicare
+            Ask general education questions about Medicare, Medigap, ancillary coverage, coverage timing, and next steps. For Medicare
             plan-specific questions, carrier comparisons, provider or drug checks, enrollment recommendations, SNP
             eligibility decisions, or plan availability, request a call with Patrick Mackin IV after required disclosures
             and scope steps. Call or text {site.phoneDisplay},{" "}
@@ -218,7 +218,7 @@ export function AIChatPanel({ onPatrickHandoffNeeded, displayMode = "page" }: AI
           <div className="rounded-2xl border border-[var(--ve-teal)]/10 bg-white/86 p-4 text-sm leading-6 text-slate-700">
             <p className="font-bold text-[var(--ve-teal)]">Ask a coverage question.</p>
             <p className="mt-1">
-              Vital Guide can explain general Medicare, ACA, coverage timing, and preparation steps.
+              Vital Guide can explain general Medicare, Medigap, ancillary coverage, coverage timing, and preparation steps.
             </p>
           </div>
         ) : (

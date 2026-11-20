@@ -28,30 +28,28 @@ type LeadPayload = {
 };
 
 const offerings = [
-  "ACA Marketplace",
-  "Cancer / Heart Attack / Stroke",
-  "Dental / Vision / Hearing",
-  "Group Benefits",
-  "Hospital Plans",
-  "Life Insurance",
-  "Final Expense",
-  "Term Life",
   "Medicare",
   "Medicare Supplement/Medigap Plan",
   "Prescription Drug Savings",
+  "Dental / Vision / Hearing",
+  "Hospital Plans",
+  "Cancer / Heart Attack / Stroke",
+  "Group Benefits",
+  "Life Insurance",
+  "Final Expense",
+  "Term Life",
   "Other",
 ];
 
-const counties = ["Duval County", "St. Johns County", "Other / not listed"];
-const states = ["Florida", "Georgia", "South Carolina", "North Carolina", "Texas", "Tennessee", "Arizona", "Washington", "Pennsylvania", "Ohio", "Michigan", "Louisiana"];
+const counties = ["Duval County", "St. Johns County", "Sumter County (The Villages)", "Other / not listed"];
+const states = ["Florida", "Georgia", "South Carolina", "North Carolina", "Texas", "Tennessee", "Arizona", "Washington", "Pennsylvania", "Ohio", "Michigan", "Louisiana", "Wisconsin"];
 const preferredContactMethods = ["Call", "Text", "Email"];
 
 const topicParamToOffering: Record<string, string> = {
   medicare: "Medicare",
   medigap: "Medicare Supplement/Medigap Plan",
-  aca: "ACA Marketplace",
+  ancillary: "Dental / Vision / Hearing",
   ichra: "Group Benefits",
-  "off-exchange": "Other",
   "small group": "Group Benefits",
 };
 

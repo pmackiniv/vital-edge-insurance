@@ -50,11 +50,13 @@ export function Footer() {
           <div>
             <div className="text-sm font-semibold text-white">Compliance</div>
             <p className="mt-3 text-sm leading-6 text-white/80">
-              Licensed insurance agency with education-first guidance across approved service states. Plan availability
-              still varies by state, county, ZIP code, carrier, eligibility, and enrollment timing.
+              Vital Edge Insurance is operated by Patrick Mackin IV, an independent licensed Florida health insurance
+              broker (NPN 21729046, FL License #G275791). Plan availability varies by state, county, ZIP code, carrier,
+              eligibility, and enrollment timing.
             </p>
-            <div className="mt-4 flex gap-4 text-sm">
+            <div className="mt-4 flex flex-wrap gap-4 text-sm">
               <Link className="text-white/80 hover:text-white" href="/privacy">Privacy</Link>
+              <Link className="text-white/80 hover:text-white" href="/terms">Terms of Use</Link>
               <Link className="text-white/80 hover:text-white" href="/contact">Contact</Link>
               <a className="text-white/80 hover:text-white" href="https://www.medicare.gov" {...linkProps}>Medicare.gov</a>
             </div>

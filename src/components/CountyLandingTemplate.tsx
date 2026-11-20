@@ -23,10 +23,10 @@ type CountyLandingTemplateProps = {
 };
 
 const coreServiceLinks: CountyLink[] = [
-  { label: "ACA", href: "/aca" },
   { label: "Medicare", href: "/medicare" },
-  { label: "ICHRA", href: "/ichra" },
-  { label: "Off-Exchange", href: "/off-exchange" },
+  { label: "Medigap", href: "/medicare/medigap" },
+  { label: "Turning 65", href: "/turning-65-medicare" },
+  { label: "Ancillary", href: "/ancillary" },
   { label: "Small Group", href: "/small-group" },
 ];
 
@@ -104,7 +104,7 @@ export function CountyLandingTemplate({
               },
               {
                 title: "Coverage education",
-                body: "Review Medicare, ACA, ancillary, employer, and off-exchange concepts without pressure.",
+                body: "Review Medicare Advantage, Medigap, Part D, ancillary, and employer coverage concepts without pressure.",
               },
               {
                 title: "Licensed handoff",

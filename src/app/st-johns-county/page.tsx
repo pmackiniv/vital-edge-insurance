@@ -3,16 +3,16 @@ import { CountyLandingTemplate } from "@/components/CountyLandingTemplate";
 import { absoluteUrl, serviceAreaStatement } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "St. Johns County Health Insurance Agent | St. Augustine, FL",
+  title: "St. Johns County Medicare & Health Insurance Agent | St. Augustine, FL",
   description:
-    `Vital Edge Insurance provides health insurance guidance in St. Johns County and St. Augustine, FL for ACA Marketplace, Medicare, Medigap, and small business questions. ${serviceAreaStatement}`,
+    `Vital Edge Insurance provides health insurance guidance in St. Johns County and St. Augustine, FL for Medicare Advantage, Medigap, Part D, ancillary, and small business questions. ${serviceAreaStatement}`,
   alternates: {
     canonical: absoluteUrl("/st-johns-county"),
   },
   openGraph: {
-    title: "St. Johns County Health Insurance | Vital Edge Insurance",
+    title: "St. Johns County Medicare & Health Insurance | Vital Edge Insurance",
     description:
-      `Licensed health insurance guidance for St. Johns County and St. Augustine with ACA, Medicare, and employer coverage education. ${serviceAreaStatement}`,
+      `Licensed health insurance guidance for St. Johns County and St. Augustine with Medicare, Medigap, ancillary, and employer coverage education. ${serviceAreaStatement}`,
     url: absoluteUrl("/st-johns-county"),
   },
 };

@@ -3,16 +3,16 @@ import { CountyLandingTemplate } from "@/components/CountyLandingTemplate";
 import { absoluteUrl, serviceAreaStatement } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Miami-Dade County Health Insurance Agent | Miami, FL",
+  title: "Miami-Dade County Medicare & Health Insurance Agent | Miami, FL",
   description:
-    `Vital Edge Insurance supports Miami-Dade County with health insurance guidance for ACA Marketplace, Medicare, and small business coverage. ${serviceAreaStatement}`,
+    `Vital Edge Insurance supports Miami-Dade County with health insurance guidance for Medicare, Medigap, ancillary, and small business coverage. ${serviceAreaStatement}`,
   alternates: {
     canonical: absoluteUrl("/miami"),
   },
   openGraph: {
-    title: "Miami-Dade Health Insurance | Vital Edge Insurance",
+    title: "Miami-Dade Medicare & Health Insurance | Vital Edge Insurance",
     description:
-      `Licensed health insurance guidance for Miami-Dade County with ACA, Medicare, and employer coverage education. ${serviceAreaStatement}`,
+      `Licensed health insurance guidance for Miami-Dade County with Medicare, Medigap, ancillary, and employer coverage education. ${serviceAreaStatement}`,
     url: absoluteUrl("/miami"),
   },
 };

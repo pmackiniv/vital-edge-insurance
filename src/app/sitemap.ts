@@ -6,8 +6,6 @@ import { site } from "@/lib/site";
 const routes = [
   "",
   "about",
-  "aca",
-  "aca/sep",
   "ancillary",
   "contact",
   "duval-county",
@@ -24,7 +22,6 @@ const routes = [
   "medicare/snp",
   "miami",
   "news",
-  "off-exchange",
   "privacy",
   "referrals",
   "resources",
@@ -32,18 +29,22 @@ const routes = [
   "services",
   "small-group",
   "st-johns-county",
+  "terms",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = site.siteUrl.replace(/\/$/, "");
   // Use actual content-update dates, not a new timestamp on every crawl.
   const updated: Record<string, string> = {
-    "": "2026-09-20",
+    "": "2026-11-19",
     enroll: "2026-09-20",
     schedule: "2026-09-20",
+    terms: "2026-11-19",
+    privacy: "2026-11-19",
     "turning-65-medicare": "2026-09-15",
     "st-johns-county": "2026-09-15",
     "nocatee-medicare-help": "2026-09-15",
+    "the-villages-medicare-help": "2026-11-19",
   };
 
   return [

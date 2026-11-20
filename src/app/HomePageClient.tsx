@@ -109,9 +109,9 @@ const routingCards = [
     icon: "clipboard" as const,
   },
   {
-    title: "Under 65 (ACA) Health Insurance",
-    description: "I need health coverage before Medicare.",
-    href: "/aca",
+    title: "Medigap & Supplements",
+    description: "Compare Original Medicare and Medicare Supplement options.",
+    href: "/medicare/medigap",
     icon: "heart" as const,
   },
   {
@@ -188,7 +188,7 @@ export default function HomePageClient() {
     name: "Vital Edge Insurance",
     url: absoluteUrl("/"),
     description:
-      "Premium, compliant health insurance guidance for Medicare, ACA Marketplace, and ancillary coverage.",
+      "Premium, compliant health insurance guidance for Medicare Advantage, Medigap, Part D, and ancillary coverage.",
   };
 
   return (
@@ -353,7 +353,7 @@ export default function HomePageClient() {
               </div>
               <div>
                 <h2 className="font-sans text-lg font-extrabold leading-tight text-[var(--ve-teal)]">
-                  Headquartered in Florida. Serving clients across 12 states and growing.
+                  {serviceAreaStatement}
                 </h2>
                 <p className="mt-1 text-sm leading-5 text-slate-700">
                   Local roots, broader licensed reach, and personalized support wherever guidance is available.
@@ -400,7 +400,7 @@ export default function HomePageClient() {
               View All Licensed States &amp; Disclosures -&gt;
             </Link>
             <p className="text-sm leading-6 text-slate-700 lg:col-span-2">
-              Looking for Medicare guidance nearby? Explore our resources for <Link href="/st-johns-county" className="font-bold underline underline-offset-4">St. Johns County</Link>, <Link href="/nocatee-medicare-help" className="font-bold underline underline-offset-4">Nocatee</Link>, and <Link href="/duval-county" className="font-bold underline underline-offset-4">Jacksonville and Duval County</Link>. If you are approaching 65, our <Link href="/turning-65-medicare" className="font-bold underline underline-offset-4">Turning 65 Medicare guide</Link> explains where to begin.
+              Looking for Medicare guidance nearby? Explore our resources for <Link href="/st-johns-county-medicare-help" className="font-bold underline underline-offset-4">St. Johns County</Link>, <Link href="/nocatee-medicare-help" className="font-bold underline underline-offset-4">Nocatee</Link>, <Link href="/duval-county-medicare-help" className="font-bold underline underline-offset-4">Jacksonville and Duval County</Link>, and <Link href="/the-villages-medicare-help" className="font-bold underline underline-offset-4">The Villages</Link>. If you are approaching 65, our <Link href="/turning-65-medicare" className="font-bold underline underline-offset-4">Turning 65 Medicare guide</Link> explains where to begin.
             </p>
           </div>
         </Container>

@@ -29,13 +29,13 @@ export const metadata: Metadata = {
     template: "%s",
   },
   description:
-    `Licensed health insurance broker guidance for Medicare, ACA Marketplace, ancillary coverage, and small group questions. ${serviceAreaStatement} Call (352) 214-8879 or request a callback.`,
+    `Licensed health insurance broker guidance for Medicare Advantage, Medigap, Part D, ancillary coverage, and small group questions. ${serviceAreaStatement} Call (352) 214-8879 or request a callback.`,
   openGraph: {
     type: "website",
     url: "/",
     title: "Vital Edge Insurance | Health Insurance Guidance Across 13 States",
     description:
-      `Licensed health insurance broker guidance for Medicare, ACA Marketplace, ancillary coverage, and small group questions. ${serviceAreaStatement} Call (352) 214-8879 or request a callback.`,
+      `Licensed health insurance broker guidance for Medicare Advantage, Medigap, Part D, ancillary coverage, and small group questions. ${serviceAreaStatement} Call (352) 214-8879 or request a callback.`,
     siteName: "Vital Edge Insurance",
     images: [
       {
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Vital Edge Insurance | Health Insurance Guidance Across 13 States",
     description:
-      `Licensed health insurance broker guidance for Medicare, ACA Marketplace, ancillary coverage, and small group questions. ${serviceAreaStatement} Call (352) 214-8879 or request a callback.`,
+      `Licensed health insurance broker guidance for Medicare Advantage, Medigap, Part D, ancillary coverage, and small group questions. ${serviceAreaStatement} Call (352) 214-8879 or request a callback.`,
     images: ["/og.png"],
   },
   robots: {

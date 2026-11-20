@@ -20,7 +20,7 @@ export const MANDATORY_CMS_DISCLAIMER =
 export const LOOKUP_FALLBACK_LINE = "Can't find the plan you're looking for? Call me!";
 
 export const PATRICK_POSITIONING_LINE =
-  "I am Patrick Mackin IV, a licensed Medicare broker with Medicare Advocates (NPN 21729046) serving clients across 13 states. I am the product: a real person who works for my clients all through 2027 and for the rest of their lives, not someone who disappears after an enrollment.";
+  "I am Patrick Mackin IV, founder of Vital Edge Insurance and an independent licensed Medicare broker (NPN 21729046, FL License #G275791) serving clients across 13 states. I am the product: a real person who works for my clients all through 2027 and for the rest of their lives, not someone who disappears after an enrollment.";
 
 export const medicareNewsArticles: MedicareNewsArticle[] = [
   {

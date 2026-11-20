@@ -12,16 +12,20 @@ import { StructuredData } from "@/components/StructuredData";
 import { absoluteUrl, serviceAreaStatement, site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "ACA Marketplace Guidance Across 12 States | Vital Edge Insurance",
+  title: "ACA Marketplace Guidance | Vital Edge Insurance",
   description:
-    "Vital Edge Insurance provides ACA Marketplace education on HealthCare.gov timing, subsidy basics, household income estimates, Special Enrollment Periods, and next steps across its approved service footprint.",
+    "General educational archive for individual health insurance enrollment timing and licensed follow-up options.",
+  robots: {
+    index: false,
+    follow: false,
+  },
   alternates: {
     canonical: absoluteUrl("/aca"),
   },
   openGraph: {
-    title: "ACA Marketplace Guidance Across 12 States | Vital Edge Insurance",
+    title: "ACA Marketplace Guidance | Vital Edge Insurance",
     description:
-      "Education-first ACA Marketplace guidance, including enrollment timing, subsidy basics, household preparation, and licensed follow-up options.",
+      "General educational archive for individual health insurance enrollment timing and licensed follow-up options.",
     url: absoluteUrl("/aca"),
   },
 };
