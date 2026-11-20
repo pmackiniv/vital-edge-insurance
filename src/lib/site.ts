@@ -21,6 +21,7 @@ const PRODUCTION_SITE_URL = "https://www.vital-edge-insurance.com";
  */
 export const MEDICARE_REVIEW_BOOKING_URL =
   "https://calendly.com/pmackiniv27/medicare-annual-review";
+export const FL_DFS_VERIFY_URL = "https://licenseesearch.fldfs.com/Licensee/2723002";
 const LEGACY_SITE_URLS = new Set(["https://vital-edge-insurance.vercel.app"]);
 export const licensedStateNames = [
   "Florida",
@@ -74,9 +75,11 @@ export const site = {
     ...licensedStateNames,
   ],
   sameAs: [
+    FL_DFS_VERIFY_URL,
+    GOOGLE_BUSINESS_PROFILE_URL,
+    MEDICARE_REVIEW_BOOKING_URL,
     "https://www.linkedin.com/in/patrick-mackin-iv-297574187",
     "https://www.linkedin.com/company/vital-edge-insurance/",
-    GOOGLE_BUSINESS_PROFILE_URL,
   ],
   logoPath: "/brand/vital-edge-logo.png",
   ogImagePath: "/og-image.svg",
@@ -201,6 +204,36 @@ export function localBusinessJsonLd() {
   };
 }
 
+const CORE_KNOWS_ABOUT = [
+  "Medicare Advantage",
+  "Medicare Supplement / Medigap",
+  "Part D Prescription Drug Plans",
+  "Turning 65 Enrollment",
+  "Medicare Special Enrollment Periods",
+  "Hospital Indemnity",
+  "Dental Vision and Hearing",
+  "Small Group Health Insurance",
+  "Florida Health Insurance",
+  "Georgia Health Insurance",
+  "South Carolina Health Insurance",
+  "North Carolina Health Insurance",
+  "Texas Health Insurance",
+  "Tennessee Health Insurance",
+  "Arizona Health Insurance",
+  "Washington Health Insurance",
+  "Pennsylvania Health Insurance",
+  "Ohio Health Insurance",
+  "Michigan Health Insurance",
+  "Louisiana Health Insurance",
+  "Wisconsin Health Insurance",
+  "Health Insurance Compliance",
+];
+
+const LICENSE_IDENTIFIERS = [
+  { "@type": "PropertyValue", name: "National Producer Number", value: "NPN 21729046" },
+  { "@type": "PropertyValue", name: "Florida DFS License", value: "FL License #G275791" },
+];
+
 export function insuranceAgencyJsonLd() {
   return {
     "@context": "https://schema.org",
@@ -210,14 +243,12 @@ export function insuranceAgencyJsonLd() {
     telephone: site.phoneE164,
     email: site.email,
     description:
-      "Independent health insurance broker guidance for Medicare Advantage, Medigap, Part D, ancillary coverage, and small group questions across Florida and 12 additional licensed states.",
+      "Vital Edge Insurance is operated by Patrick Mackin IV, an independent licensed Florida health insurance broker (NPN 21729046, FL License #G275791) offering Medicare Advantage, Medigap, Part D, ancillary coverage, and small group guidance across Florida and 12 additional licensed states.",
     areaServed: site.serviceAreas.map((name) => ({ "@type": "AdministrativeArea", name })),
     sameAs: site.sameAs,
     logo: absoluteUrl(site.logoPath),
-    identifier: [
-      { "@type": "PropertyValue", name: "National Producer Number", value: site.npn },
-      { "@type": "PropertyValue", name: "Florida insurance license", value: site.floridaLicense },
-    ],
+    identifier: LICENSE_IDENTIFIERS,
+    knowsAbout: CORE_KNOWS_ABOUT,
     contactPoint: {
       "@type": "ContactPoint",
       telephone: site.phoneE164,
@@ -234,7 +265,7 @@ export function personJsonLd() {
     "@context": "https://schema.org",
     "@type": "Person",
     name: "Patrick Mackin IV",
-    jobTitle: "Licensed Health Insurance Agent",
+    jobTitle: "Independent Licensed Florida Health Insurance Broker",
     worksFor: {
       "@type": "InsuranceAgency",
       name: site.legalName,
@@ -243,34 +274,9 @@ export function personJsonLd() {
     email: site.email,
     url: absoluteUrl("/about"),
     sameAs: site.sameAs,
-    identifier: [
-      { "@type": "PropertyValue", name: "National Producer Number", value: site.npn },
-      { "@type": "PropertyValue", name: "Florida insurance license", value: site.floridaLicense },
-    ],
+    identifier: LICENSE_IDENTIFIERS,
     areaServed: site.serviceAreas.map((name) => ({ "@type": "AdministrativeArea", name })),
-    knowsAbout: [
-      "Medicare",
-      "Medicare Advantage",
-      "Medicare Part D",
-      "Medicare Supplement",
-      "Medigap",
-      "Ancillary Coverage",
-      "Small Group Health Insurance",
-      "Florida Health Insurance",
-      "Georgia Health Insurance",
-      "South Carolina Health Insurance",
-      "North Carolina Health Insurance",
-      "Texas Health Insurance",
-      "Tennessee Health Insurance",
-      "Arizona Health Insurance",
-      "Washington Health Insurance",
-      "Pennsylvania Health Insurance",
-      "Ohio Health Insurance",
-      "Michigan Health Insurance",
-      "Louisiana Health Insurance",
-      "Wisconsin Health Insurance",
-      "Health Insurance Compliance",
-    ],
+    knowsAbout: CORE_KNOWS_ABOUT,
   };
 }
 

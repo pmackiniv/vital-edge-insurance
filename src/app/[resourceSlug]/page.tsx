@@ -11,7 +11,9 @@ import {
   PremiumInteriorHero,
   PremiumLinkGrid,
 } from "@/components/PremiumInteriorPage";
-import { absoluteUrl, site } from "@/lib/site";
+import { externalLinkProps, PLANENROLL } from "@/lib/externalLinks";
+import { LOOKUP_FALLBACK_LINE, MANDATORY_CMS_DISCLAIMER } from "@/lib/medicareNews";
+import { absoluteUrl, MEDICARE_REVIEW_BOOKING_URL, site } from "@/lib/site";
 import { getResourcePage, resourcePages } from "@/lib/resourcePages";
 
 export async function generateStaticParams() {
@@ -88,6 +90,10 @@ export default async function ResourcePage({ params }: { params: Promise<{ resou
       url: absoluteUrl("/"),
       telephone: site.phoneE164,
       email: site.email,
+      identifier: [
+        { "@type": "PropertyValue", name: "National Producer Number", value: `NPN ${site.npn}` },
+        { "@type": "PropertyValue", name: "Florida DFS License", value: `FL License #${site.floridaLicense}` },
+      ],
     },
     areaServed: page.areaServed || site.serviceAreas,
   };
@@ -236,12 +242,81 @@ export default async function ResourcePage({ params }: { params: Promise<{ resou
             </aside>
           </div>
 
+          {page.formVariant !== "partner" && page.formVariant !== "event" ? (
+            <section className="rounded-3xl bg-[var(--ve-teal)] p-7 text-white shadow-[0_24px_70px_rgba(0,63,69,0.2)] md:p-9">
+              <p className="font-sans text-xs font-extrabold uppercase tracking-[0.16em] text-[var(--ve-gold)]">
+                Self-Directed 2027 Plan Lookup
+              </p>
+              <h2 className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
+                Compare 2027 Medicare Plans in 3 Simple Steps
+              </h2>
+              <p className="mt-2 max-w-3xl font-sans text-sm leading-6 text-white/90">
+                Check your doctors, hospitals, and prescriptions side by side online, or book a 1-on-1 call with Patrick
+                Mackin IV (NPN {site.npn}, FL License #{site.floridaLicense}).
+              </p>
+              <ol className="mt-5 grid gap-3 font-sans text-sm text-white/95 md:grid-cols-3">
+                <li className="rounded-2xl border border-white/15 bg-white/10 p-4">
+                  <span className="block text-xs font-extrabold uppercase tracking-[0.12em] text-[var(--ve-gold)]">
+                    Step 1
+                  </span>
+                  <span className="mt-1 block font-semibold">Enter your ZIP code</span>
+                </li>
+                <li className="rounded-2xl border border-white/15 bg-white/10 p-4">
+                  <span className="block text-xs font-extrabold uppercase tracking-[0.12em] text-[var(--ve-gold)]">
+                    Step 2
+                  </span>
+                  <span className="mt-1 block font-semibold">Add your doctors and prescriptions</span>
+                </li>
+                <li className="rounded-2xl border border-white/15 bg-white/10 p-4">
+                  <span className="block text-xs font-extrabold uppercase tracking-[0.12em] text-[var(--ve-gold)]">
+                    Step 3
+                  </span>
+                  <span className="mt-1 block font-semibold">Compare 2027 plans side by side</span>
+                </li>
+              </ol>
+
+              <div className="mt-6 space-y-2.5 font-sans text-sm md:text-base">
+                <div>
+                  <a
+                    href={PLANENROLL}
+                    {...externalLinkProps()}
+                    className="font-semibold text-white underline underline-offset-4 hover:text-[var(--ve-gold)]"
+                  >
+                    🔗 Self-enroll lookup: {PLANENROLL}
+                  </a>
+                </div>
+                <div>
+                  <a
+                    href={MEDICARE_REVIEW_BOOKING_URL}
+                    {...externalLinkProps()}
+                    className="font-semibold text-white underline underline-offset-4 hover:text-[var(--ve-gold)]"
+                  >
+                    📅 Book a call: {MEDICARE_REVIEW_BOOKING_URL}
+                  </a>
+                </div>
+                <div>
+                  <a
+                    href={`tel:${site.phoneE164}`}
+                    className="font-semibold text-white underline underline-offset-4 hover:text-[var(--ve-gold)]"
+                  >
+                    Call or text: {site.phoneDisplay}
+                  </a>
+                </div>
+              </div>
+
+              <p className="mt-4 font-sans text-sm font-semibold text-white">{LOOKUP_FALLBACK_LINE}</p>
+              <p className="mt-4 border-t border-white/20 pt-4 font-sans text-xs leading-6 text-white/85">
+                {MANDATORY_CMS_DISCLAIMER}
+              </p>
+            </section>
+          ) : null}
+
           <ResourceLeadForm
             variant={page.formVariant || "consumer"}
             leadCategory={page.leadCategory}
             pageSource={`/${page.slug}`}
             defaultTopic={page.title}
-            showMedicareTiming={["turning-65-medicare", "st-johns-county-medicare-help", "nocatee-medicare-help"].includes(page.slug)}
+            showMedicareTiming={["turning-65-medicare", "st-johns-county-medicare-help", "nocatee-medicare-help", "the-villages-medicare-help"].includes(page.slug)}
           />
         </div>
       </Container>

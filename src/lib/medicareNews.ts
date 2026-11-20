@@ -1,3 +1,8 @@
+export type MedicareNewsFaq = {
+  question: string;
+  answer: string;
+};
+
 export type MedicareNewsArticle = {
   slug: string;
   eyebrow: string;
@@ -11,6 +16,7 @@ export type MedicareNewsArticle = {
     heading: string;
     paragraphs: string[];
   }>;
+  faqs: MedicareNewsFaq[];
   framingQuestion?: string;
 };
 
@@ -53,6 +59,23 @@ export const medicareNewsArticles: MedicareNewsArticle[] = [
         ],
       },
     ],
+    faqs: [
+      {
+        question: "How much do eligible weight-management GLP-1 medications cost under the Medicare GLP-1 Bridge Program?",
+        answer:
+          "Eligible Medicare Part D enrollees can get certain weight-management GLP-1 medications for $50 a month under the Medicare GLP-1 Bridge Program.",
+      },
+      {
+        question: "How long does the $50/month Medicare GLP-1 Bridge Program rate last?",
+        answer:
+          "The $50 a month rate under the Medicare GLP-1 Bridge Program runs through December 31, 2027.",
+      },
+      {
+        question: "Does every Medicare Part D plan handle the GLP-1 Bridge Program the same way?",
+        answer:
+          "No. Eligibility rules apply and plans do not all handle coverage, prior authorizations, or pharmacy setup the same way, so you should verify your exact prescriptions and ZIP code before enrolling.",
+      },
+    ],
   },
   {
     slug: "medicare-shared-savings-program-2027",
@@ -84,6 +107,23 @@ export const medicareNewsArticles: MedicareNewsArticle[] = [
         ],
       },
     ],
+    faqs: [
+      {
+        question: "How much did the Medicare Shared Savings Program save in 2025?",
+        answer:
+          "The Medicare Shared Savings Program generated $2.5 billion in net savings in 2025, its largest year ever, while serving 12.6 million Medicare beneficiaries.",
+      },
+      {
+        question: "When can approved Medicare Shared Savings Program organizations reduce beneficiary out-of-pocket costs?",
+        answer:
+          "Starting April 1, 2027, approved care organizations in the Medicare Shared Savings Program can reduce or even eliminate what beneficiaries pay out of pocket for certain items and services.",
+      },
+      {
+        question: "Does every Medicare beneficiary automatically receive April 1, 2027 Shared Savings cost reductions?",
+        answer:
+          "No. Whether cost reductions apply depends on your care setup and whether your doctors take part in an approved care organization, which is why reviewing your doctor setup matters.",
+      },
+    ],
   },
   {
     slug: "2027-medicare-part-b-premium",
@@ -113,6 +153,23 @@ export const medicareNewsArticles: MedicareNewsArticle[] = [
           "While the Part B premium itself is set by CMS, you can still review whether the Medicare plan built around it is the right fit for your budget, your doctors, and your prescriptions before the Annual Enrollment Period ends on December 7.",
           "A clear side-by-side ZIP code review takes just a few minutes, and you get a real licensed broker who stays in your corner all through 2027 and for life.",
         ],
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the standard 2027 Medicare Part B monthly premium?",
+        answer:
+          "CMS announced the 2027 standard Medicare Part B premium is $209.40 a month, which is an increase of $6.50 a month compared to 2026.",
+      },
+      {
+        question: "What is the highest 2027 Medicare Part B premium for higher income brackets?",
+        answer:
+          "Higher income brackets pay up to $711.80 a month at the top in 2027, an increase of up to $21.90 a month.",
+      },
+      {
+        question: "Can a broker change my federal Part B premium, or what can I review before December 7?",
+        answer:
+          "Nobody can change the federal Part B premium itself, which comes straight out of Social Security, but you can review your Medicare plan fit, doctors, and prescriptions before AEP ends on December 7.",
       },
     ],
   },
@@ -147,6 +204,23 @@ export const medicareNewsArticles: MedicareNewsArticle[] = [
         ],
       },
     ],
+    faqs: [
+      {
+        question: "What share of 2027 Medicare Advantage plans include an OTC allowance?",
+        answer:
+          "Only 58% of Medicare Advantage plans include an over-the-counter (OTC) allowance in 2027, down from 66.3% in 2026 according to a MoneyGeek analysis of CMS plan files.",
+      },
+      {
+        question: "Why are Medicare Advantage OTC allowances dropping in 2027?",
+        answer:
+          "Most of the drop comes from returning plans quietly reducing or removing the OTC benefit for 2027 rather than plans shutting down completely.",
+      },
+      {
+        question: "How can I check if my 2027 OTC allowance was reduced before December 7?",
+        answer:
+          "Review your 2027 Annual Notice of Change and compare available 2027 plans for your ZIP code, doctors, and prescriptions before AEP ends on December 7.",
+      },
+    ],
   },
   {
     slug: "medicare-advantage-appeals-win-rate",
@@ -176,6 +250,23 @@ export const medicareNewsArticles: MedicareNewsArticle[] = [
           "Anyone can enroll you and disappear once the application goes through. Having a real person in your corner when a denial letter shows up in your mailbox is the entire point of working with an independent broker.",
           "I work for my clients all through 2027 and for the rest of their lives, helping you understand your appeal window, check your doctors and prescriptions every year, and protect your coverage long after enrollment day.",
         ],
+      },
+    ],
+    faqs: [
+      {
+        question: "How often are appealed Medicare Advantage prior-authorization denials overturned?",
+        answer:
+          "According to a KFF analysis of 2024 appeals, 80.7% of appealed Medicare Advantage prior-authorization denials are overturned in full or in part.",
+      },
+      {
+        question: "How many days do I have to appeal a Medicare Advantage denial notice?",
+        answer:
+          "Medicare Advantage beneficiaries have 65 days from the date printed on the denial notice to file an appeal with the plan.",
+      },
+      {
+        question: "Is a Medicare Advantage prior-authorization denial letter the final word?",
+        answer:
+          "No. A denial letter is not the final word, and working with an independent broker who stays with you year-round helps you stay on top of appeal timelines and coverage questions.",
       },
     ],
   },

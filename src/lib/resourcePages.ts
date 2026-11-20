@@ -726,6 +726,170 @@ const floridaPage: ResourcePage = {
   ],
 };
 
+const wisconsinPage: ResourcePage = {
+  slug: "wisconsin-medicare-help",
+  eyebrow: "Wisconsin Medicare help",
+  title: "Wisconsin Medicare Help",
+  metaTitle: "Wisconsin Medicare Help from a Licensed Broker | Vital Edge Insurance",
+  description:
+    "Wisconsin Medicare education from Patrick Mackin IV (NPN 21729046). Review county availability across 72 Wisconsin counties, Wisconsin's unique base-plan plus rider Medigap rules, doctor networks, prescriptions, and free official SHIP resources.",
+  heroSubtitle:
+    "Licensed Medicare guidance for Wisconsin residents across all 72 counties, including Milwaukee, Madison, Green Bay, Fox Valley, and rural northern communities.",
+  leadCategory: "Medicare consumer review",
+  audience: "Wisconsin Medicare consumers and families",
+  primaryCtaLabel: "Request Wisconsin Medicare Guidance",
+  primaryCtaHref: "/contact?topic=medicare&state=Wisconsin",
+  secondaryCtaLabel: "Medicare 101",
+  secondaryCtaHref: "/medicare-101",
+  serviceType: "State Medicare education",
+  areaServed: "Wisconsin",
+  cards: [
+    {
+      title: "Wisconsin Medigap works differently",
+      body: "Wisconsin is one of only three states that uses a standardized base Medicare Supplement plan with optional riders instead of standard lettered plans like Plan G or Plan N.",
+    },
+    {
+      title: "72 Wisconsin counties and regional networks",
+      body: "Provider access differs across Milwaukee, Dane County (Madison), Brown County (Green Bay), the Fox Valley, and northern Wisconsin counties. Reviews start with your county, ZIP code, and hospital system.",
+    },
+    {
+      title: "Licensed broker and free official help",
+      body: "Patrick Mackin IV (NPN 21729046) provides one-on-one Wisconsin Medicare reviews alongside free unbiased counseling available through Wisconsin's SHIP program and the Wisconsin Office of the Commissioner of Insurance.",
+    },
+  ],
+  blocks: [
+    {
+      title: "Medicare guidance in Wisconsin",
+      paragraphs: [
+        "Vital Edge Insurance provides education-first Medicare guidance for Wisconsin residents who want clear answers before making any plan-specific decision.",
+        "Wisconsin stands out for two big reasons during a Medicare review: first, Wisconsin Medicare Supplement policies use a standardized Basic Benefit plan paired with selectable riders rather than federal Plan G or Plan N labels; second, Medicare Advantage networks vary sharply across southeastern Wisconsin, south-central Wisconsin, northeastern Wisconsin, and rural northern counties.",
+        "Every review starts with your Wisconsin county, ZIP code, doctors, hospital systems, prescriptions, preferred pharmacies, budget, and enrollment timing.",
+      ],
+    },
+    {
+      title: "About your licensed broker",
+      paragraphs: [
+        "Patrick Mackin IV is an independent licensed Medicare broker (National Producer Number 21729046, Florida Resident License #G275791) serving clients across 13 licensed states including Wisconsin. Producer records can be verified through the Wisconsin Office of the Commissioner of Insurance linked below.",
+      ],
+    },
+    {
+      title: "Official Wisconsin and federal resources",
+      bullets: [
+        "Medicare.gov and 1-800-MEDICARE for complete plan information for your Wisconsin ZIP code.",
+        "Wisconsin's State Health Insurance Assistance Program (SHIP) for free, unbiased Medicare counseling via shiphelp.org.",
+        "Wisconsin Office of the Commissioner of Insurance (oci.wi.gov) for state licensing verification and consumer guides.",
+      ],
+    },
+    { title: "Compliance note", paragraphs: [medicareDisclosure, tpmoDisclosure] },
+  ],
+  faqs: [
+    {
+      question: "Why do Wisconsin Medigap plans look different from Plan G or Plan N?",
+      answer:
+        "Wisconsin is a waiver state that standardizes Medicare Supplement coverage around a Basic Benefit plan plus optional riders (such as Part A deductible, Part B excess charges, or foreign travel emergency) rather than federal lettered plans.",
+    },
+    {
+      question: "Do Medicare Advantage options vary across Wisconsin counties?",
+      answer:
+        "Yes. Plan availability and provider networks are set by county across Wisconsin's 72 counties, so plans available in Milwaukee or Dane County can differ from Brown County, Marathon County, or northern rural counties.",
+    },
+    {
+      question: "Is Vital Edge Insurance licensed to help Wisconsin residents?",
+      answer:
+        "Yes. Patrick Mackin IV (NPN 21729046) serves Medicare clients across 13 licensed states including Wisconsin. You can verify producer licensing through the Wisconsin Office of the Commissioner of Insurance at oci.wi.gov.",
+    },
+    {
+      question: "Where can Wisconsin residents get free unbiased Medicare counseling?",
+      answer:
+        "Free, unbiased counseling is available through Wisconsin's State Health Insurance Assistance Program (find local contacts at shiphelp.org), Medicare.gov, and 1-800-MEDICARE.",
+    },
+  ],
+  links: [
+    { label: "Wisconsin Office of the Commissioner of Insurance", href: "https://oci.wi.gov" },
+    { label: "Medicare.gov", href: "https://www.medicare.gov" },
+    { label: "Find Wisconsin SHIP via shiphelp.org", href: "https://www.shiphelp.org" },
+    ...coreLinks,
+  ],
+};
+
+const theVillagesPage: ResourcePage = {
+  slug: "the-villages-medicare-help",
+  eyebrow: "The Villages Medicare help",
+  title: "The Villages Medicare Help",
+  metaTitle: "The Villages Medicare Help (Sumter, Marion & Lake Counties) | Vital Edge Insurance",
+  description:
+    "Local Florida Medicare education for The Villages residents across Sumter (32162, 32163), Marion (32159), and Lake counties from Patrick Mackin IV (FL License #G275791, NPN 21729046).",
+  heroSubtitle:
+    "Florida-licensed Medicare guidance tailored for The Villages across Sumter, Marion, and Lake counties, focusing on primary care access, hospital networks, prescriptions, and 2027 plan changes.",
+  leadCategory: "Medicare consumer review",
+  audience: "The Villages Medicare residents and families",
+  primaryCtaLabel: "Request The Villages Medicare Guidance",
+  primaryCtaHref: "/contact?topic=medicare&area=The%20Villages",
+  secondaryCtaLabel: "Florida Medicare Hub",
+  secondaryCtaHref: "/florida-medicare-help",
+  serviceType: "Local Medicare education",
+  areaServed: "The Villages, Sumter County, Marion County, and Lake County, Florida",
+  cards: [
+    {
+      title: "Three counties, different plan menus",
+      body: "The Villages spans Sumter County (32162, 32163), Marion County (32159), and Lake County. Because Medicare Advantage plans are filed by county, neighbors a few streets apart can have different plan options.",
+    },
+    {
+      title: "Primary care and hospital checks first",
+      body: "In The Villages, verifying whether your primary care group, specialists, and preferred hospitals (including UF Health and regional systems) stay in network for 2027 is step one before looking at extra benefits.",
+    },
+    {
+      title: "Florida-licensed local advocacy",
+      body: "Patrick Mackin IV holds an active resident Florida license (FL License #G275791, NPN 21729046) and stays in your corner all through 2027 and for life, not just during enrollment season.",
+    },
+  ],
+  blocks: [
+    {
+      title: "Why county lines matter in The Villages",
+      paragraphs: [
+        "The Villages is unique in Florida because the community crosses three separate county boundaries: Sumter County, Marion County, and Lake County. Medicare Advantage availability, copays, over-the-counter allowances, and provider contracts are set at the county level, not by community name.",
+        "Every review starts with your exact county and ZIP code, your primary care physician and specialists, your prescription list and preferred pharmacy, and whether you are relocating to Florida (Special Enrollment Period), turning 65 (Initial Enrollment Period), or reviewing 2027 changes.",
+      ],
+    },
+    {
+      title: "About your Florida-licensed broker",
+      paragraphs: [
+        "Vital Edge Insurance is operated by Patrick Mackin IV, an independent licensed Florida health insurance broker (NPN 21729046, FL License #G275791). You can verify Patrick's active Florida 0215 license and carrier appointments directly through the Florida Department of Financial Services link below.",
+      ],
+    },
+    { title: "Compliance note", paragraphs: [medicareDisclosure, tpmoDisclosure] },
+  ],
+  faqs: [
+    {
+      question: "Why do Medicare plans in The Villages vary between 32162, 32163, and 32159?",
+      answer:
+        "Because The Villages spans Sumter, Marion, and Lake counties, and Medicare Advantage plans are approved county by county. Checking your exact county and ZIP code ensures you compare only the plans available at your home address.",
+    },
+    {
+      question: "Does moving to The Villages from another state open a Medicare Special Enrollment Period?",
+      answer:
+        "Yes. Permanently moving to a new county or state generally triggers a Special Enrollment Period so you can review local Florida Medicare Advantage, Part D, or Medigap options and verify Florida provider networks.",
+    },
+    {
+      question: "How can I verify Patrick Mackin IV's Florida insurance license?",
+      answer:
+        "Patrick Mackin IV holds active Florida License #G275791 (NPN 21729046), publicly verifiable at any time on the Florida Department of Financial Services Licensee Search.",
+    },
+    {
+      question: "Where can The Villages residents find free unbiased Medicare counseling?",
+      answer:
+        "Florida's SHINE program (Serving Health Insurance Needs of Elders) provides free, unbiased Medicare counseling statewide via shiphelp.org, alongside Medicare.gov and 1-800-MEDICARE.",
+    },
+  ],
+  links: [
+    { label: "Verify Patrick's Florida license (FL DFS)", href: "https://licenseesearch.fldfs.com/Licensee/2723002" },
+    { label: "Florida Medicare Help", href: "/florida-medicare-help" },
+    { label: "Medicare.gov", href: "https://www.medicare.gov" },
+    { label: "Find SHINE via shiphelp.org", href: "https://www.shiphelp.org" },
+    ...coreLinks,
+  ],
+};
+
 const statePages: ResourcePage[] = [
   ["georgia", "Georgia", "Education for Georgia residents who want to review Medicare timing, networks, prescriptions, and county availability."],
   ["south-carolina", "South Carolina", "Plain-language Medicare guidance for South Carolina residents and families comparing coverage pathways."],
@@ -738,7 +902,6 @@ const statePages: ResourcePage[] = [
   ["ohio", "Ohio", "Ohio Medicare education for people comparing Original Medicare, Medicare Advantage, Medigap, and Part D basics."],
   ["michigan", "Michigan", "Michigan Medicare guidance focused on provider networks, prescriptions, enrollment timing, and county-level variation."],
   ["louisiana", "Louisiana", "Louisiana Medicare education for people who want clear next steps before plan-specific conversations."],
-  ["wisconsin", "Wisconsin", "Wisconsin Medicare education for residents reviewing doctors, prescriptions, county plan options, and enrollment timing."],
 ]
   // A state with a verified license record publishes a full authority page
   // instead, so drop its templated twin here to avoid a duplicate slug.
@@ -787,7 +950,6 @@ const localPages: ResourcePage[] = [
   ["mandarin", "Mandarin", "Mandarin Medicare Help", "Mandarin-area Medicare education from a Florida-headquartered licensed agent serving clients across 13 states and growing."],
   ["ponte-vedra", "Ponte Vedra", "Ponte Vedra Medicare Help", "Ponte Vedra Medicare education for provider access, prescription review, pharmacy preferences, and timing questions."],
   ["nocatee", "Nocatee", "Nocatee Medicare Help", "Nocatee Medicare guidance for people approaching 65, still working, or helping a family member compare coverage paths."],
-  ["the-villages", "The Villages", "The Villages Medicare Help", "The Villages Medicare education for residents comparing Original Medicare, Medigap, Medicare Advantage, provider networks, and prescription coverage across Sumter, Marion, and Lake counties."],
 ].map(([slugBase, areaName, title, subtitle]) => ({
   slug: `${slugBase}-medicare-help`,
   eyebrow: `${areaName} Medicare help`,
@@ -831,7 +993,9 @@ export const resourcePages: ResourcePage[] = [
   ...strategicPages,
   floridaPage,
   ...stateAuthorityPages,
+  wisconsinPage,
   ...statePages,
+  addLocalT65Guidance(theVillagesPage),
   ...localPages.map(addLocalT65Guidance),
 ];
 

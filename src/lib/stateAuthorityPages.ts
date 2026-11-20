@@ -193,7 +193,7 @@ export const stateAuthorityDrafts: StateAuthorityDraft[] = [
     countyPlural: "counties",
     countyCount: 95,
     geographyNote:
-      "Tennessee has 95 counties across three grand divisions — East, Middle, and West — that function as distinct healthcare markets.",
+      "Tennessee has 95 counties across three grand divisions (East, Middle, and West) that function as distinct healthcare markets.",
     marketNote:
       "Tennessee's grand divisions are anchored by different hospital systems around Memphis, Nashville, and Knoxville. Someone moving between divisions is effectively changing markets, even without leaving the state, and network access can change accordingly.",
     stateSpecificFaq: {
@@ -243,13 +243,13 @@ export const stateAuthorityDrafts: StateAuthorityDraft[] = [
     countyPlural: "counties",
     countyCount: 15,
     geographyNote:
-      "Arizona has only 15 counties, but they are geographically large — a single county can span both a major metro area and remote rural communities.",
+      "Arizona has only 15 counties, but they are geographically large, and a single county can span both a major metro area and remote rural communities.",
     marketNote:
       "Arizona's county count is low but each county covers a lot of ground, so county-level plan availability can hide big differences in practical provider access within the same county. Arizona also has a substantial seasonal-resident population, which makes coverage while travelling a common and legitimate question here.",
     stateSpecificFaq: {
       question: "I spend part of the year outside Arizona. How does that affect coverage?",
       answer:
-        "It depends on the type of coverage. Original Medicare is generally accepted by any provider nationwide that takes Medicare. Medicare Advantage plans are usually network-based and tied to where you live, though many cover emergency and urgent care while travelling. If you split the year between states, raise it early in the review — it often changes which approach fits.",
+        "It depends on the type of coverage. Original Medicare is generally accepted by any provider nationwide that takes Medicare. Medicare Advantage plans are usually network-based and tied to where you live, though many cover emergency and urgent care while travelling. If you split the year between states, raise it early in the review because it often changes which approach fits.",
     },
   },
   {
@@ -270,9 +270,9 @@ export const stateAuthorityDrafts: StateAuthorityDraft[] = [
     geographyNote:
       "Washington has 39 counties, and the Cascade Range divides the state into two quite different healthcare markets.",
     marketNote:
-      "Western Washington around the Puget Sound has dense provider networks, while the eastern counties are more rural and served by different systems. The east–west split matters more in Washington than the simple county count suggests.",
+      "Western Washington around the Puget Sound has dense provider networks, while the eastern counties are more rural and served by different systems. The east-west split matters more in Washington than the simple county count suggests.",
     stateSpecificFaq: {
-      question: "Does the east–west split in Washington affect Medicare plans?",
+      question: "Does the east-west split in Washington affect Medicare plans?",
       answer:
         "It does in practice. Provider networks and plan participation differ between the Puget Sound region and eastern Washington. Your county determines which plans are available, and the providers you actually use should be checked against any plan's network before deciding.",
     },
@@ -299,7 +299,7 @@ export const stateAuthorityDrafts: StateAuthorityDraft[] = [
     stateSpecificFaq: {
       question: "Are Medicare options different in Philadelphia versus rural Pennsylvania?",
       answer:
-        "Plan availability is set by county, and the metro counties generally have more Medicare Advantage options than the rural central counties. More options is not automatically better — what matters is whether your doctors, hospitals, and prescriptions are covered under the plans available where you live.",
+        "Plan availability is set by county, and the metro counties generally have more Medicare Advantage options than the rural central counties. More options is not automatically better; what matters is whether your doctors, hospitals, and prescriptions are covered under the plans available where you live.",
     },
   },
   {
@@ -357,7 +357,7 @@ const medicareDisclosure =
   "Plan availability and eligibility vary by county and individual circumstances. Vital Edge Insurance is not connected with or endorsed by the U.S. Government or the federal Medicare program. Plan-specific Medicare Advantage or Part D discussions require appropriate appointment documentation.";
 
 const tpmoDisclosure =
-  "We do not offer every plan available in your area. Any information we provide is limited to those plans we do offer in your area. Please contact Medicare.gov or 1-800-MEDICARE to get information on all of your options.";
+  "We do not offer every plan available in your area. We represent many organizations which offer several products in your area. Please contact Medicare.gov or 1-800-MEDICARE to get information on all of your options. You may also contact 1-800-MEDICARE (TTY users should call 1-877-486-2048), 24 hours a day, 7 days a week, or your local State Health Insurance Assistance Program (SHIP) to get information on all of your options. Can't find the plan you're looking for? Call me!";
 
 function formatReviewDate(iso: string): string {
   const [year, month, day] = iso.split("-").map(Number);
@@ -406,7 +406,7 @@ function buildStateAuthorityPage(
       },
       {
         title: "Free official help exists",
-        body: `${stateName}'s State Health Insurance Assistance Program offers free, unbiased Medicare counseling. Vital Edge encourages using official resources alongside licensed-agent guidance — find your local SHIP through the national locator.`,
+        body: `${stateName}'s State Health Insurance Assistance Program offers free, unbiased Medicare counseling. Vital Edge encourages using official resources alongside licensed-agent guidance, and you can find your local SHIP through the national locator.`,
       },
     ],
     blocks: [
