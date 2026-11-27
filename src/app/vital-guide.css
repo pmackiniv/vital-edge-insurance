@@ -58,7 +58,7 @@ body:has(.vg-dialog[open]) { overflow: hidden; }
   border-radius: .65rem; padding: .35rem .65rem; font-size: .96rem; font-weight: 700; line-height: 1.15; cursor: pointer;
   background: #fff; color: #075b54; text-decoration: none;
 }
-.vg-actions a.vg-primary, .vg-search button { color: white; background: #075b54; }
+.vg-conversation .vg-actions a.vg-primary[href], .vg-search button { color: white; background: #075b54; }
 .vg-topics button[aria-pressed="true"] { color: #202d24; background: #f3c985; }
 .vg-topics button:hover, .vg-actions a:not(.vg-primary):hover { background: #f3c985; color: #202d24; }
 .vg-answer .vg-disclosure { font-size: .9rem; margin-top: .65rem; }
