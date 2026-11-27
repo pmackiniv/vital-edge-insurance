@@ -190,11 +190,11 @@ h2.editorial-heading {
   z-index: 9999;
 }
 
-a:not(.btn):not([class*="text-"]):not([class*="premium-"]) {
+a:not(.btn):not([class*="text-"]):not([class*="premium-"]):not(:where(.ve-home a.button)) {
   color: var(--vei-blue);
 }
 
-a:not(.btn):not([class*="text-"]):not([class*="premium-"]):hover {
+a:not(.btn):not([class*="text-"]):not([class*="premium-"]):not(:where(.ve-home a.button)):hover {
   color: var(--vei-green);
 }
 

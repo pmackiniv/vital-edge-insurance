@@ -10,7 +10,10 @@ test("homepage keeps call, ancillary, resources and comparison paths", async ({ 
   const nav = page.getByRole("navigation", { name: "Main navigation" });
   await expect(nav.getByRole("link", { name: "Dental, Vision & More" })).toHaveAttribute("href", "/ancillary");
   await expect(nav.getByRole("link", { name: "Resources", exact: true })).toHaveAttribute("href", "/resources");
-  await expect(page.getByRole("link", { name: "Compare plans on SunFire" })).toHaveAttribute("href", PLANENROLL);
+  await expect(page.getByRole("link", { name: "Compare Medicare plans" })).toHaveAttribute("href", PLANENROLL);
+  await expect(page.getByRole("link", { name: "Get started", exact: true })).toHaveCSS("color", "rgb(255, 255, 255)");
+  await expect(page.getByRole("link", { name: "Compare Medicare plans" })).toHaveCSS("color", "rgb(255, 255, 255)");
+  await expect(page.getByRole("link", { name: "Explore Medicare options" })).toHaveCSS("color", "rgb(32, 45, 36)");
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize()!.width);
 });
 
@@ -25,6 +28,7 @@ test("homepage guide answers without collecting details and routes to the right 
   const guide = page.getByRole("dialog", { name: "Vital Guide" });
   await expect(guide.getByRole("heading", { name: "See when to sign up" })).toBeVisible();
   await expect(guide.getByRole("link", { name: "Book a 20-minute Turning 65 call" })).toHaveAttribute("href", /^https:\/\/calendly\.com\/pmackiniv27\/turning-65-medicare-phone-appointment\?.*utm_source=vital_edge_website/);
+  await expect(guide.getByRole("link", { name: "Book a 20-minute Turning 65 call" })).toHaveCSS("color", "rgb(255, 255, 255)");
   await guide.getByText("Look up a general topic").click();
   const input = guide.getByRole("searchbox");
   await input.fill("Is my doctor in network?");
