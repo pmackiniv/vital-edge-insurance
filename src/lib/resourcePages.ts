@@ -1,3 +1,4 @@
+import { websiteScheduleUrl } from "./scheduling";
 import { publishableStateAuthorityPages, publishedStateSlugBases } from "./stateAuthorityPages";
 
 import { site, licensedStateNames } from "./site";
@@ -154,7 +155,7 @@ const strategicPages: ResourcePage[] = [
     leadCategory: "Turning 65",
     audience: "People approaching Medicare age",
     primaryCtaLabel: "Book a Turning 65 Appointment",
-    primaryCtaHref: site.scheduleUrl,
+    primaryCtaHref: websiteScheduleUrl("https://calendly.com/pmackiniv27/turning-65-medicare-phone-appointment"),
     primaryExternal: true,
     secondaryCtaLabel: "Request a Callback",
     secondaryCtaHref: "#resource-lead-form",
