@@ -5,6 +5,8 @@ import { useEffect, useId, useRef, useState } from "react";
 import { site } from "@/lib/site";
 import { PLANENROLL } from "@/lib/externalLinks";
 import { websiteScheduleUrl } from "@/lib/scheduling";
+import { GUIDE_QUESTION_MAX, guidePrivacyBlock, guideNeedsHuman, type GuideAIResult } from "@/lib/vitalGuideAI";
+import type { GuideSourceId } from "@/lib/vitalGuideSources";
 
 type Destination = [label: string, href: string];
 type Answer = { title: string; text: string; steps?: string[]; source?: Destination; actions: Destination[] };
@@ -49,43 +51,121 @@ function GuideLink({ href, label, onNavigate, className }: { href: string; label
     : <a href={href} className={className}>{label}</a>;
 }
 
-function GuideConversation({ topic, onTopic, onNavigate }: { topic: Topic; onTopic: (topic: Topic) => void; onNavigate?: () => void }) {
+function GuideConversation({ topic, onTopic, onNavigate, aiEnabled }: {
+  topic: Topic; onTopic: (topic: Topic) => void; onNavigate?: () => void; aiEnabled: boolean;
+}) {
   const input = useRef<HTMLInputElement>(null);
   const scroll = useRef<HTMLDivElement>(null);
+  const request = useRef<AbortController | null>(null);
+  const context = useRef<GuideSourceId[]>([]);
+  const [result, setResult] = useState<GuideAIResult | null>(null);
+  const [pending, setPending] = useState(false);
   const inputId = useId();
   const answer: Answer = answers[topic];
+
+  useEffect(() => () => request.current?.abort(), []);
   function select(next: Topic) {
     onTopic(next);
     if (scroll.current) scroll.current.scrollTop = 0;
+  }
+  function selectQuickTopic(next: Topic) {
+    request.current?.abort();
+    context.current = [];
+    setPending(false);
+    setResult(null);
+    select(next);
+  }
+  async function ask(question: string) {
+    request.current?.abort();
+    const fallback = topicFor(question);
+    setPending(false);
+    if (guidePrivacyBlock(question)) {
+      context.current = [];
+      setResult({ kind: "privacy" });
+      select("personal");
+      return;
+    }
+    if (!aiEnabled || guideNeedsHuman(question)) {
+      context.current = [];
+      setResult(null);
+      select(guideNeedsHuman(question) ? "personal" : fallback);
+      return;
+    }
+    const controller = new AbortController();
+    request.current = controller;
+    const timer = setTimeout(() => controller.abort("timeout"), 12_000);
+    setPending(true);
+    setResult(null);
+    try {
+      const response = await fetch("/api/vital-guide", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question, context: context.current }),
+        signal: controller.signal,
+      });
+      const value = await response.json() as GuideAIResult;
+      if (controller.signal.aborted) return;
+      setResult(value);
+      if (value.kind === "answer") {
+        context.current = value.context;
+        select(value.topic);
+      } else if (value.kind === "personal" || value.kind === "privacy") {
+        context.current = [];
+        select("personal");
+      } else if (value.kind === "unknown") {
+        select("unknown");
+      } else {
+        select(fallback);
+      }
+    } catch {
+      if (!controller.signal.aborted || controller.signal.reason === "timeout") {
+        setResult({ kind: "unavailable" });
+        select(fallback);
+      }
+    } finally {
+      clearTimeout(timer);
+      if (request.current === controller) setPending(false);
+    }
   }
   return (
     <div className="vg-conversation">
       <div className="vg-scroll" ref={scroll}>
         <div role="log" aria-label="Vital Guide conversation" aria-live="polite" aria-atomic="true">
           <div className="vg-answer">
-            <h3>{answer.title}</h3>
-            <p>{answer.text}</p>
-            {answer.steps && <ul>{answer.steps.map((step) => <li key={step}>{step}</li>)}</ul>}
-            {answer.source && <p><a href={answer.source[1]}>{answer.source[0]}</a></p>}
-            {answer.actions.length > 0 && <div className="vg-actions">{answer.actions.map(([label, href], index) => (
+            {pending ? <p>Checking the public guides…</p> : result?.kind === "answer" ? <>
+              <h3>Here’s what to check</h3>
+              <ul className="vg-evidence">{result.facts.map((fact) => <li key={fact.text}>
+                <p>{fact.text}</p><GuideLink href={fact.href} label={fact.label} onNavigate={onNavigate} />
+              </li>)}</ul>
+            </> : <>
+              <h3>{answer.title}</h3>
+              {result?.kind === "privacy"
+                ? <p>Please remove personal information and ask again. This question wasn’t sent to the AI service.</p>
+                : <p>{answer.text}</p>}
+              {result?.kind === "unavailable" && <p className="vg-disclosure">AI answers are unavailable. You can still use the guide and contact options.</p>}
+              {answer.steps && <ul>{answer.steps.map((step) => <li key={step}>{step}</li>)}</ul>}
+              {answer.source && <p><a href={answer.source[1]}>{answer.source[0]}</a></p>}
+            </>}
+            {!pending && answer.actions.length > 0 && <div className="vg-actions">{answer.actions.map(([label, href], index) => (
               <GuideLink key={href} href={href} label={label} onNavigate={onNavigate} className={index === 0 ? "vg-primary" : ""} />
             ))}</div>}
-            {topic === "review" && <p className="vg-disclosure">We do not offer every plan available in your area. Visit <a href="https://www.medicare.gov/">Medicare.gov</a> or call <a href="tel:+18006334227">1-800-MEDICARE</a> for all options.</p>}
+            {!pending && topic === "review" && <p className="vg-disclosure">We do not offer every plan available in your area. Visit <a href="https://www.medicare.gov/">Medicare.gov</a> or call <a href="tel:+18006334227">1-800-MEDICARE</a> for all options.</p>}
           </div>
         </div>
         <div className="vg-topics" aria-label="Popular topics">
-          {labels.map(([id, label]) => <button type="button" key={id} onClick={() => select(id)} aria-pressed={topic === id}>{label}</button>)}
+          {labels.map(([id, label]) => <button type="button" key={id} onClick={() => selectQuickTopic(id)} aria-pressed={topic === id}>{label}</button>)}
         </div>
       </div>
       <form className="vg-composer" onSubmit={(event) => {
         event.preventDefault();
         if (!input.current?.value.trim()) return;
-        select(topicFor(input.current.value));
+        const question = input.current.value.trim();
         input.current.value = "";
+        void ask(question);
       }}>
-        <label htmlFor={inputId}>Look up a general Medicare topic</label>
-        <div className="vg-search"><input ref={input} id={inputId} type="search" maxLength={100} placeholder="e.g. employer coverage" autoComplete="off" /><button type="submit">Send</button></div>
-        <p>For privacy, don’t enter Medicare numbers, medical details, or payment information.</p>
+        <label htmlFor={inputId}>{aiEnabled ? "Ask a general Medicare question" : "Look up a general Medicare topic"}</label>
+        <div className="vg-search"><input ref={input} id={inputId} type="search" maxLength={aiEnabled ? GUIDE_QUESTION_MAX : 100} placeholder="e.g. employer coverage" autoComplete="off" /><button type="submit" disabled={pending}>Send</button></div>
+        <p>For privacy, don’t enter Medicare numbers, medical details, or payment information.{aiEnabled && " General questions may be sent to an AI provider."}</p>
       </form>
       <footer className="vg-footer">
         <a href={call[1]}>{call[0]}</a>
@@ -96,12 +176,12 @@ function GuideConversation({ topic, onTopic, onNavigate }: { topic: Topic; onTop
   );
 }
 
-export function InlineVitalGuide() {
+export function InlineVitalGuide({ aiEnabled = false }: { aiEnabled?: boolean }) {
   const [topic, setTopic] = useState<Topic>("start");
-  return <div className="vg-inline"><GuideConversation topic={topic} onTopic={setTopic} /></div>;
+  return <div className="vg-inline"><GuideConversation topic={topic} onTopic={setTopic} aiEnabled={aiEnabled} /></div>;
 }
 
-export function ChatWidget() {
+export function ChatWidget({ aiEnabled = false }: { aiEnabled?: boolean }) {
   const pathname = usePathname();
   const [topic, setTopic] = useState<Topic>("start");
   const [open, setOpen] = useState(false);
@@ -151,7 +231,7 @@ export function ChatWidget() {
             <div><h2 id="vg-title">Vital Guide</h2><p>Automated Medicare guide</p></div>
             <form method="dialog"><button ref={closeButton} type="submit" aria-label="Close Vital Guide">×</button></form>
           </header>
-          <GuideConversation topic={topic} onTopic={setTopic} onNavigate={() => dialog.current?.close()} />
+          <GuideConversation topic={topic} onTopic={setTopic} aiEnabled={aiEnabled} onNavigate={() => dialog.current?.close()} />
         </>}
       </dialog>
     </>
