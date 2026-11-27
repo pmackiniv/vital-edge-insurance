@@ -2,27 +2,28 @@
 
 :root {
   font-size: 16px;
-  --vei-blue: #0e4498;
-  --vei-green: #35b228;
-  --vei-orange: #f69232;
-  --vei-soft-blue: #839bc0;
-  --vei-navy: #091a38;
-  --ve-teal: #003f45;
-  --ve-teal-2: #075f66;
-  --ve-gold: #c58a2b;
-  --ve-gold-2: #e0a23b;
-  --ve-bg: #f6faf9;
-  --ve-border: #d7e6e4;
-  --ve-text: #092f34;
-  --ve-muted: #52667a;
-  --background: #ffffff;
-  --foreground: #0b1320;
-  --brand-blue: #0e4498;
-  --brand-green: #35b228;
-  --brand-orange: #f69232;
-  --ink: #0b1320;
+  --vei-blue: #075b54;
+  --vei-green: #12483f;
+  --vei-orange: #9a5a0e;
+  --vei-soft-blue: #527973;
+  --vei-navy: #102f32;
+  --ve-teal: #075b54;
+  --ve-teal-2: #12483f;
+  --ve-gold: #8a550f;
+  --ve-gold-fill: #f3c985;
+  --ve-gold-2: #ad7f37;
+  --ve-bg: #f8faf7;
+  --ve-border: #cbd9d5;
+  --ve-text: #102f32;
+  --ve-muted: #3c5657;
+  --background: #f8faf7;
+  --foreground: #102f32;
+  --brand-blue: #075b54;
+  --brand-green: #12483f;
+  --brand-orange: #9a5a0e;
+  --ink: #102f32;
   --paper: #ffffff;
-  --muted: #f4f7fb;
+  --muted: #e4f0eb;
 }
 
 @theme inline {
@@ -115,20 +116,20 @@ h2.editorial-heading {
 
 /* Default light pane: most body content. */
 .vei-glass-light {
-  background-color: rgba(255, 255, 255, 0.66);
+  background-color: #ffffff;
   color: var(--ve-text);
 }
 
 /* Tinted pane: sections that should feel cooler and recede slightly. */
 .vei-glass-tint {
-  background-image: linear-gradient(135deg, rgba(228, 246, 247, 0.62), rgba(255, 255, 255, 0.7));
+  background-image: linear-gradient(135deg, #e4f0eb, #f8faf7);
   color: var(--ve-text);
 }
 
 /* Deep pane: inverted glass for emphasis blocks. White text needs the tint
    dark enough that bright sand behind it cannot lift the background. */
 .vei-glass-deep {
-  background-color: rgba(0, 47, 52, 0.78);
+  background-color: #102f32;
   border-color: rgba(255, 255, 255, 0.22);
   color: #ffffff;
   box-shadow:
@@ -148,7 +149,7 @@ h2.editorial-heading {
 
 /* Retained aliases so existing markup picks up the new material. */
 .glass-panel {
-  background-color: rgba(255, 255, 255, 0.66);
+  background-color: #ffffff;
   backdrop-filter: blur(22px) saturate(175%);
   -webkit-backdrop-filter: blur(22px) saturate(175%);
   border: 1px solid rgba(255, 255, 255, 0.55);
@@ -317,14 +318,14 @@ textarea::placeholder {
 }
 
 .premium-cta-primary {
-  background: linear-gradient(180deg, #00545d, #003f45);
+  background: var(--ve-teal);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.35);
 }
 
 .premium-cta-gold {
-  background: linear-gradient(180deg, #dea344, #c17f25);
-  color: #ffffff;
+  background: var(--ve-gold-fill);
+  color: #202d24;
   border: 1px solid rgba(255, 255, 255, 0.32);
 }
 
@@ -462,10 +463,8 @@ textarea::placeholder {
 }
 
 .premium-small-button-gold {
-  background: var(--ve-gold);
-  /* White on #c58a2b is 2.98:1 and fails AA. Brand ink on the same gold is
-     4.80:1 and passes, so the brand colour is kept and the text changes. */
-  color: var(--ve-text);
+  background: var(--ve-gold-fill);
+  color: #202d24;
   box-shadow: 0 14px 34px rgba(197, 138, 43, 0.2);
 }
 
@@ -505,135 +504,16 @@ textarea::placeholder {
   background: rgba(255, 255, 255, 0.12);
 }
 
-.vei-tide {
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle at 30% 60%, rgba(255, 255, 255, 0.35), transparent 55%);
-  opacity: 0.12;
-  animation: vei-tide 12s ease-in-out infinite;
-}
-
-/* Subtle “water shimmer” — moving band of light (sun on water) */
-.vei-water-shimmer {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 0%,
-    transparent 35%,
-    rgba(255, 255, 255, 0.06) 48%,
-    rgba(255, 255, 255, 0.12) 50%,
-    rgba(255, 255, 255, 0.06) 52%,
-    transparent 65%,
-    transparent 100%
-  );
-  background-size: 200% 100%;
-  animation: vei-shimmer 18s ease-in-out infinite;
-  pointer-events: none;
-}
-
 .vei-bg {
   position: fixed;
   inset: 0;
-  z-index: -10;
-  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+}
+.ve-interior-backdrop {
+  background: #f8faf7;
 }
 
-.vei-bg-layer {
-  position: absolute;
-  inset: -4%;
-  background-size: cover;
-  background-position: center top;
-  opacity: 1;
-  transform: scale(1.02);
-  animation: vei-bg-drift 30s ease-in-out infinite;
-}
-
-/*
- * Site-wide background photograph.
- *
- * This is a CSS background, so it bypasses the Next image optimiser entirely --
- * every visitor on every page was downloading the 2,578 KB source PNG. A
- * photograph should never have been a PNG; AVIF at q60 is 191 KB, a 92.6%
- * reduction, with no visible difference at the scale and blur this renders at.
- *
- * image-set() lets the browser pick: AVIF where supported, WebP next, and the
- * original PNG only for browsers that understand neither. The bare url() below
- * is the fallback for browsers without image-set() support at all.
- */
-.vei-bg-beach {
-  background-image: url("/images/hero/vital-edge-goa-beach-hero.webp");
-  background-image: -webkit-image-set(
-    url("/images/hero/vital-edge-goa-beach-hero.avif") type("image/avif"),
-    url("/images/hero/vital-edge-goa-beach-hero.webp") type("image/webp"),
-    url("/images/hero/vital-edge-goa-beach-hero.png") type("image/png")
-  );
-  background-image: image-set(
-    url("/images/hero/vital-edge-goa-beach-hero.avif") type("image/avif"),
-    url("/images/hero/vital-edge-goa-beach-hero.webp") type("image/webp"),
-    url("/images/hero/vital-edge-goa-beach-hero.png") type("image/png")
-  );
-}
-
-/*
- * Scrim over the beach photograph.
- *
- * Deliberately light. Legibility is carried by the glass surfaces (see
- * .vei-glass) rather than by washing out the image -- a heavy backdrop blur
- * removes the photo's high-frequency detail wherever text actually sits, which
- * means the image can stay vivid everywhere else.
- *
- * Previous values (0.78 / 0.58 / 0.86) flattened the photo to near-cream.
- */
-.vei-bg-overlay {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(255, 249, 238, 0.38), rgba(255, 249, 238, 0.2) 48%, rgba(246, 250, 249, 0.5)),
-    linear-gradient(90deg, rgba(0, 63, 69, 0.14), rgba(255, 247, 232, 0.04) 48%, rgba(0, 63, 69, 0.1));
-  mix-blend-mode: normal;
-}
-
-/*
- * The background drifts slowly. Anyone who has asked their OS to reduce motion
- * should get a still image instead -- vestibular sensitivity is more common in
- * the 65+ audience this site serves.
- */
-@media (prefers-reduced-motion: reduce) {
-  .vei-bg-layer {
-    animation: none;
-    transform: scale(1.02);
-  }
-}
-
-/* Slow drift/scale so the beach atmosphere feels alive without distracting from content. */
-@keyframes vei-bg-drift {
-  0%,
-  100% {
-    transform: scale(1.02) translate(0, 0);
-  }
-  25% {
-    transform: scale(1.035) translate(0.5%, 0.3%);
-  }
-  50% {
-    transform: scale(1.03) translate(-0.3%, 0.5%);
-  }
-  75% {
-    transform: scale(1.04) translate(0.2%, -0.2%);
-  }
-}
-
-@keyframes vei-tide {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(10px);
-  }
-}
-
-/* Moving band of light (sun on water) */
 @keyframes vei-shimmer {
   0%,
   100% {
@@ -701,13 +581,6 @@ textarea::placeholder {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .vei-tide {
-    animation: none;
-  }
-  .vei-bg-layer {
-    animation: none;
-    opacity: 1;
-  }
   .vei-water-shimmer {
     animation: none;
   }
@@ -719,4 +592,76 @@ textarea::placeholder {
    clear the ChatWidget (fixed bottom-4 right-3, z-[120]). */
 .calendly-overlay {
   z-index: 140 !important;
+}
+
+/* The same calm palette as the homepage, with text on solid color. */
+.ve-interior-hero {
+  background: #e4f0eb;
+  border-bottom: 1px solid var(--ve-border);
+}
+.ve-interior-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 5vw, 4rem);
+  align-items: center;
+  padding-block: clamp(2rem, 5vw, 4.75rem);
+}
+.ve-interior-hero-copy { min-width: 0; }
+.ve-interior-eyebrow {
+  margin-bottom: .65rem;
+  color: var(--ve-teal);
+  font-size: .9rem;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+.ve-interior-hero h1 {
+  max-width: 24ch;
+  color: var(--ve-text);
+  font-size: clamp(2.25rem, 4.65vw, 4.75rem);
+  line-height: 1.04;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+.ve-interior-subtitle {
+  max-width: 62ch;
+  margin-top: .85rem;
+  color: var(--ve-muted);
+  font-size: clamp(1.0625rem, 1.65vw, 1.25rem);
+  line-height: 1.47;
+}
+.ve-interior-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .65rem;
+  margin-top: 1.15rem;
+}
+.ve-interior-actions .premium-small-button {
+  min-height: 46px;
+  border-radius: 999px;
+  text-align: center;
+  white-space: normal;
+}
+.ve-interior-actions .premium-small-button:focus-visible {
+  outline: 3px solid var(--ve-gold);
+  outline-offset: 3px;
+}
+.ve-interior-actions .premium-small-button-primary { color: white; }
+.ve-interior-disclosure { margin-top: 1rem; }
+.ve-interior-photo {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid var(--ve-border);
+  border-radius: 1.1rem;
+  background-color: #d6e5da;
+}
+.ve-interior-photo img { object-fit: cover; object-position: 83% 46%; }
+@media (max-width: 767px) {
+  .ve-interior-hero-grid { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
+  .ve-interior-hero h1 { text-wrap: initial; }
+  .ve-interior-photo { aspect-ratio: 16 / 8.5; }
+}
+@media (max-width: 480px) {
+  .ve-interior-actions .premium-small-button { width: 100%; }
 }

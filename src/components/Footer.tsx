@@ -14,7 +14,7 @@ import {
 export function Footer() {
   const linkProps = externalLinkProps();
   return (
-    <footer className="border-t border-white/10 bg-[rgba(7,18,36,0.86)] text-white backdrop-blur-md">
+    <footer className="border-t border-white/10 bg-[var(--ve-text)] text-white">
       <Container>
         <div className="grid gap-8 py-12 md:grid-cols-3">
           <div>
