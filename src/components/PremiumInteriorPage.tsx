@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/Container";
+import { interiorPhotos, photoForInteriorPage } from "@/lib/interiorTheme";
 import { externalLinkProps } from "@/lib/externalLinks";
 
 export type PremiumAction = {
@@ -57,40 +58,34 @@ export function PremiumInteriorHero({
   actions: PremiumAction[];
   children?: ReactNode;
 }) {
+  const photo = photoForInteriorPage(eyebrow, title);
+
   return (
-    <section className="relative isolate overflow-hidden bg-[#fff7e9]">
-      <div className="absolute inset-0 -z-10">
-        <Image
-          src="/images/hero/vital-edge-goa-beach-hero.png"
-          alt=""
-          fill
-          priority
-          className="object-cover object-[center_top] md:object-center"
-          sizes="100vw"
-        />
-        {/* Lightened from 0.98/0.86/0.2 — the copy now sits on its own glass
-            pane, so the photograph no longer has to be washed out to stay
-            readable behind it. */}
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,249,238,0.5)_0%,rgba(255,247,232,0.34)_43%,rgba(255,247,232,0.1)_100%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white/80 to-transparent" />
-      </div>
+    <section className="ve-interior-hero">
       <Container>
-        <div className="max-w-3xl py-16 md:py-24">
-          <div className="vei-glass vei-glass-light rounded-3xl px-6 py-7 md:px-9 md:py-9">
-            <p className="font-sans text-xs font-extrabold uppercase tracking-[0.16em] text-[var(--ve-teal)]">
-              {eyebrow}
-            </p>
-            <h1 className="mt-4 font-display text-[clamp(2.75rem,5vw,5rem)] font-bold leading-[0.98] tracking-normal text-[var(--ve-teal)]">
-              {title}
-            </h1>
-            <p className="mt-5 max-w-2xl font-sans text-base leading-7 text-slate-800 md:text-lg">{subtitle}</p>
+        <div className="ve-interior-hero-grid">
+          <div className="ve-interior-hero-copy">
+            <p className="ve-interior-eyebrow">{eyebrow}</p>
+            <h1>{title}</h1>
+            <p className="ve-interior-subtitle">{subtitle}</p>
+            {actions.length > 0 && (
+              <div className="ve-interior-actions">
+                {actions.map((action) => (
+                  <ActionLink key={`${action.label}-${action.href}`} action={action} />
+                ))}
+              </div>
+            )}
+            {children ? <div className="ve-interior-disclosure">{children}</div> : null}
           </div>
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            {actions.map((action) => (
-              <ActionLink key={`${action.label}-${action.href}`} action={action} />
-            ))}
+          <div className="ve-interior-photo" data-lifestyle-photo={photo} aria-hidden="true">
+            <Image
+              src={interiorPhotos[photo]}
+              alt=""
+              fill
+              sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1279px) 43vw, 535px"
+              fetchPriority="high"
+            />
           </div>
-          {children ? <div className="mt-6">{children}</div> : null}
         </div>
       </Container>
     </section>

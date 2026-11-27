@@ -119,7 +119,7 @@ export const site = {
       ],
     },
     {
-      label: "Ancillary",
+      label: "Dental, Vision & More",
       href: "/ancillary",
       children: [
         { label: "Ancillary Overview", href: "/ancillary" },

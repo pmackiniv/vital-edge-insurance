@@ -71,7 +71,7 @@ export function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-[70] border-b border-white/40 bg-white/82 shadow-[0_10px_40px_rgba(0,63,69,0.08)] backdrop-blur-xl">
+    <header className="sticky top-0 z-[70] border-b border-[var(--ve-border)] bg-[var(--ve-bg)] shadow-sm">
       <div>
         <Container>
           <div className="flex min-h-[5.4rem] items-center justify-between gap-4 py-3">
