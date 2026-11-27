@@ -9,6 +9,7 @@ import AttributionCapture from "@/components/AttributionCapture";
 import { BackgroundLayers } from "@/components/BackgroundLayers";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { vitalGuideAIPreviewEnabled } from "@/lib/vitalGuideAI";
 import { ChatWidget } from "@/components/ChatWidget";
 import { ScheduleButton } from "@/components/ScheduleButton";
 import TimedLeadPopup from "@/components/TimedLeadPopup";
@@ -90,7 +91,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <InteriorChrome><BackgroundLayers /><Header /></InteriorChrome>
         <main id="main-content" className="relative z-10" tabIndex={-1}>{children}</main>
         <Footer />
-        <ChatWidget />
+        <ChatWidget aiEnabled={vitalGuideAIPreviewEnabled()} />
         <InteriorChrome><ScheduleButton /></InteriorChrome>
         <Suspense fallback={null}>
           <TimedLeadPopup />

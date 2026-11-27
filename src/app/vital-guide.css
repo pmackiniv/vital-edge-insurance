@@ -77,3 +77,7 @@ body:has(.vg-dialog[open]) { overflow: hidden; }
 @media (max-width: 460px) {
   .vg-dialog { inset-inline: max(.45rem, env(safe-area-inset-left)) max(.45rem, env(safe-area-inset-right)); width: auto; }
 }
+.vg-answer .vg-evidence { padding-left: 1.15rem; }
+.vg-evidence li + li { margin-top: .5rem; }
+.vg-evidence a { font-size: .92rem; }
+.vg-search button:disabled { cursor: wait; opacity: .72; }
