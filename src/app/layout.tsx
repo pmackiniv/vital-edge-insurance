@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import "./globals.css";
+import "./vital-guide.css";
 
 import InteriorChrome from "@/components/InteriorChrome";
 import AnalyticsConsent from "@/components/AnalyticsConsent";
@@ -89,7 +90,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <InteriorChrome><BackgroundLayers /><Header /></InteriorChrome>
         <main id="main-content" className="relative z-10" tabIndex={-1}>{children}</main>
         <Footer />
-        <InteriorChrome><ChatWidget /><ScheduleButton /></InteriorChrome>
+        <ChatWidget />
+        <InteriorChrome><ScheduleButton /></InteriorChrome>
         <Suspense fallback={null}>
           <TimedLeadPopup />
         </Suspense>

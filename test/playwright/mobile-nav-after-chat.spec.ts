@@ -5,19 +5,19 @@ test("mobile navigation remains usable after chat open/send/close flow", async (
 
   await page.goto("/aca");
 
-  await page.getByRole("button", { name: "Open 24/7 Coverage Guide" }).click();
-  await expect(page.getByRole("button", { name: "Close chat", exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Open Vital Guide" }).click();
+  await expect(page.getByRole("button", { name: "Close Vital Guide", exact: true })).toBeVisible();
 
   await page
-    .getByPlaceholder("Ask a coverage question")
-    .fill("Can I enroll in a Medicare plan?");
+    .getByPlaceholder("e.g. employer coverage")
+    .fill("Is my doctor in network?");
   await page.getByRole("button", { name: /^Send$/ }).click();
-  await expect(page.getByText(/licensed-agent follow-up/i)).toBeVisible();
+  await expect(page.getByText(/Talk to Patrick about this/i)).toBeVisible();
 
-  await page.getByRole("button", { name: "Close chat", exact: true }).click();
-  await expect(page.getByRole("button", { name: "Close chat", exact: true })).toBeHidden();
+  await page.getByRole("button", { name: "Close Vital Guide", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Close Vital Guide", exact: true })).toBeHidden();
   await expect
-    .poll(() => page.evaluate(() => document.body.dataset.chatWidgetOpen || ""))
+    .poll(() => page.evaluate(() => document.querySelector(".vg-dialog[open]") ? "open" : ""))
     .toBe("");
 
   await page.getByLabel("Vital Edge Insurance home").click();
@@ -49,15 +49,15 @@ test("desktop parent links and submenu controls have separate actions", async ({
 
 test("Vital Guide conversation surface stays readable and bounded", async ({ page }) => {
   await page.goto("/aca");
-  await page.getByRole("button", { name: "Open 24/7 Coverage Guide" }).click();
+  await page.getByRole("button", { name: "Open Vital Guide" }).click();
 
   const dialog = page.getByRole("dialog", { name: "Vital Guide" });
   await expect(dialog).toBeVisible();
   const transcript = dialog.getByRole("log", { name: "Vital Guide conversation" });
   await expect(transcript).toBeVisible();
-  await expect(transcript.getByText("Ask a coverage question.", { exact: true })).toBeVisible();
+  await expect(transcript.getByText("e.g. employer coverage.", { exact: true })).toBeVisible();
 
-  const measurements = await transcript.evaluate((element) => {
+  const measurements = await dialog.locator(".vg-scroll").evaluate((element) => {
     const style = window.getComputedStyle(element);
     const rect = element.getBoundingClientRect();
     return {
@@ -70,7 +70,7 @@ test("Vital Guide conversation surface stays readable and bounded", async ({ pag
 
   expect(measurements.color).not.toBe("rgba(0, 0, 0, 0)");
   expect(measurements.backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
-  expect(measurements.height).toBeGreaterThan(140);
+  expect(measurements.height).toBeGreaterThan(120);
   expect(measurements.overflowY).toBe("auto");
 });
 

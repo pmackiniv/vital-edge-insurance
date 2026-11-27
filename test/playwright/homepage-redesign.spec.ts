@@ -29,7 +29,6 @@ test("homepage guide answers without collecting details and routes to the right 
   await expect(guide.getByRole("heading", { name: "See when to sign up" })).toBeVisible();
   await expect(guide.getByRole("link", { name: "Book a 20-minute Turning 65 call" })).toHaveAttribute("href", /^https:\/\/calendly\.com\/pmackiniv27\/turning-65-medicare-phone-appointment\?.*utm_source=vital_edge_website/);
   await expect(guide.getByRole("link", { name: "Book a 20-minute Turning 65 call" })).toHaveCSS("color", "rgb(255, 255, 255)");
-  await guide.getByText("Look up a general topic").click();
   const input = guide.getByRole("searchbox");
   await input.fill("Is my doctor in network?");
   await input.press("Enter");

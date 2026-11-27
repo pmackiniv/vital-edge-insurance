@@ -1,0 +1,79 @@
+.vg-launch, .vg-dialog, .vg-inline { font-family: "Times New Roman", Times, serif; }
+.vg-launch {
+  position: fixed;
+  right: max(.85rem, env(safe-area-inset-right));
+  bottom: calc(.85rem + env(safe-area-inset-bottom));
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  min-height: 48px;
+  padding: .58rem 1rem;
+  border: 1px solid #fff;
+  border-radius: 999px;
+  background: #075b54;
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.2;
+  box-shadow: 0 6px 24px #102f3240;
+  cursor: pointer;
+}
+.vg-launch svg, .vg-header svg { width: 1.4rem; height: 1.4rem; flex: none; }
+.vg-launch:hover { background: #12483f; }
+.vg-dialog {
+  position: fixed;
+  inset: auto max(.85rem, env(safe-area-inset-right)) calc(.85rem + env(safe-area-inset-bottom)) auto;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  width: min(27rem, calc(100vw - 1.7rem));
+  max-width: none;
+  max-height: min(42rem, calc(100dvh - 1.7rem - env(safe-area-inset-bottom) - env(safe-area-inset-top)));
+  border: 1px solid #cbd9d5;
+  border-radius: 1rem;
+  color: #102f32;
+  background: #fff;
+  box-shadow: 0 14px 60px #102f3250;
+}
+.vg-dialog[open] { display: flex; flex-direction: column; overflow: hidden; }
+.vg-dialog::backdrop { background: #102f3242; }
+body:has(.vg-dialog[open]) { overflow: hidden; }
+.vg-header { display: flex; flex: none; align-items: center; gap: .75rem; padding: .6rem .85rem; background: #075b54; color: white; }
+.vg-header h2 { color: white; font-size: 1.25rem; font-weight: 700; line-height: 1.1; }
+.vg-header p { margin-top: .12rem; font-size: .9rem; }
+.vg-header form { margin-left: auto; }
+.vg-header button { width: 44px; height: 44px; border: 1px solid #ffffff8c; border-radius: 50%; color: white; font-size: 1.65rem; line-height: 1; cursor: pointer; }
+.vg-conversation { display: flex; flex-direction: column; min-height: 0; background: white; color: #102f32; }
+.vg-scroll { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: .85rem; background: #f8faf7; }
+.vg-answer { padding: .75rem; border-radius: .2rem .85rem .85rem; background: #e4f0eb; line-height: 1.35; font-size: 1rem; overflow-wrap: anywhere; }
+.vg-answer h3 { font-size: 1.1rem; font-weight: 700; }
+.vg-answer p, .vg-answer ul { margin-top: .35rem; }
+.vg-answer ul { list-style: disc; padding-left: 1.25rem; }
+.vg-answer a, .vg-footer a { color: #075b54; text-decoration: underline; text-underline-offset: .15em; }
+.vg-actions, .vg-topics, .vg-footer { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; }
+.vg-actions, .vg-topics { margin-top: .65rem; }
+.vg-topics button, .vg-actions a, .vg-search button {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 44px; border: 1px solid #075b54;
+  border-radius: .65rem; padding: .35rem .65rem; font-size: .96rem; font-weight: 700; line-height: 1.15; cursor: pointer;
+  background: #fff; color: #075b54; text-decoration: none;
+}
+.vg-actions a.vg-primary, .vg-search button { color: white; background: #075b54; }
+.vg-topics button[aria-pressed="true"] { color: #202d24; background: #f3c985; }
+.vg-topics button:hover, .vg-actions a:not(.vg-primary):hover { background: #f3c985; color: #202d24; }
+.vg-answer .vg-disclosure { font-size: .9rem; margin-top: .65rem; }
+.vg-composer { flex: none; padding: .6rem .85rem .45rem; border-top: 1px solid #cbd9d5; font-size: 1rem; }
+.vg-composer label { display: block; font-weight: 700; line-height: 1.25; }
+.vg-search { display: flex; gap: .4rem; margin-top: .35rem; }
+.vg-search input {
+  min-width: 0; flex: 1; padding: .45rem .6rem; border: 1px solid #527973; border-radius: .55rem;
+  background: white; color: #102f32; font: inherit; font-size: 16px;
+}
+.vg-composer p { margin-top: .35rem; font-size: .87rem; line-height: 1.2; color: #3c5657; }
+.vg-footer { flex: none; justify-content: space-between; padding: .1rem .85rem; border-top: 1px solid #cbd9d5; }
+.vg-footer a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; font-size: .95rem; }
+.vg-launch:focus-visible, .vg-dialog :focus-visible, .vg-inline :focus-visible { outline: 3px solid #8a550f; outline-offset: 2px; }
+.vg-header button:focus-visible { outline-color: #f3c985; }
+@media (max-width: 460px) {
+  .vg-dialog { inset-inline: max(.45rem, env(safe-area-inset-left)) max(.45rem, env(safe-area-inset-right)); width: auto; }
+}
