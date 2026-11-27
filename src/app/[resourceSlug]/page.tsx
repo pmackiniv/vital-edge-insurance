@@ -242,7 +242,12 @@ export default async function ResourcePage({ params }: { params: Promise<{ resou
             </aside>
           </div>
 
-          {page.formVariant !== "partner" && page.formVariant !== "event" ? (
+          {page.slug === "medicare-still-working" ? (
+            <PremiumContentBand title="Ready to compare plans on your own?" tone="white">
+              <p className="mb-3">If you already know your Medicare timing and are ready to explore, you can browse plan options without booking an appointment.</p>
+              <Link href="/enroll" className="font-bold underline underline-offset-4">Compare Medicare plans online</Link>
+            </PremiumContentBand>
+          ) : page.formVariant !== "partner" && page.formVariant !== "event" ? (
             <section className="rounded-3xl bg-[var(--ve-teal)] p-7 text-white shadow-[0_24px_70px_rgba(0,63,69,0.2)] md:p-9">
               <p className="font-sans text-xs font-extrabold uppercase tracking-[0.16em] text-[var(--ve-gold)]">
                 Self-Directed 2027 Plan Lookup

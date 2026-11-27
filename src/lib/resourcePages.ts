@@ -245,13 +245,14 @@ const strategicPages: ResourcePage[] = [
     title: "Medicare When You Are Still Working",
     metaTitle: "Medicare While Still Working Past 65 | Vital Edge Insurance",
     description:
-      "Education for people still working past 65 who need to review employer coverage, Part B timing, creditable coverage, prescriptions, and Medicare coordination.",
+      "Turning 65 and still working? Ask your benefits team these five questions about employer coverage, Medicare Part B, prescription coverage, and HSA timing.",
     heroSubtitle:
-      "Employer coverage can change Medicare timing. Review the details before you make a Part B or coverage decision.",
+      "Turning 65 and still working? Get clear on how your job-based coverage works with Medicare before you enroll or make a change.",
     leadCategory: "Employer/private options",
     audience: "Workers age 65 and older",
-    primaryCtaLabel: "Review Employer Coverage Timing",
-    primaryCtaHref: "/contact?topic=medicare-still-working",
+    primaryCtaLabel: "Book a 20-minute Turning 65 call",
+    primaryCtaHref: websiteScheduleUrl("https://calendly.com/pmackiniv27/turning-65-medicare-phone-appointment"),
+    primaryExternal: true,
     secondaryCtaLabel: "Turning 65 Timeline",
     secondaryCtaHref: "/turning-65-medicare",
     serviceType: "Employer Medicare coordination education",
@@ -262,12 +263,30 @@ const strategicPages: ResourcePage[] = [
     ],
     blocks: [
       {
-        title: "Questions to review",
+        title: "Five questions to ask your benefits team",
+        paragraphs: [
+          "If you or your spouse get health insurance through a current job, ask your benefits team these questions before you enroll in Medicare or drop your work coverage.",
+        ],
         bullets: [
-          "Is the coverage active employee group health coverage or retiree coverage?",
-          "How does the employer plan coordinate with Medicare?",
-          "Is prescription drug coverage considered creditable?",
-          "Are your doctors and pharmacies still practical under the current arrangement?",
+          "Which plan pays first when I turn 65? Does my work plan expect me to have Medicare Part A or Part B?",
+          "When does my work coverage end? Ask for the exact date and how a change would affect your spouse or dependents.",
+          "Is my prescription coverage creditable for Medicare? Ask for the current written creditable coverage notice and keep a copy.",
+          "If I contribute to an HSA, what timing should I check before applying? Premium-free Medicare Part A can sometimes start retroactively.",
+          "If I’m applying for Part B based on current employment, can you confirm my coverage dates and complete Section B of CMS-L564 if Social Security needs it?",
+        ],
+        links: [
+          { label: "CMS: Creditable prescription drug coverage", href: "https://www.cms.gov/medicare/employers-plan-sponsors/creditable-coverage" },
+          { label: "CMS-L564: Request for Employment Information", href: "https://www.cms.gov/cms-l564-request-employment-information" },
+        ],
+      },
+      {
+        title: "Before delaying Part B or dropping work coverage",
+        paragraphs: [
+          "COBRA and retiree coverage work differently from coverage through a current job. Check your timing with Medicare or Social Security before delaying Part B or dropping coverage. This checklist is general education, not a plan recommendation or an eligibility determination.",
+        ],
+        links: [
+          { label: "Medicare.gov: Working past 65", href: "https://www.medicare.gov/basics/get-started-with-medicare/medicare-basics/working-past-65" },
+          { label: "Social Security: Signing up for Part B", href: "https://www.ssa.gov/medicare/sign-up/part-b-only" },
         ],
       },
       { title: "Compliance note", paragraphs: [medicareDisclosure] },

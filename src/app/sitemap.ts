@@ -42,6 +42,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     terms: "2026-11-19",
     privacy: "2026-11-19",
     "turning-65-medicare": "2026-09-15",
+    "medicare-still-working": "2026-11-27",
     "st-johns-county": "2026-09-15",
     "nocatee-medicare-help": "2026-09-15",
     "the-villages-medicare-help": "2026-11-19",
