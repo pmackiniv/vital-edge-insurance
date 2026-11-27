@@ -23,6 +23,8 @@ test("mobile navigation remains usable after chat open/send/close flow", async (
   await page.getByLabel("Vital Edge Insurance home").click();
   await expect(page).toHaveURL(/\/$/);
 
+  await page.getByRole("navigation", { name: "Main navigation" }).getByRole("link", { name: "Resources" }).click();
+  await expect(page).toHaveURL(/\/resources$/);
   await page.getByRole("button", { name: /toggle navigation/i }).click();
   const mobilePanel = page.locator("#mobile-nav-panel");
   await expect(mobilePanel).toBeVisible();
@@ -34,11 +36,11 @@ test("mobile navigation remains usable after chat open/send/close flow", async (
 test("desktop parent links and submenu controls have separate actions", async ({ page }) => {
   test.skip((page.viewportSize()?.width ?? 0) < 1024, "Desktop navigation only");
 
-  await page.goto("/");
+  await page.goto("/aca");
   await page.getByRole("link", { name: "Medicare", exact: true }).click();
   await expect(page).toHaveURL(/\/medicare$/);
 
-  await page.goto("/");
+  await page.goto("/aca");
   await page.getByRole("button", { name: "Open Resources menu" }).click();
   await expect(page.getByRole("link", { name: "Resource Hub", exact: true })).toBeVisible();
   await page.getByRole("link", { name: "Resource Hub", exact: true }).click();
@@ -46,7 +48,7 @@ test("desktop parent links and submenu controls have separate actions", async ({
 });
 
 test("Vital Guide conversation surface stays readable and bounded", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/aca");
   await page.getByRole("button", { name: "Open 24/7 Coverage Guide" }).click();
 
   const dialog = page.getByRole("dialog", { name: "Vital Guide" });
